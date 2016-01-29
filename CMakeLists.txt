@@ -9,6 +9,12 @@ set(CMAKE_CXX_COMPILER "i686-elf-g++")
 set(CMAKE_CXX_FLAGS "-ffreestanding -O0 -Wall -Wextra -fno-exceptions -fno-rtti")
 
 #Set up the linker
+#Path to crtbegin.o and crtend.o
+set(CRT_PATH "/usr/local/cross/lib/gcc/i686-elf/5.3.0")
+set(CRTBEGIN_O "${CRT_PATH}/crtbegin.o")
+set(CRTEND_O "${CRT_PATH}/crtend.o")
+
+#The linker configuration file
 set(LINKER_FILE "${PROJECT_SOURCE_DIR}/config/linker.ld")
 
 set(CMAKE_CXX_LINK_FLAGS "-nostdlib -T ${LINKER_FILE}")
@@ -19,20 +25,24 @@ set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 #List the main executable source files
-set(SOURCES
-	"src/boot/kernel.cpp"
-	"src/boot/boot.asm"
-	)
-
-#Create the main executable
-add_executable(${PROJECT_NAME}.bin ${SOURCES})
-
+add_subdirectory(src/boot)
 add_subdirectory(src/kernel)
 add_subdirectory(src/io)
 add_subdirectory(src/libc)
 
-#Add libraries
-target_link_libraries(${PROJECT_NAME}.bin gcc kernel io libc)
+set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
+
+#Create the main executable
+add_executable(${PROJECT_NAME}.bin
+	"$<TARGET_OBJECTS:crti>"
+	"${CRTBEGIN_O}"
+	"$<TARGET_OBJECTS:boot>"
+	"$<TARGET_OBJECTS:kernel>"
+	"$<TARGET_OBJECTS:io>"
+	"$<TARGET_OBJECTS:libc>"
+	"${CRTEND_O}"
+	"$<TARGET_OBJECTS:crtn>"
+	)
 
 #Make the iso
 file(COPY "${CMAKE_SOURCE_DIR}/iso" DESTINATION "${CMAKE_BINARY_DIR}")

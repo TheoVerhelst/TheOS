@@ -5,7 +5,6 @@ set(SOURCES
 	"string/strlen.cpp"
 	"string/strrchr.cpp")
 
-add_library(libc ${SOURCES})
+add_library(libc OBJECT ${SOURCES})
 
-target_link_libraries(libc kernel io)
 

@@ -5,5 +5,5 @@ set(SOURCES
 	"video/VGA_management.cpp"
 	)
 
-add_library(kernel ${SOURCES})
+add_library(kernel OBJECT ${SOURCES})
 
