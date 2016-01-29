@@ -2,37 +2,62 @@
 #define VGA_MANAGEMENT_H
 
 #include <stdint.h>
+#include <stddef.h>
 
-#define VGA_WIDTH 80
-#define VGA_HEIGHT 25
-#define VGA_BUFFER_ADDRESS 0xB8000 // defined location on the VGA buffer
-#define VGA_COORD_TO_IDX(x, y) ((y)*VGA_WIDTH + (x))
-
-typedef uint8_t colour_t;
-typedef uint16_t VGA_entry_t;
-
-// VGA Hardware interface
-enum VGA_Colour
+// VGA hardware interface
+namespace VGA
 {
-	COLOUR_BLACK = 0,
-	COLOUR_BLUE,
-	COLOUR_GREEN,
-	COLOUR_CYAN,
-	COLOUR_RED,
-	COLOUR_MAGENTA,
-	COLOUR_BROW,
-	COLOUR_LIGHT_GREY,
-	COLOUR_DARK_GREY,
-	COLOUR_LIGHT_BLUE,
-	COLOUR_LIGHT_GREEN,
-	COLOUR_LIGHT_CYAN,
-	COLOUR_LIGHT_RED,
-	COLOUR_LIGHT_MAGENTA,
-	COLOUR_LIGHT_BROWN,
-	COLOUR_WHITE = 15
+
+enum class Colour : uint8_t
+{
+	Black = 0,
+	Blue,
+	Green,
+	Cyan,
+	Red,
+	Magenta,
+	Brown,
+	LightGrey,
+	DarkGrey,
+	LightBlue,
+	LightGreen,
+	LightCyen,
+	LightRed,
+	LightMagenta,
+	LightBrown,
+	White = 15
 };
 
-colour_t make_colour(enum VGA_Colour, enum VGA_Colour);
-VGA_entry_t make_VGA_entry(char, colour_t);
+class ColourProfile
+{
+	public:
+		ColourProfile(Colour foreground, Colour background);
+		uint8_t getValue() const;
+
+	private:
+		uint8_t _value;
+};
+
+class Entry
+{
+	public:
+		Entry(char c, const ColourProfile& profile);
+		uint16_t getValue() const;
+
+	private:
+		uint16_t _value;
+};
+
+const size_t width{80};
+const size_t height{25};
+Entry * const buffer{reinterpret_cast<Entry*>(0xB8000)};// defined location on the VGA buffer
+
+constexpr inline size_t coordToIndex(size_t x, size_t y)
+{
+	return y * width + x;
+}
+
+
+}// namespace VGA
 
 #endif// VGA_MANAGEMENT_H
