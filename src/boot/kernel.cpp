@@ -9,7 +9,7 @@ struct terminal_s terminal;
 
 extern "C" void kernel_main()
 {
+	terminal_init();
 	puts("This is BermudOS with puts!");
-	printf("This is BermudOS with printf!");
 }
 

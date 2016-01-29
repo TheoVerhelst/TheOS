@@ -10,7 +10,7 @@ static void terminal_move_cursor(int, int);
 
 /** code **/
 
-void terminal_init(void)
+void terminal_init()
 {
 	terminal.row = terminal.column = 0;
 	terminal.colour = make_colour(COLOUR_WHITE, COLOUR_BLACK);
