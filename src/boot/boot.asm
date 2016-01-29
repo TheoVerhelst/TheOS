@@ -30,9 +30,17 @@ section .text
 	global _start
 	; kernel_main is the entry point of the C++ code kernel
 	extern kernel_main
+	; _init and _fini are entry points of routine used for initializing global objects
+	extern _init
+	extern _fini
+
 	_start:
 		; set up a stack by putting TOS in ESP
 		mov esp, stack_top
+
+		; call objects constructors calling routine
+		call _init
+		call _fini
 
 		call kernel_main
 
