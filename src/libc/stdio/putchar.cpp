@@ -1,8 +1,8 @@
 #include <stdio.hpp>
-#include <kernel/terminal/terminal.hpp>
+#include <kernel/terminal/Terminal.hpp>
 
 int putchar(int c)
 {
-	terminal_putchar(c);
+	terminal.putChar(c);
 	return c;
 }

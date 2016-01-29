@@ -3,12 +3,11 @@
 #endif
 
 #include <stdio.hpp>
-#include <kernel/terminal/terminal.hpp>
+#include <kernel/terminal/Terminal.hpp>
 
-struct terminal_s terminal;
+Terminal terminal;
 
 extern "C" void kernel_main()
 {
-	terminal_init();
 	printf("Veuillez patienter...");
 }

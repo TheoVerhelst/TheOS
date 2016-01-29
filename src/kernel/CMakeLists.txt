@@ -1,7 +1,7 @@
 set(SOURCES
 	"memcpy.cpp"
 	"memset.cpp"
-	"terminal/terminal.cpp"
+	"terminal/Terminal.cpp"
 	"video/VGA_management.cpp"
 	)
 

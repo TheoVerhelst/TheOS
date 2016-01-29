@@ -1,9 +1,9 @@
 #include <stdio.hpp>
-#include <kernel/terminal/terminal.hpp>
+#include <kernel/terminal/Terminal.hpp>
 
 int puts(const char * str)
 {
-	terminal_putstring(str);
+	terminal.putString(str);
 	putchar('\n');
 	return 1;
 }
