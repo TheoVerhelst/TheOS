@@ -14,18 +14,18 @@ class Terminal
 		void putString(const char *);
 
 	private:
-		void putEntryAt(char, colour_t, size_t, size_t);
 		void newLine();
 		void scrollUp();
 		void clearScreen();
+		void putEntryAt(char, colour_t, size_t, size_t);
 		void moveCursor(int, int);
 
-		size_t row;         /// Y coordinate
-		size_t column;      /// X coordinate
-		colour_t colour;    /// Colour of the cell
-		VGA_entry_t* buffer;/// address of the buffer to write the data in
-		static VGA_entry_t emptyCell;
-		bool writing;
+		size_t _row;         /// Y coordinate
+		size_t _column;      /// X coordinate
+		colour_t _colour;    /// Colour of the cell
+		VGA_entry_t _emptyCell;
+		VGA_entry_t* _buffer;/// address of the buffer to write the data in
+		bool _writing;
 
 };
 
