@@ -1,7 +1,6 @@
 set(SOURCES
-	"stdio/printf.cpp"
-	"stdio/putchar.cpp"
-	"stdio/puts.cpp"
+	"string/memset.cpp"
+	"string/memcpy.cpp"
 	"string/strlen.cpp"
 	"string/strrchr.cpp")
 

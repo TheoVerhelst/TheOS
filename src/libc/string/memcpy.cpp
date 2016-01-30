@@ -1,4 +1,4 @@
-#include <kernel/memcpy.hpp>
+#include <string.hpp>
 
 /* Decompose into 32-bit blocks and 8-bit blocks so transfer
    may be faster */

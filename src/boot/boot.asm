@@ -42,6 +42,8 @@ section .text
 		call _init
 		call _fini
 
+		; Give multiboot information address to kernel_main
+		push ebx
 		call kernel_main
 
 		cli  ; set Interrupt Flag (IF) to 0 to not handle maskable interrupts
