@@ -1,7 +1,10 @@
 #include <io/Printer.hpp>
+#include <string.hpp>
 #include <kernel/terminal/Terminal.hpp>
 
 Terminal terminal;
+const char* Printer::_prefixes[] = {"", "0b", "", "", "", "", "", "0", "",
+			"", "", "", "", "", "", "0x", "", "", "", "", "", "", "", "", "", ""};
 
 Printer& Printer::setBase(int newBase)
 {
@@ -51,16 +54,27 @@ Printer& Printer::operator<<(long int arg)
 		buffer[index++] = '-';
 		arg = -arg;
 	}
+
+	if(_showPrefix)
+	{
+		strcpy(&buffer[index], _prefixes[_base - 1]);
+		index += strlen(_prefixes[_base - 1]);
+	}
+	const int begin{index};
+
+	if(arg == 0)
+		buffer[index++] = '0';
+
 	while(arg > 0)
 	{
 		const long int remainder{arg % _base};
+		buffer[index++] = _alphabet[remainder];
 		arg /= _base;
-		buffer[index++] = '0' + static_cast<char>(remainder);
 	}
 	buffer[index] = '\0';
 
 	//Reverse digits
-	int reverseIndex{negative ? 1 : 0};
+	int reverseIndex{begin};
 	char tmp;
 	while(reverseIndex < index)
 	{
@@ -76,16 +90,27 @@ Printer& Printer::operator<<(long unsigned int arg)
 {
 	char buffer[_bufferLength];
 	int index{0};
+
+	if(_showPrefix)
+	{
+		strcpy(&buffer[index], _prefixes[_base - 1]);
+		index += strlen(_prefixes[_base - 1]);
+	}
+	const int begin{index};
+
+	if(arg == 0)
+		buffer[index++] = '0';
+
 	while(arg > 0)
 	{
-		const unsigned long int remainder{arg % 10};
-		buffer[index++] = '0' + static_cast<char>(remainder);
-		arg /= 10;
+		const long unsigned int remainder{arg % _base};
+		buffer[index++] = _alphabet[remainder];
+		arg /= _base;
 	}
 	buffer[index--] = '\0';
 
 	//Reverse digits
-	int reverseIndex{0};
+	int reverseIndex{begin};
 	char tmp;
 	while(reverseIndex < index)
 	{

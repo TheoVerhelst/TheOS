@@ -8,16 +8,10 @@ struct MultibootInfo
 	uint32_t flags;            ///< Indicates the presence and validity of the following fields.
 	uintptr_t mem_lower;       ///< Amount of lower memory, in kilobytes.
 	uintptr_t mem_upper;       ///< Amount of upper memory, in kilobytes.
-	struct
-	{
-		uint8_t drive;
-		uint8_t part1;
-		uint8_t part2;
-		uint8_t part3;
-	} boot_device;             ///< Indicates which bios disk device the boot loader loaded the OS image from.
-	char* cmdline;             ///< Present if flags[2] is set.
-	uint32_t mods_count;       ///< Present if flags[3] is set.
-	uintptr_t mods_addr;       ///< ...
+	uint32_t boot_device;      ///< Indicates which bios disk device the boot loader loaded the OS image from.
+	char* cmdline;             ///< Command line to be passed to the kernel.
+	uint32_t mods_count;       ///< The number of modules loaded.
+	uintptr_t mods_addr;       ///< Tthe physical address of the first module structure.
 	union
 	{
 		struct
@@ -58,7 +52,7 @@ enum InfoAvailable : uint32_t
 	mem_bounds       = 1 << 0,
 	boot_device      = 1 << 1,
 	cmdline          = 1 << 2,
-	mods          = 1 << 3,
+	mods             = 1 << 3,
 	a_out_syms       = 1 << 4,
 	elf32_syms       = 1 << 5,
 	mmap             = 1 << 6,

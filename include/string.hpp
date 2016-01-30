@@ -6,6 +6,7 @@
 
 char *strrchr(const char *, int);
 size_t strlen(const char *);
+char* strcpy(char* dest, const char * src);
 
 void *memsetb(void *, BYTE, size_t);
 void *memsetw(void *, WORD, size_t);

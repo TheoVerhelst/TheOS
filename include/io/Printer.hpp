@@ -7,6 +7,7 @@ class Printer
 {
 	public:
 		Printer& setBase(int newBase);
+		Printer& setShowPrefix(bool newShowPrefix);
 		Printer& operator<<(char arg);
 		Printer& operator<<(const char* arg);
 		Printer& operator<<(short int arg);
@@ -19,7 +20,10 @@ class Printer
 
 	private:
 		int _base = 10;
+		bool _showPrefix = true;
 		static const size_t _bufferLength = 32UL;
+		static constexpr const char* _alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
+		static const char* _prefixes[];
 };
 
 extern Printer out;

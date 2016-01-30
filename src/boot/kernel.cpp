@@ -13,26 +13,12 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	out << "Available memory = " << memSize/1024 << " Mb\n";
 	if(info.flags & InfoAvailable::boot_device)
 	{
-		switch(info.boot_device.drive)
-		{
-			case 0x00:
-				out << "Loaded from 1st floppy disk";
-				break;
-			case 0x01:
-				out << "Loaded from 2nd floppy disk";
-				break;
-			case 0x80:
-				out << "Loaded from 1st hard disk";
-				break;
-			case 0x81:
-				out << "Loaded from 2nd hard disk";
-				break;
-			default:
-				out << "Unrecognized drive number";
-		}
-		out << " on partition " << info.boot_device.part1;
-		out << "." << info.boot_device.part2;
-		out << "." << info.boot_device.part3 << "\n";
+		out.setBase(16);
+		out << "Loaded from " << (info.boot_device & 0x000000FF) << " on partition ";
+		out << (info.boot_device & 0x0000FF00);
+		out << "." << (info.boot_device & 0x00FF0000);
+		out << "." << (info.boot_device  & 0xFF000000) << "\n";
+		out.setBase(10);
 	}
 	if(info.flags & InfoAvailable::cmdline)
 		out << "Command line: \"" << info.cmdline << "\"\n";
