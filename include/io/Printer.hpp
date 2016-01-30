@@ -2,6 +2,7 @@
 #define PRINTER_HPP
 
 #include <stddef.h>
+#include <stdint.h>
 
 class Printer
 {
@@ -17,6 +18,12 @@ class Printer
 		Printer& operator<<(long int arg);
 		Printer& operator<<(long unsigned int arg);
 		Printer& operator<<(bool arg);
+		template <typename T>
+		Printer& operator<<(const T* arg)
+		{
+			*this << reinterpret_cast<uintptr_t>(arg);
+			return *this;
+		}
 
 	private:
 		int _base = 10;

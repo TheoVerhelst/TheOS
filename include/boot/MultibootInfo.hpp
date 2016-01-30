@@ -3,39 +3,59 @@
 
 #include <stdint.h>
 
+/// Structure representing data about the a.out
+/// symbol table of the kernel.
+struct AOutSyms
+{
+	uint32_t tabsize;
+	uint32_t strsize;
+	void* addr;
+	uint32_t reserved;
+};
+
+/// Structure representing data about the elf32
+/// symbol table of the kernel.
+struct Elf32Syms
+{
+	uint32_t num;
+	uint32_t size;
+	void* addr;
+	uint32_t shndx;
+};
+
+struct MemoryRegion
+{
+	uint32_t size;
+	uint64_t base_addr;
+	uint64_t length;
+	int type;
+};
+
+/// This is the Multiboot information data structure,
+/// through which the boot loader communicates vital information to the operating system.
+/// The operating system can use or ignore any parts of the structure as it chooses;
+/// all information passed by the boot loader is advisory only.
 struct MultibootInfo
 {
 	uint32_t flags;            ///< Indicates the presence and validity of the following fields.
-	uintptr_t mem_lower;       ///< Amount of lower memory, in kilobytes.
-	uintptr_t mem_upper;       ///< Amount of upper memory, in kilobytes.
+	uint32_t mem_lower;        ///< Amount of lower memory, in kilobytes.
+	uint32_t mem_upper;        ///< Amount of upper memory, in kilobytes.
 	uint32_t boot_device;      ///< Indicates which bios disk device the boot loader loaded the OS image from.
 	char* cmdline;             ///< Command line to be passed to the kernel.
 	uint32_t mods_count;       ///< The number of modules loaded.
-	uintptr_t mods_addr;       ///< Tthe physical address of the first module structure.
+	void* mods_addr;           ///< Tthe physical address of the first module structure.
 	union
 	{
-		struct
-		{
-			uint32_t tabsize;  ///<
-			uint32_t strsize;  ///< ...
-			uintptr_t addr;    ///< ...
-			uint32_t reserved; ///< ...
-		} a_out_syms;          ///< Present if flags[4] is set.
-		struct
-		{
-			uint32_t num;      ///< Present if flags[5] is set.
-			uint32_t size;     ///< ...
-			uintptr_t addr;    ///< ...
-			uint32_t shndx;    ///< ...
-		} elf32_syms;          ///< ...
+		AOutSyms a_out_syms;   ///< Present if flags[4] is set.
+		Elf32Syms elf32_syms;  ///< Present if flags[5] is set.
 	};
 	uint32_t mmap_length;      ///< Present if flags[6] is set.
-	uintptr_t mmap_addr;       ///< ...
+	MemoryRegion* mmap_addr;   ///< ...
 	uint32_t drives_length;    ///< Present if flags[7] is set.
-	uintptr_t drives_addr;     ///< ...
+	void* drives_addr;         ///< ...
 	uint32_t config_table;     ///< Present if flags[8] is set.
 	char* boot_loader_name;    ///< Present if flags[9] is set.
-	uintptr_t apm_table;       ///< Present if flags[10] is set.
+	void* apm_table;           ///< Present if flags[10] is set.
 	uint32_t vbe_control_info; ///< Present if flags[11] is set.
 	uint32_t vbe_mode_info;    ///< ...
 	uint16_t vbe_mode;         ///< ...

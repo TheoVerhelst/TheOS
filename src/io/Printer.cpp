@@ -11,6 +11,11 @@ Printer& Printer::setBase(int newBase)
 	_base = newBase;
 	return *this;
 }
+Printer& Printer::setShowPrefix(bool newShowPrefix)
+{
+	_showPrefix = newShowPrefix;
+	return *this;
+}
 
 Printer& Printer::operator<<(char arg)
 {
@@ -71,7 +76,7 @@ Printer& Printer::operator<<(long int arg)
 		buffer[index++] = _alphabet[remainder];
 		arg /= _base;
 	}
-	buffer[index] = '\0';
+	buffer[index--] = '\0';
 
 	//Reverse digits
 	int reverseIndex{begin};
