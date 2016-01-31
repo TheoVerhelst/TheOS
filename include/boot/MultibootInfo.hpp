@@ -28,7 +28,7 @@ struct MemoryRegion
 	uint32_t size;
 	uint64_t base_addr;
 	uint64_t length;
-	int type;
+	uint32_t type;
 };
 
 /// This is the Multiboot information data structure,
@@ -37,6 +37,7 @@ struct MemoryRegion
 /// all information passed by the boot loader is advisory only.
 struct MultibootInfo
 {
+	static_assert(sizeof(void*) == sizeof(uint32_t), "Addresses must be 32-bit");
 	uint32_t flags;            ///< Indicates the presence and validity of the following fields.
 	uint32_t mem_lower;        ///< Amount of lower memory, in kilobytes.
 	uint32_t mem_upper;        ///< Amount of upper memory, in kilobytes.

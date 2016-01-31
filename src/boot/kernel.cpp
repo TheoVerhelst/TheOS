@@ -8,9 +8,8 @@
 #include <boot/MultibootInfo.hpp>
 
 Printer out;
-details::MemoryBlock* details::blocks[details::addressSize];
 
-void browseMemoryMap(MemoryRegion* address, size_t size)
+void initMemory(MemoryRegion* address, size_t size)
 {
 	uintptr_t upperAddress{reinterpret_cast<uintptr_t>(address) + size};
 	out.setShowPrefix(false);
@@ -18,10 +17,13 @@ void browseMemoryMap(MemoryRegion* address, size_t size)
 	{
 		if(address->type == 1)
 		{
-			out << "base_addr = 0x" << (uint32_t)(address->base_addr) << "\n";
-			out << "length = 0x" << (uint32_t)(address->length) << "\n";
+			MemoryManager::MemoryBlock* block = MemoryManager::MemoryBlock::allocate();
+			block->address = reinterpret_cast<void*>(address->base_addr);
+			const size_t index{MemoryManager::getIndexFromSize(static_cast<size_t>(address->length)) - 1};
+			block->addToList(MemoryManager::freeBlocks, index);
+			out << "Allocated block of size 2^" << index << " starting at " << block->address << "\n";
 		}
-		address = (MemoryRegion*)(reinterpret_cast<uintptr_t>(address) + address->size + sizeof(address->size));
+		address = reinterpret_cast<MemoryRegion*>(reinterpret_cast<uintptr_t>(address) + address->size + sizeof(address->size));
 	}
 }
 
@@ -60,5 +62,5 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	if(info.flags & InfoAvailable::boot_device)
 		printDeviceInfo(info.boot_device);
 	if(info.flags & InfoAvailable::mmap)
-		browseMemoryMap(info.mmap_addr, static_cast<size_t>(info.mmap_length));
+		initMemory(info.mmap_addr, static_cast<size_t>(info.mmap_length));
 }

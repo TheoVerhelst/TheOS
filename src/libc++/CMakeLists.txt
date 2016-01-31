@@ -1,6 +1,7 @@
 set(SOURCES
 	"BitSet.cpp"
 	"Printer.cpp"
+	"math.cpp"
 	"memory.cpp"
 	)
 
