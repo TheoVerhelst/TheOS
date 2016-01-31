@@ -2,25 +2,70 @@
  #error "Must be cross-compiled i686-elf to work properly!"
 #endif
 
-#include <stdint.h>
+#include <kernel/kernel.hpp>
 #include <Printer.hpp>
 #include <memory.hpp>
 #include <boot/MultibootInfo.hpp>
 
 Printer out;
 
-void initMemory(MemoryRegion* address, size_t size)
+class C
+{
+	public:
+		C()
+		{
+			out << "C()\n";
+		}
+
+		~C()
+		{
+			out << "~C()\n";
+		}
+};
+class D
+{
+	public:
+		D()
+		{
+			out << "D()\n";
+		}
+
+		~D()
+		{
+			out << "~D()\n";
+		}
+		int x;
+};
+
+extern "C" void kernel_main(const MultibootInfo& info)
+{
+	out.setBase(16);
+	if(info.flags & InfoAvailable::boot_loader_name)
+		out << "This kernel has been loaded by \"" << info.boot_loader_name << "\"\n";
+	if(info.flags & InfoAvailable::boot_device)
+		printDeviceInfo(info.boot_device);
+	if(info.flags & InfoAvailable::mmap)
+		initKernelHeap(info.mmap_addr, static_cast<size_t>(info.mmap_length));
+	C* c = new C;
+	out << "c Address = " << c << "\n";
+	delete c;
+	D* d = new D;
+	out << "d Address = " << d << "\n";
+	delete d;
+	out << "End\n";
+}
+
+void initKernelHeap(MemoryRegion* address, size_t size)
 {
 	uintptr_t upperAddress{reinterpret_cast<uintptr_t>(address) + size};
 	while(reinterpret_cast<uintptr_t>(address) < upperAddress)
 	{
-		if(address->type == 1)
+		if(address->type == 1 and static_cast<size_t>(address->length) >= kernelHeapSize)
 		{
 			MemoryManager::MemoryBlock* block = MemoryManager::MemoryBlock::allocate();
 			block->address = reinterpret_cast<void*>(address->base_addr);
-			const size_t index{MemoryManager::getIndexFromSize(static_cast<size_t>(address->length)) - 1};
-			block->addToList(MemoryManager::freeBlocks, index);
-			out << "Allocated block of size 2^" << index << " starting at " << block->address << "\n";
+			block->addToList(MemoryManager::freeBlocks, logKernelHeapSize);
+			out << "Allocated block of size 2^" << logKernelHeapSize << " starting at " << block->address << "\n";
 		}
 		address = reinterpret_cast<MemoryRegion*>(reinterpret_cast<uintptr_t>(address) + address->size + sizeof(address->size));
 	}
@@ -51,15 +96,4 @@ void printDeviceInfo(uint32_t boot_device)
 	out << ((boot_device & 0x0000FF00) >> 8);
 	out << "." << ((boot_device & 0x00FF0000) >> 16);
 	out << "." << ((boot_device  & 0xFF000000) >> 24) << "\n";
-}
-
-extern "C" void kernel_main(const MultibootInfo& info)
-{
-	out.setBase(16);
-	if(info.flags & InfoAvailable::boot_loader_name)
-		out << "This kernel has been loaded by \"" << info.boot_loader_name << "\"\n";
-	if(info.flags & InfoAvailable::boot_device)
-		printDeviceInfo(info.boot_device);
-	if(info.flags & InfoAvailable::mmap)
-		initMemory(info.mmap_addr, static_cast<size_t>(info.mmap_length));
 }

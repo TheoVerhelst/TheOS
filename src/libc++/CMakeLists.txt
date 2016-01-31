@@ -6,5 +6,3 @@ set(SOURCES
 	)
 
 add_library(libc++ OBJECT ${SOURCES})
-
-
