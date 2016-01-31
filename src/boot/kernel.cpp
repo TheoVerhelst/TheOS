@@ -62,3 +62,4 @@ extern "C" void kernel_main(const MultibootInfo& info)
 		printDeviceInfo(info.boot_device);
 	if(info.flags & InfoAvailable::mmap)
 		initMemory(info.mmap_addr, static_cast<size_t>(info.mmap_length));
+}

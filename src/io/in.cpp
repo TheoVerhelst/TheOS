@@ -1,8 +1,8 @@
 #include <io/in.hpp>
 
-BYTE inb(uint16_t port)
+uint8_t inb(uint16_t port)
 {
-	BYTE ret;
+	uint8_t ret;
 	__asm__ __volatile__("inb %1, %0" : "=a" (ret) : "dN" (port));
 	return ret;
 }

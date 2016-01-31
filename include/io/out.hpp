@@ -2,8 +2,7 @@
 #define OUT_HPP
 
 #include <stdint.h>
-#include <kernel/_memtypes.hpp>
 
-void outb(uint16_t, BYTE);
+void outb(uint16_t, uint8_t);
 
 #endif// OUT_HPP

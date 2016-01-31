@@ -2,15 +2,15 @@
 #define STRING_HPP
 
 #include <stddef.h>
-#include <kernel/_memtypes.hpp>
+#include <stdint.h>
 
 char *strrchr(const char *, int);
 size_t strlen(const char *);
 char* strcpy(char* dest, const char * src);
 
-void *memsetb(void *, BYTE, size_t);
-void *memsetw(void *, WORD, size_t);
-void *memsetd(void *, DWORD, size_t);
+void *memsetb(void *, uint8_t, size_t);
+void *memsetw(void *, uint16_t, size_t);
+void *memsetd(void *, uint32_t, size_t);
 
 void *memcpy(void *, const void *, size_t);
 

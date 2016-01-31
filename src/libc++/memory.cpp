@@ -74,6 +74,8 @@ void operator delete[](void* address, size_t size) throw()
 MemoryManager::MemoryBlock* MemoryManager::MemoryBlock::allocate()
 {
 	const size_t blockIndex{usedMemoryBlocks.find(false)};
+	if(blockIndex == ~0UL)
+		return nullptr;
 	usedMemoryBlocks.set(blockIndex);
 	return &memoryBlocksArray[blockIndex];
 }

@@ -3,6 +3,7 @@
 #include <kernel/terminal/Terminal.hpp>
 
 Terminal terminal;
+
 const char* Printer::_prefixes[] = {"", "0b", "", "", "", "", "", "0", "",
 			"", "", "", "", "", "", "0x", "", "", "", "", "", "", "", "", "", ""};
 

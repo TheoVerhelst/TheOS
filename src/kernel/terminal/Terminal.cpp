@@ -70,8 +70,8 @@ void Terminal::moveCursor(int x, int y)
 
 	/* 0x3D4-0x3D5 are in VGA address space */
 	outb(0x3D4, 0x0F);
-	outb(0x3D5, (BYTE)(location & 0xFF));
+	outb(0x3D5, (uint8_t)(location & 0xFF));
 	outb(0x3D4, 0x0E);
-	outb(0x3D5, (BYTE)((location>>8) & 0xFF));
+	outb(0x3D5, (uint8_t)((location>>8) & 0xFF));
 }
 
