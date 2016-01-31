@@ -12,7 +12,6 @@ Printer out;
 void initMemory(MemoryRegion* address, size_t size)
 {
 	uintptr_t upperAddress{reinterpret_cast<uintptr_t>(address) + size};
-	out.setShowPrefix(false);
 	while(reinterpret_cast<uintptr_t>(address) < upperAddress)
 	{
 		if(address->type == 1)
@@ -63,4 +62,3 @@ extern "C" void kernel_main(const MultibootInfo& info)
 		printDeviceInfo(info.boot_device);
 	if(info.flags & InfoAvailable::mmap)
 		initMemory(info.mmap_addr, static_cast<size_t>(info.mmap_length));
-}

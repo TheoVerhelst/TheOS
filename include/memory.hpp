@@ -3,10 +3,18 @@
 
 #include <BitSet.hpp>
 
-void* operator new(size_t size) throw();
-void operator delete(void* address) throw();
-void* operator new[](size_t size) throw();
-void operator delete[](void* address) throw();
+void* operator new(size_t size) throw()
+	__attribute__((__externally_visible__));
+void operator delete(void* address) throw()
+	__attribute__((__externally_visible__));
+void operator delete(void* address, size_t size) throw()
+	__attribute__((__externally_visible__));
+void* operator new[](size_t size) throw()
+	__attribute__((__externally_visible__));
+void operator delete[](void* address) throw()
+	__attribute__((__externally_visible__));
+void operator delete[](void* address, size_t size) throw()
+	__attribute__((__externally_visible__));
 
 /// Holds all things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.

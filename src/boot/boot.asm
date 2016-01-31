@@ -46,7 +46,7 @@ section .text
 		push ebx
 		call kernel_main
 
-		cli  ; set Interrupt Flag (IF) to 0 to not handle maskable interrupts
+		cli  ; reset the interrupt flag (IF) to not handle maskable interrupts
 	.hang:
 		hlt  ; infinite loop if kernel_main returns
 		jmp .hang

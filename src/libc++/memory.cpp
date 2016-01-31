@@ -9,9 +9,13 @@ BitSet<MemoryManager::maxBlocksNumber> MemoryManager::usedMemoryBlocks;
 void* operator new(size_t size) throw()
 {
 	const size_t index{MemoryManager::getIndexFromSize(size)};
-	MemoryManager::MemoryBlock* block{MemoryManager::getBlock(index)};
-	if(block == nullptr)
-		return nullptr;
+	MemoryManager::MemoryBlock* block;
+	do
+	{
+		block = MemoryManager::getBlock(index);
+		if(block == nullptr)
+			return nullptr;
+	} while(block->address == nullptr);
 	return block->address;
 }
 
@@ -35,6 +39,23 @@ void operator delete(void* address) throw()
 	}
 }
 
+void operator delete(void* address, size_t size) throw()
+{
+	if(address == nullptr)
+		return;
+
+	// Find the block corresponding to the address
+	size_t index{MemoryManager::getIndexFromSize(size)};
+	MemoryManager::MemoryBlock* block{MemoryManager::findBlock(MemoryManager::allocatedBlocks, index, address)};
+
+	if(block != nullptr)
+	{
+		// Add the freed block to the free list
+		block->addToList(MemoryManager::freeBlocks, index);
+		block->tryMerge(MemoryManager::freeBlocks, index);
+	}
+}
+
 void* operator new[](size_t size) throw()
 {
 	return operator new(size);
@@ -43,6 +64,11 @@ void* operator new[](size_t size) throw()
 void operator delete[](void* address) throw()
 {
 	operator delete(address);
+}
+
+void operator delete[](void* address, size_t size) throw()
+{
+	operator delete(address, size);
 }
 
 MemoryManager::MemoryBlock* MemoryManager::MemoryBlock::allocate()
@@ -83,8 +109,7 @@ void MemoryManager::MemoryBlock::tryMerge(MemoryManager::MemoryBlock** blockArra
 		// If we found another block adjacent to this
 		if(otherBlock != this)
 		{
-			long diff = static_cast<char*>(otherBlock->address) - static_cast<char*>(address);
-			if((diff > 0 ? diff : -diff) == blockSize)
+			if(static_cast<uintptr_t>(abs(static_cast<char*>(otherBlock->address) - static_cast<char*>(address))) == blockSize)
 			{
 				// Ensure that otherBlock has a size corresponding to index
 				if(findBlock(blockArray, index, otherBlock->address) != nullptr)
@@ -142,7 +167,7 @@ size_t MemoryManager::getIndexFromSize(size_t size)
 	// Note that when size == 0, 0 is returned (corresponding
 	// to a chunk of size 1) according to C++ ISO standard
 	size_t i{0};
-	while(size > (1 << i))
+	while(size > (1UL << i))
 		++i;
 	return i;
 }
