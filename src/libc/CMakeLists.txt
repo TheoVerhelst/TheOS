@@ -6,5 +6,3 @@ set(SOURCES
 	"string/strrchr.cpp")
 
 add_library(libc OBJECT ${SOURCES})
-
-

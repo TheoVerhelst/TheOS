@@ -1,4 +1,4 @@
-#include <io/Printer.hpp>
+#include <Printer.hpp>
 #include <string.hpp>
 #include <kernel/terminal/Terminal.hpp>
 

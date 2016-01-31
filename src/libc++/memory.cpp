@@ -9,7 +9,7 @@ void* operator new(size_t size)
 	return block->address;
 }
 
-void  operator delete(void* address)
+void operator delete(void* address)
 {
 	if(ptr == nullptr)
 		return;
@@ -33,13 +33,66 @@ void* operator new[](std::size_t size)
 {
 }
 
-void  operator delete[](void* address)
+void operator delete[](void* address)
 {
 
 }
 
 namespace details
 {
+
+MemoryBlock* MemoryBlock::allocate()
+{
+	const size_t blockIndex{usedMemoryBlocks->find(false)};
+	usedMemoryBlocks->set(blockIndex);
+	return &memoryBlocksArray[blockIndex];
+}
+
+void MemoryBlock::free() const
+{
+	const size_t blockIndex{this - memoryBlocksArray};
+	usedMemoryBlocks->reset(blockIndex);
+}
+
+void MemoryBlock::addToList(MemoryBlock** blockArray, size_t index)
+{
+	previous = nullptr;
+	next = blockArray[index];
+	if(next != nullptr)
+		next->previous = this;
+	blockArray[index] = this;
+}
+
+void MemoryBlock::removeFromList()
+{
+	if(next != nullptr)
+		next->previous = previous;
+	if(previous != nullptr)
+		previous->next = next;
+}
+
+void MemoryBlock::tryMerge(MemoryBlock** blockArray, size_t index)
+{
+	const size_t blockSize{1 << index};
+	for(MemoryBlock* otherBlock{blockArray[index]}; otherBlock != nullptr; otherBlock = otherBlock->next)
+	{
+		// If we found another block adjacent to this
+		if(otherBlock != this and abs(otherBlock->address - address) == blockSize)
+		{
+			// Ensure that otherBlock has a size corresponding to index
+			if(findBlock(blockArray, index, otherBlock->address) != nullptr)
+			{
+				MemoryBlock* lowerBlock{otherBlock->address < address ? otherBlock : this};
+				MemoryBlock* upperBlock{lowerBlock == this ? otherBlock : this};
+				lowerBlock->removeFromList();
+				upperBlock->removeFromList();
+				lowerBlock->addToList(blockArray, index + 1)
+				upperBlock->free();
+			}
+			break;
+		}
+	}
+}
 
 MemoryBlock* getBlock(size_t index)
 {
@@ -77,7 +130,13 @@ MemoryBlock* getBlock(size_t index)
 
 size_t getIndexFromSize(size_t size)
 {
-
+	// Test all power of two until one is bigger than size
+	// Note that when size == 0, 0 is returned (corresponding
+	// to a chunk of size 1) according to C++ ISO standard
+	size_t i{0};
+	while(size > (1 << i))
+		++i;
+	return i;
 }
 
 MemoryBlock* findBlock(MemoryBlock** blockArray, size_t index, void* address)
@@ -86,50 +145,6 @@ MemoryBlock* findBlock(MemoryBlock** blockArray, size_t index, void* address)
 		if(block->address == address)
 			return block;
 	return nullptr;
-}
-
-void MemoryBlock::tryMerge(MemoryBlock** blockArray, size_t index)
-{
-	for(MemoryBlock* otherBlock{blockArray[index]}; otherBlock != nullptr; otherBlock = otherBlock->next)
-	{
-		// If we found another block adjacent to this and that begin at (this +- 2^index)
-		if(otherBlock != this and (abs(otherBlock->address - address) == (1 << index)))
-		{
-			// Ensure that otherBlock has a size corresponding to index
-			if(findBlock(blockArray, index, otherBlock->address) != nullptr)
-			{
-				MemoryBlock* lowerBlock{otherBlock->address < address ? otherBlock : this};
-				MemoryBlock* upperBlock{lowerBlock == otherBlock ? this : otherBlock};
-				if(lowerBlock->previous != nullptr)
-					lowerBlock->previous->next = upperBlock->next;
-				if(upperBlock->next != nullptr)
-					upperBlock->next->previous = lowerBlock->previous;
-
-				// Add the new block to the upper block list
-				addBlockToList(blockArray, lowerBlock, index + 1)
-
-				// Free the unused block info
-				upperBlock->free();
-			}
-			break;
-		}
-	}
-}
-
-void addBlockToList(MemoryBlock** blockArray, MemoryBlock* block, size_t index)
-{
-	block->previous = nullptr;
-	block->next = blockArray[index];
-	if(block->next != nullptr)
-		block->next->previous = block;
-	blockArray[index] = block;
-}
-void removeBlockFromList(MemoryBlock* block)
-{
-	if(block->next != nullptr)
-		block->next->previous = block->previous;
-	if(block->previous != nullptr)
-		block->previous->next = block->next;
 }
 
 }

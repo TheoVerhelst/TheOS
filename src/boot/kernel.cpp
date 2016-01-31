@@ -3,7 +3,7 @@
 #endif
 
 #include <stdint.h>
-#include <io/Printer.hpp>
+#include <Printer.hpp>
 #include <memory.hpp>
 #include <boot/MultibootInfo.hpp>
 

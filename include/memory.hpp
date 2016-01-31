@@ -1,6 +1,8 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
+#include <BitSet.hpp>
+
 void* operator new(size_t size);
 void operator delete(void* address);
 void* operator new[](size_t size);
@@ -40,7 +42,7 @@ namespace details
 	/// Array of pointers to free blocks.
 	/// The index indicate the size of the blocks in the list:
 	/// a block at index 4 has a size of 2^4 bytes.
-	extern MemoryBlock* freeBlocks	[addressSize];
+	extern MemoryBlock* freeBlocks[addressSize];
 
 	/// Array of pointers to allocated blocks.
 	/// The index indicate the size of the blocks in the list:

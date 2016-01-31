@@ -29,6 +29,7 @@ add_subdirectory(src/boot)
 add_subdirectory(src/kernel)
 add_subdirectory(src/io)
 add_subdirectory(src/libc)
+add_subdirectory(src/libc++)
 
 set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 
@@ -40,6 +41,7 @@ add_executable(${PROJECT_NAME}.bin
 	"$<TARGET_OBJECTS:kernel>"
 	"$<TARGET_OBJECTS:io>"
 	"$<TARGET_OBJECTS:libc>"
+	"$<TARGET_OBJECTS:libc++>"
 	"${CRTEND_O}"
 	"$<TARGET_OBJECTS:crtn>"
 	)

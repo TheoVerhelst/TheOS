@@ -1,4 +1,4 @@
-#include <string.hpp>
+#include <listring.hpp>
 
 void *memsetb(void *address, BYTE value, size_t bytes)
 {
