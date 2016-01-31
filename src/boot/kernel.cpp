@@ -4,9 +4,11 @@
 
 #include <stdint.h>
 #include <io/Printer.hpp>
+#include <memory.hpp>
 #include <boot/MultibootInfo.hpp>
 
 Printer out;
+details::MemoryBlock* details::blocks[details::addressSize];
 
 void browseMemoryMap(MemoryRegion* address, size_t size)
 {
