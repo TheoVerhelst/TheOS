@@ -30,8 +30,6 @@ class Allocator
 class MemoryManager
 {
 	public:
-		MemoryManager();
-
 		/// Registers a chunk of memory, making it available for allocations.
 		/// This is not guaranteed that the whole chunk of memory provided
 		/// will really be available (maybe only a smaller chunk, rounded
@@ -72,13 +70,13 @@ class MemoryManager
 				/// allocated by one of the two lists (freeBlocks and
 				/// allocatedBlocks). This is the primary memory allocation
 				/// scfaheme used to implements the real memory allocation.
-				BitSet<_maxBlocksNumber> _usedListNodes;
+				static BitSet<_maxBlocksNumber> _usedListNodes;
 
 				/// An array of list nodes. This is where all data
 				/// about memory allocation is stored, freeBlocks and
 				/// allocatedBlocks hold list nodes that are elements of this
 				/// array.
-				valueType _listNodesArray[_maxBlocksNumber];
+				static valueType _listNodesArray[_maxBlocksNumber];
 		};
 
 		typedef List<void*, ListNodeAllocator>::iterator blockIt;

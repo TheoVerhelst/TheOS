@@ -34,6 +34,8 @@ void operator delete[](void* address, size_t size) throw()
 	operator delete(address, size);
 }
 
+BitSet<MemoryManager::_maxBlocksNumber> MemoryManager::ListNodeAllocator::_usedListNodes;
+MemoryManager::ListNodeAllocator::valueType MemoryManager::ListNodeAllocator::_listNodesArray[MemoryManager::_maxBlocksNumber];
 
 template <class T>
 T* Allocator<T>::allocate()
@@ -45,15 +47,6 @@ template <class T>
 void Allocator<T>::deallocate(T* pointer)
 {
 	delete pointer;
-}
-
-MemoryManager::MemoryManager()
-{
-	for(size_t i{0}; i < _addressSize; ++i)
-	{
-		_freeBlocks[i].setAllocator(_allocator);
-		_allocatedBlocks[i].setAllocator(_allocator);
-	}
 }
 
 void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
