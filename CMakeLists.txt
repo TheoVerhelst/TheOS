@@ -31,8 +31,6 @@ add_subdirectory(src/io)
 add_subdirectory(src/libc)
 add_subdirectory(src/libc++)
 
-set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
-
 #Create the main executable
 add_executable(${PROJECT_NAME}.bin
 	"$<TARGET_OBJECTS:crti>"
