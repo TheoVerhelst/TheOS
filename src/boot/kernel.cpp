@@ -58,7 +58,7 @@ void initKernelHeap(MemoryRegion* address, size_t size)
 		if(address->type == 1 and static_cast<size_t>(address->length) >= kernelHeapSize)
 		{
 			void* baseAddress{reinterpret_cast<void*>(address->base_addr)};
-			kernelHeapMamanger.addMemoryChunk(baseAddress, logKernelHeapSize);
+			kernelHeapMamanger.addMemoryChunk(baseAddress, kernelHeapSize);
 			out << "Allocated kernel heap of size " << kernelHeapSize/1000 << " Ko starting at " << baseAddress << "\n";
 		}
 		address = reinterpret_cast<MemoryRegion*>(reinterpret_cast<uintptr_t>(address) + address->size + sizeof(address->size));

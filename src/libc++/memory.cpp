@@ -59,7 +59,7 @@ void* MemoryManager::allocate(size_t size)
 {
 	const size_t index{getIndexFromSize(size)};
 	blockIt it{getBlock(index)};
-	if(it == _freeBlocks[index].end())
+	if(it == _allocatedBlocks[index].end() or *it == nullptr)
 	{
 		out << "Error: MemoryMamanger::allocate: no more memory, nullptr returned\n";
 		return nullptr;
