@@ -1,5 +1,8 @@
 #include <string.hpp>
 
+extern "C"
+{
+
 size_t strlen(const char *s)
 {
 	size_t length{0};
@@ -8,3 +11,4 @@ size_t strlen(const char *s)
 	return length;
 }
 
+}// extern "C"

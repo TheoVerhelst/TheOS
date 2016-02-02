@@ -1,5 +1,8 @@
 #include <string.hpp>
 
+extern "C"
+{
+
 char *strrchr(const char *str, int c)
 {
 	size_t length = strlen(str);
@@ -11,3 +14,4 @@ char *strrchr(const char *str, int c)
 		return NULL;
 }
 
+}// extern "C"

@@ -1,5 +1,8 @@
 #include <string.hpp>
 
+extern "C"
+{
+
 char* strcpy(char* dest, const char * src)
 {
 	int i = 0;
@@ -8,3 +11,5 @@ char* strcpy(char* dest, const char * src)
 	dest[i] = '\0';
 	return dest;
 }
+
+}// extern "C"

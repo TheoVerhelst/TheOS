@@ -1,6 +1,16 @@
 #include <string.hpp>
 
-void *memset(void *address, uint8_t value, size_t bytes)
+extern "C"
+{
+
+void *memset(void *address, int value, size_t bytes)
+{
+	return _memset(address, (unsigned char)value, bytes);
+}
+
+}// extern "C"
+
+void *_memset(void *address, uint8_t value, size_t bytes)
 {
 	size_t i;
 	uint8_t *byte_array = (uint8_t *)(address);
@@ -11,7 +21,7 @@ void *memset(void *address, uint8_t value, size_t bytes)
 	return address;
 }
 
-void *memset(void *address, uint16_t value, size_t blocks)
+void *_memset(void *address, uint16_t value, size_t blocks)
 {
 	size_t i;
 	uint16_t *word_array = (uint16_t *)(address);
@@ -22,7 +32,7 @@ void *memset(void *address, uint16_t value, size_t blocks)
 	return address;
 }
 
-void *memset(void *address, uint32_t value, size_t blocks)
+void *_memset(void *address, uint32_t value, size_t blocks)
 {
 	size_t i;
 	uint32_t *dword_array = (uint32_t *)(address);
@@ -32,4 +42,3 @@ void *memset(void *address, uint32_t value, size_t blocks)
 
 	return address;
 }
-

@@ -1,9 +1,11 @@
 #include <string.hpp>
 
-/* Decompose into 32-bit blocks and 8-bit blocks so transfer
-   may be faster */
+extern "C"
+{
+
 void *memcpy(void *dest, const void *src, size_t bytes)
 {
+	// Decompose into 32-bit blocks and 8-bit blocks so transfer may be faster
 	size_t dword_blocks = bytes / sizeof(uint32_t),
 	       byte_blocks = bytes % sizeof(uint32_t),
 	       i;
@@ -19,3 +21,5 @@ void *memcpy(void *dest, const void *src, size_t bytes)
 		byte_dest[i] = byte_src[i];
 	return dest;
 }
+
+}// extern "C"
