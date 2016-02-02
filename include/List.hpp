@@ -2,6 +2,7 @@
 #define LIST_HPP
 
 #include <utility.hpp>
+#include <Printer.hpp>
 
 //Forward declarations
 template <typename T>
@@ -72,9 +73,6 @@ class List
 		typedef NodeConstIterator constIterator;
 
 		List(const AllocatorType& allocator = AllocatorType());
-
-		/// \pre empty().
-		void setAllocator(const AllocatorType& allocator);
 		AllocatorType getAllocator() const;
 		bool empty() const;
 		size_t size() const;
@@ -127,17 +125,6 @@ List<T, AllocatorType>::List(const AllocatorType& allocator):
 }
 
 template <class T, class AllocatorType>
-void List<T, AllocatorType>::setAllocator(const AllocatorType& allocator)
-{
-	if(empty())
-	{
-		_allocator.deallocate(_begin);
-		_allocator = allocator;
-		_begin = _end = _allocator.allocate();
-	}
-}
-
-template <class T, class AllocatorType>
 AllocatorType List<T, AllocatorType>::getAllocator() const
 {
 	return _allocator;
@@ -146,7 +133,7 @@ AllocatorType List<T, AllocatorType>::getAllocator() const
 template <class T, class AllocatorType>
 bool List<T, AllocatorType>::empty() const
 {
-	return size() == 0;
+	return _begin == _end;
 }
 
 template <class T, class AllocatorType>
@@ -283,7 +270,7 @@ template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, AllocatorType>::iterator pos)
 {
 	iterator tmp{pos};
-	tmp++;
+	++tmp;
 	return erase(pos, tmp);
 }
 
