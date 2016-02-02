@@ -23,12 +23,15 @@ struct ListNode
 template <class T, class AllocatorType = Allocator<details::ListNode<T>>>
 class List
 {
+	static_assert(sizeof(typename AllocatorType::valueType) == sizeof(details::ListNode<T>),
+			"AllocatorType cannot be used because it allocates the wrong size");
 	private:
 		//TODO template <class U>; typedef NodeIterator<T> iterator; typedef NodeIterator<const T> constIterator;
 		class NodeIterator
 		{
 			public:
 				NodeIterator() = default;
+				NodeIterator(const NodeIterator& other) = default;
 				explicit NodeIterator(details::ListNode<T>* node) noexcept;
 				T& operator*() const noexcept;
 				T* operator->() const noexcept;
@@ -41,12 +44,14 @@ class List
 
 			private:
 				details::ListNode<T>* _node;
+				friend class List;
 		};
 
 		class NodeConstIterator
 		{
 			public:
 				NodeConstIterator() = default;
+				NodeConstIterator(const NodeConstIterator& other) = default;
 				explicit NodeConstIterator(const details::ListNode<T>* node) noexcept;
 				const T& operator*() const noexcept;
 				const T* operator->() const noexcept;
@@ -59,18 +64,31 @@ class List
 
 			private:
 				const details::ListNode<T>* _node;
+				friend class List;
 		};
 
 	public:
 		typedef NodeIterator iterator;
 		typedef NodeConstIterator constIterator;
 
-		List(AllocatorType& allocator = AllocatorType());
+		List(const AllocatorType& allocator = AllocatorType());
+
+		/// \pre empty().
+		void setAllocator(const AllocatorType& allocator);
+		AllocatorType getAllocator() const;
 		bool empty() const;
 		size_t size() const;
+
+		/// \pre not empty().
 		T& back();
+
+		/// \pre not empty().
 		const T& back() const;
+
+		/// \pre not empty().
 		T& front();
+
+		/// \pre not empty().
 		const T& front() const;
 		void clear();
 		void pushBack(const T& value);
@@ -96,17 +114,33 @@ class List
 		details::ListNode<T>* _begin;
 		details::ListNode<T>* _end;
 		size_t _size;
-		AllocatorType& _allocator;
+		AllocatorType _allocator;
 };
 
 // List
 template <class T, class AllocatorType>
-List<T, AllocatorType>::List(AllocatorType& allocator):
-	_begin{allocator.allocate()},
-	_end{_begin},
+List<T, AllocatorType>::List(const AllocatorType& allocator):
 	_size{0UL},
 	_allocator{allocator}
 {
+	_begin = _end = _allocator.allocate();
+}
+
+template <class T, class AllocatorType>
+void List<T, AllocatorType>::setAllocator(const AllocatorType& allocator)
+{
+	if(empty())
+	{
+		_allocator.deallocate(_begin);
+		_allocator = allocator;
+		_begin = _end = _allocator.allocate();
+	}
+}
+
+template <class T, class AllocatorType>
+AllocatorType List<T, AllocatorType>::getAllocator() const
+{
+	return _allocator;
 }
 
 template <class T, class AllocatorType>
@@ -191,25 +225,25 @@ void List<T, AllocatorType>::popFront()
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::begin()
 {
-	return {_begin};
+	return iterator(_begin);
 }
 
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::constIterator List<T, AllocatorType>::cbegin() const
 {
-	return {_begin};
+	return constIterator(_begin);
 }
 
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::end()
 {
-	return {_end};
+	return iterator(_end);
 }
 
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::constIterator List<T, AllocatorType>::cend() const
 {
-	return {_end};
+	return constIterator(_end);
 }
 
 template <class T, class AllocatorType>
@@ -230,7 +264,7 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(List<T,
 	if(node->previous == nullptr)
 		_begin = node;
 	++_size;
-	return {node};
+	return iterator(node);
 }
 
 template <class T, class AllocatorType>
@@ -265,14 +299,14 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, 
 	if(first._node == _begin)
 		_begin = last._node;
 	else if(first != last)
-		first._node->previous->next = last;
+		first._node->previous->next = last._node;
 	if(last._node == _end)
 		_end->previous = first._node->previous;
 	else if(first != last)
 		last._node->next->previous = first._node->previous;
 	while(first != last)
 	{
-		_allocator.deallocate(first);
+		_allocator.deallocate(first._node);
 		++first;
 		--_size;
 	}

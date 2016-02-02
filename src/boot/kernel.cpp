@@ -60,10 +60,9 @@ void initKernelHeap(MemoryRegion* address, size_t size)
 	{
 		if(address->type == 1 and static_cast<size_t>(address->length) >= kernelHeapSize)
 		{
-			MemoryManager::MemoryBlock* block = MemoryManager::MemoryBlock::allocate();
-			block->address = reinterpret_cast<void*>(address->base_addr);
-			block->addToList(MemoryManager::freeBlocks, logKernelHeapSize);
-			out << "Allocated kernel heap of size " << kernelHeapSize/1000 << " Ko starting at " << block->address << "\n";
+			void* baseAddress{reinterpret_cast<void*>(address->base_addr)};
+			kernelHeapMamanger.addMemoryChunk(baseAddress, logKernelHeapSize);
+			out << "Allocated kernel heap of size " << kernelHeapSize/1000 << " Ko starting at " << baseAddress << "\n";
 		}
 		address = reinterpret_cast<MemoryRegion*>(reinterpret_cast<uintptr_t>(address) + address->size + sizeof(address->size));
 	}

@@ -8,6 +8,7 @@ template <size_t N>
 class BitSet
 {
 	public:
+		BitSet();
 		void set();
 		void set(size_t index, bool value = true);
 		void reset();
@@ -26,6 +27,12 @@ class BitSet
 		uint64_t _words[_wordsNumber];
 		size_t _lastIndex = 0;
 };
+
+template <size_t N>
+BitSet<N>::BitSet()
+{
+	reset();
+}
 
 template <size_t N>
 void BitSet<N>::set()

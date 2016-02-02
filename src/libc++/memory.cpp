@@ -1,59 +1,22 @@
 #include <memory.hpp>
 #include <math.hpp>
+#include <Printer.hpp>
 
-MemoryManager::MemoryBlock* MemoryManager::freeBlocks[MemoryManager::addressSize];
-MemoryManager::MemoryBlock* MemoryManager::allocatedBlocks[MemoryManager::addressSize];
-MemoryManager::MemoryBlock MemoryManager::memoryBlocksArray[MemoryManager::maxBlocksNumber];
-BitSet<MemoryManager::maxBlocksNumber> MemoryManager::usedMemoryBlocks;
+extern MemoryManager kernelHeapMamanger;
 
 void* operator new(size_t size) throw()
 {
-	const size_t index{MemoryManager::getIndexFromSize(size)};
-	MemoryManager::MemoryBlock* block;
-	do
-	{
-		block = MemoryManager::getBlock(index);
-		if(block == nullptr)
-			return nullptr;
-	} while(block->address == nullptr);
-	return block->address;
+	return kernelHeapMamanger.allocate(size);
 }
 
 void operator delete(void* address) throw()
 {
-	if(address == nullptr)
-		return;
-
-	// Find the block corresponding to the address
-	size_t index{0};
-	MemoryManager::MemoryBlock* block;
-	while(index < MemoryManager::addressSize and block == nullptr)
-		block = MemoryManager::findBlock(MemoryManager::allocatedBlocks, index++, address);
-	--index;
-
-	if(block != nullptr)
-	{
-		// Add the freed block to the free list
-		block->addToList(MemoryManager::freeBlocks, index);
-		block->tryMerge(MemoryManager::freeBlocks, index);
-	}
+	kernelHeapMamanger.deallocate(address);
 }
 
 void operator delete(void* address, size_t size) throw()
 {
-	if(address == nullptr)
-		return;
-
-	// Find the block corresponding to the address
-	size_t index{MemoryManager::getIndexFromSize(size)};
-	MemoryManager::MemoryBlock* block{MemoryManager::findBlock(MemoryManager::allocatedBlocks, index, address)};
-
-	if(block != nullptr)
-	{
-		// Add the freed block to the free list
-		block->addToList(MemoryManager::freeBlocks, index);
-		block->tryMerge(MemoryManager::freeBlocks, index);
-	}
+	kernelHeapMamanger.deallocate(address, size);
 }
 
 void* operator new[](size_t size) throw()
@@ -84,95 +47,155 @@ void Allocator<T>::deallocate(T* pointer)
 	delete pointer;
 }
 
-MemoryManager::MemoryBlock* MemoryManager::MemoryBlock::allocate()
+MemoryManager::MemoryManager()
 {
-	const size_t blockIndex{usedMemoryBlocks.find(false)};
+	for(size_t i{0}; i < _addressSize; ++i)
+	{
+		_freeBlocks[i].setAllocator(_allocator);
+		_allocatedBlocks[i].setAllocator(_allocator);
+	}
+}
+
+void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
+{
+	const size_t index{getIndexFromSize(size)};
+	_freeBlocks[index].pushBack(baseAddress);
+}
+
+void* MemoryManager::allocate(size_t size)
+{
+	const size_t index{getIndexFromSize(size)};
+	blockIt it{getBlock(index)};
+	if(it == _freeBlocks[index].end())
+	{
+		out << "Error: MemoryMamanger::allocate: no more memory, nullptr returned\n";
+		return nullptr;
+	}
+	else
+		return *it;
+}
+
+void MemoryManager::deallocate(void* address)
+{
+	if(address == nullptr)
+		return;
+
+	// Find the block corresponding to the address
+	size_t index{0};
+	blockIt it;
+	while(index < _addressSize)
+		it = findBlock(_allocatedBlocks[index++], address);
+	--index;
+
+	if(it != _allocatedBlocks[index].end())
+	{
+		// Add the freed block to the free list
+		_allocatedBlocks[index].erase(it);
+		_freeBlocks[index].pushFront(address);
+		tryMerge(_freeBlocks[index].begin(), index);
+	}
+	else
+		out << "Error: MemoryMamanger::deallocate: invalid pointer argument (" << address << ")\n";
+}
+
+void MemoryManager::deallocate(void* address, size_t size)
+{
+	if(address == nullptr)
+		return;
+
+	// Find the block corresponding to the address
+	size_t index{getIndexFromSize(size)};
+	blockIt it{findBlock(_allocatedBlocks[index], address)};
+
+	if(it != _allocatedBlocks[index].end())
+	{
+		// Add the freed block to the free list
+		_allocatedBlocks[index].erase(it);
+		_freeBlocks[index].pushFront(address);
+		tryMerge(_freeBlocks[index].begin(), index);
+	}
+	else
+		out << "Error: MemoryMamanger::deallocate: invalid pointer argument (" << address << ")\n";
+}
+
+
+MemoryManager::ListNodeAllocator::pointer MemoryManager::ListNodeAllocator::allocate()
+{
+	const size_t blockIndex{_usedListNodes.find(false)};
 	if(blockIndex == ~0UL)
 		return nullptr;
-	usedMemoryBlocks.set(blockIndex);
-	return &memoryBlocksArray[blockIndex];
+	_usedListNodes.set(blockIndex);
+	return &_listNodesArray[blockIndex];
 }
 
-void MemoryManager::MemoryBlock::free() const
+void MemoryManager::ListNodeAllocator::deallocate(MemoryManager::ListNodeAllocator::pointer pointer)
 {
-	const size_t blockIndex{static_cast<size_t>(this - memoryBlocksArray)};
-	usedMemoryBlocks.reset(blockIndex);
+	const size_t blockIndex{static_cast<size_t>(pointer - _listNodesArray)};
+	if(blockIndex < _maxBlocksNumber)
+		_usedListNodes.reset(blockIndex);
 }
 
-void MemoryManager::MemoryBlock::addToList(MemoryManager::MemoryBlock** blockArray, size_t index)
-{
-	previous = nullptr;
-	next = blockArray[index];
-	if(next != nullptr)
-		next->previous = this;
-	blockArray[index] = this;
-}
-
-void MemoryManager::MemoryBlock::removeFromList()
-{
-	if(next != nullptr)
-		next->previous = previous;
-	if(previous != nullptr)
-		previous->next = next;
-}
-
-void MemoryManager::MemoryBlock::tryMerge(MemoryManager::MemoryBlock** blockArray, size_t index)
+void MemoryManager::tryMerge(blockIt blockToMergeIt, size_t index)
 {
 	const size_t blockSize{1UL << index};
-	for(MemoryBlock* otherBlock{blockArray[index]}; otherBlock != nullptr; otherBlock = otherBlock->next)
+	for(blockIt it{_freeBlocks[index].begin()}; it != _freeBlocks[index].end(); ++it)
 	{
-		// If we found another block adjacent to this
-		if(otherBlock != this)
+		// If we found a block...
+		if(it != blockToMergeIt
+			// that is adjacent to the block to merge...
+			and static_cast<size_t>(abs(static_cast<char*>(*it) - static_cast<char*>(*blockToMergeIt))) == blockSize
+			// and that has a size corresponding to index
+			and findBlock(_freeBlocks[index], *it) != _freeBlocks[index].end())
+
 		{
-			if(static_cast<uintptr_t>(abs(static_cast<char*>(otherBlock->address) - static_cast<char*>(address))) == blockSize)
-			{
-				// Ensure that otherBlock has a size corresponding to index
-				if(findBlock(blockArray, index, otherBlock->address) != nullptr)
-				{
-					MemoryBlock* lowerBlock{otherBlock->address < address ? otherBlock : this};
-					MemoryBlock* upperBlock{lowerBlock == this ? otherBlock : this};
-					lowerBlock->removeFromList();
-					upperBlock->removeFromList();
-					lowerBlock->addToList(blockArray, index + 1);
-					upperBlock->free();
-				}
-				break;
-			}
+			blockIt lowerBlockIt{*it < *blockToMergeIt ? it : blockToMergeIt};
+			blockIt upperBlockIt{lowerBlockIt == blockToMergeIt ? it : blockToMergeIt};
+			void* baseAddress{*lowerBlockIt};
+			_freeBlocks[index].erase(lowerBlockIt);
+			_freeBlocks[index].erase(upperBlockIt);
+			_freeBlocks[index + 1].pushBack(baseAddress);
+			break;
 		}
 	}
 }
 
-MemoryManager::MemoryBlock* MemoryManager::getBlock(size_t index)
+MemoryManager::blockIt MemoryManager::getBlock(size_t index)
 {
-	if(index > addressSize)
-		return nullptr;
+	//This should never happens (TODO: write an assert instead)
+	if(index >= _addressSize)
+		return _allocatedBlocks[_addressSize].end();
 
-	MemoryBlock* block{freeBlocks[index]};
-	if(block == nullptr)
+	if(_freeBlocks[index].empty())
 	{
-		MemoryBlock* biggerBlock{getBlock(index + 1)};
-		if(biggerBlock == nullptr)
-			return nullptr;
-		biggerBlock->removeFromList();
+		//If we ask for the biggest block possible, but there is not a free one
+		if(index + 1 == _addressSize)
+			return _allocatedBlocks[index].end();
+
+		// Try to get a bigger free block
+		blockIt biggerBlock{getBlock(index + 1)};
+		// If this is not possible
+		if(biggerBlock == _allocatedBlocks[index + 1].end())
+			return _allocatedBlocks[index].end();
+
+		//Erase the bigger free block
+		void* baseAddress{*biggerBlock};
+		_freeBlocks[index + 1].erase(biggerBlock);
 
 		// Create a block containing the second half of biggerBlock
-		MemoryBlock* midBlock = MemoryBlock::allocate();
-		midBlock->address = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(biggerBlock->address) + (1 << index));
-
-		freeBlocks[index] = midBlock;// Add if to free list
-
-		biggerBlock->addToList(allocatedBlocks, index);
-		return biggerBlock;
+		void* midAddress{reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(*biggerBlock) + (1UL << index))};
+		// Add if to free list
+		_freeBlocks[index].pushFront(midAddress);
+		// And add the allocated block (the first half of biggerBlock) to the allocated list
+		_allocatedBlocks[index].pushFront(baseAddress);
+		return _allocatedBlocks[index].begin();
 	}
 	else
 	{
-		// Remove the allocated block from the free list
-		if(block->next != nullptr)
-			block->next->previous = nullptr;
-		freeBlocks[index] = block->next;
-
-		block->addToList(allocatedBlocks, index);
-		return block;
+		blockIt it{_freeBlocks[index].begin()};
+		void* address{*it};
+		_freeBlocks[index].erase(it);
+		_allocatedBlocks[index].pushFront(address);
+		return _allocatedBlocks[index].begin();
 	}
 }
 
@@ -182,15 +205,15 @@ size_t MemoryManager::getIndexFromSize(size_t size)
 	// Note that when size == 0, 0 is returned (corresponding
 	// to a chunk of size 1) according to C++ ISO standard
 	size_t i{0};
-	while(size > (1UL << i))
+	while(size > (1UL << i) and i + 1 <= _addressSize)
 		++i;
 	return i;
 }
 
-MemoryManager::MemoryBlock* MemoryManager::findBlock(MemoryBlock** blockArray, size_t index, void* address)
+MemoryManager::blockIt MemoryManager::findBlock(List<void*, ListNodeAllocator>& blockList, void* address)
 {
-	for(MemoryBlock* block{blockArray[index]}; block != nullptr; block = block->next)
-		if(block->address == address)
-			return block;
-	return nullptr;
+	blockIt it{blockList.begin()};
+	while(*it != address and it != blockList.end())
+		++it;
+	return it;
 }

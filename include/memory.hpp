@@ -30,59 +30,81 @@ class Allocator
 class MemoryManager
 {
 	public:
+		MemoryManager();
+
+		/// Registers a chunk of memory, making it available for allocations.
+		/// This is not guaranteed that the whole chunk of memory provided
+		/// will really be available (maybe only a smaller chunk, rounded
+		/// to some multiple of power of two, will be used instead).
+		void addMemoryChunk(void* baseAddress, size_t size);
+
+		void* allocate(size_t size);
+
+		void deallocate(void* address);
+
+		void deallocate(void* address, size_t size);
+
+	private:
 		/// The number of bits of an address.
-		static constexpr size_t addressSize{sizeof(void*) * 8};
+		static constexpr size_t _addressSize{sizeof(void*) * 8};
 
 		/// Maximum number of blocks. Even if the memory is not full,
 		/// memory allocation will fail if there is too much blocks.
 		/// The limit of blocks must be static and reserve too much room
 		/// to blocks information will result in bigger kernel.
-		static constexpr size_t maxBlocksNumber{1 << 16};
+		static constexpr size_t _maxBlocksNumber{1 << 16};
 
-		/// Element of a linked list of free block.
-		/// The size of the free block is implicitly given
-		/// by its position in the free blocks list.
-		///
-		class MemoryBlock
+		/// Class that manages the list nodes used to manage the kernel's heap.
+		/// All nodes that are in the lists that manages the kernel's heap
+		/// (freeBlocks and allocatedBlocks) are in fact stored in the instance
+		/// pf this class.
+		class ListNodeAllocator
 		{
 			public:
-				void* address = nullptr;        ///< Address of the first byte of the block in memory.
-				MemoryBlock* next = nullptr;    ///< Next block in the list.
-				MemoryBlock* previous = nullptr;///< Previous block in the memory.
+				typedef details::ListNode<void*> valueType;
+				typedef valueType* pointer;
 
-				static MemoryBlock* allocate();
-				void free() const;
-				void addToList(MemoryBlock** blockArray, size_t index);
-				void removeFromList();
-				void tryMerge(MemoryBlock** blockArray, size_t index);
+				pointer allocate();
+				void deallocate(pointer pointer);
+
+			private:
+				/// Indicates in memoryBlocksArray wich nodes are currently
+				/// allocated by one of the two lists (freeBlocks and
+				/// allocatedBlocks). This is the primary memory allocation
+				/// scfaheme used to implements the real memory allocation.
+				BitSet<_maxBlocksNumber> _usedListNodes;
+
+				/// An array of list nodes. This is where all data
+				/// about memory allocation is stored, freeBlocks and
+				/// allocatedBlocks hold list nodes that are elements of this
+				/// array.
+				valueType _listNodesArray[_maxBlocksNumber];
 		};
 
-		/// Array of pointers to free blocks.
+		typedef List<void*, ListNodeAllocator>::iterator blockIt;
+
+		/// Array of list of addresses of free blocks.
 		/// The index indicate the size of the blocks in the list:
-		/// a block at index 4 has a size of 2^4 bytes.
-		static MemoryBlock* freeBlocks[addressSize];
+		/// a block in the list at index 4 has a size of 2^4 bytes.
+		List<void*, ListNodeAllocator> _freeBlocks[_addressSize];
 
-		/// Array of pointers to allocated blocks.
-		/// The index indicate the size of the blocks in the list:
-		/// a block at index 4 has a size of 2^4 bytes.
-		static MemoryBlock* allocatedBlocks[addressSize];
+		/// Array of list of addresses of allocated blocks.
+		/// \see freeBlocks
+		List<void*, ListNodeAllocator> _allocatedBlocks[_addressSize];
 
-		/// An array of MemoryBlock objects. This is where all data
-		/// about memory allocation is stored, freeBlocks and allocatedBlocks
-		/// hold pointers that point to elements of this array.
-		static MemoryBlock memoryBlocksArray[maxBlocksNumber];
+		/// Instance of the allocator used for this MemoryManager.
+		ListNodeAllocator _allocator;
 
-		/// Indicates in memoryBlocksArray wich elements are currently used in
-		/// the two lists (freeBlocks and allocatedBlocks).
-		/// This is the primary memory allocation scheme used to implements
-		/// the real memory allocation.
-		static BitSet<maxBlocksNumber> usedMemoryBlocks;
+		void tryMerge(blockIt blockToMergeIt, size_t index);
 
-		static MemoryBlock* getBlock(size_t index);
+		/// \return A valid iterator in _allocatedBlocks[index] in case of success,
+		/// _allocatedBlocks[index].end() otherwise.
+		blockIt getBlock(size_t index);
 
+		//TODO try to add constexpr
 		static size_t getIndexFromSize(size_t size);
 
-		static MemoryBlock* findBlock(MemoryBlock** blockArray, size_t index, void* address);
+		static blockIt findBlock(List<void*, ListNodeAllocator>& blockList, void* address);
 };
 
 #endif// MEMORY_HPP

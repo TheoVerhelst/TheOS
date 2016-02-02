@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <memory.hpp>
 
 //Forward declarations
 struct MultibootInfo;
@@ -11,6 +12,8 @@ struct MemoryRegion;
 constexpr size_t logKernelHeapSize{20UL};
 
 constexpr size_t kernelHeapSize{1UL << logKernelHeapSize};
+
+MemoryManager kernelHeapMamanger;
 
 extern "C" void kernel_main(const MultibootInfo& info);
 

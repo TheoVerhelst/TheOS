@@ -56,12 +56,12 @@ void Terminal::scrollUp()
 {
 	memcpy(VGA::buffer, &VGA::buffer[VGA::coordToIndex(0, 1)],
 	       (VGA::width * (VGA::height - 1)) * sizeof(VGA::Entry));
-	memsetw(&VGA::buffer[VGA::coordToIndex(0, VGA::height-1)], _emptyCell.getValue(), VGA::width);
+	memset(&VGA::buffer[VGA::coordToIndex(0, VGA::height-1)], _emptyCell.getValue(), VGA::width);
 }
 
 void Terminal::clearScreen()
 {
-	memsetw(VGA::buffer, _emptyCell.getValue(), VGA::height*VGA::width);
+	memset(VGA::buffer, _emptyCell.getValue(), VGA::height*VGA::width);
 }
 
 void Terminal::moveCursor(int x, int y)
