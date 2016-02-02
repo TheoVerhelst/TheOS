@@ -54,6 +54,7 @@ void Terminal::putString(const char *str)
 
 void Terminal::scrollUp()
 {
+	--_row;
 	memcpy(VGA::buffer, &VGA::buffer[VGA::coordToIndex(0, 1)],
 	       (VGA::width * (VGA::height - 1)) * sizeof(VGA::Entry));
 	_memset(&VGA::buffer[VGA::coordToIndex(0, VGA::height - 1)], _emptyCell.getValue(), VGA::width);
