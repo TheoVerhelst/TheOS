@@ -42,17 +42,15 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	out.setBase(16);
 	if(info.flags & InfoAvailable::boot_loader_name)
 		out << "This kernel has been loaded by \"" << info.boot_loader_name << "\"\n";
-	if(info.flags & InfoAvailable::boot_device)
-		printDeviceInfo(info.boot_device);
 	if(info.flags & InfoAvailable::mmap)
 		initKernelHeap(info.mmap_addr, static_cast<size_t>(info.mmap_length));
+	//Test heap
 	C* c = new C;
 	out << "c Address = " << c << "\n";
 	delete c;
 	D* d = new D;
 	out << "d Address = " << d << "\n";
 	delete d;
-	out << "End\n";
 }
 
 void initKernelHeap(MemoryRegion* address, size_t size)
@@ -65,7 +63,7 @@ void initKernelHeap(MemoryRegion* address, size_t size)
 			MemoryManager::MemoryBlock* block = MemoryManager::MemoryBlock::allocate();
 			block->address = reinterpret_cast<void*>(address->base_addr);
 			block->addToList(MemoryManager::freeBlocks, logKernelHeapSize);
-			out << "Allocated block of size 2^" << logKernelHeapSize << " starting at " << block->address << "\n";
+			out << "Allocated kernel heap of size " << kernelHeapSize/1000 << " Ko starting at " << block->address << "\n";
 		}
 		address = reinterpret_cast<MemoryRegion*>(reinterpret_cast<uintptr_t>(address) + address->size + sizeof(address->size));
 	}

@@ -46,6 +46,8 @@ add_executable(${PROJECT_NAME}.bin
 	"$<TARGET_OBJECTS:crtn>"
 	)
 
+target_link_libraries(${PROJECT_NAME}.bin gcc)
+
 #Make the iso
 file(COPY "${CMAKE_SOURCE_DIR}/iso" DESTINATION "${CMAKE_BINARY_DIR}")
 #First, delete old iso
