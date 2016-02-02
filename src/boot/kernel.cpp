@@ -4,10 +4,7 @@
 
 #include <kernel/kernel.hpp>
 #include <Printer.hpp>
-#include <memory.hpp>
 #include <boot/MultibootInfo.hpp>
-
-Printer out;
 
 class C
 {
@@ -90,7 +87,7 @@ void printDeviceInfo(uint32_t boot_device)
 			out << "unrecogniezed ";
 	}
 	out << "disk (" << drive << ") on partition ";
-	out << ((boot_device & 0x0000FF00) >> 8);
-	out << "." << ((boot_device & 0x00FF0000) >> 16);
-	out << "." << ((boot_device  & 0xFF000000) >> 24) << "\n";
+	out << ((boot_device & 0x0000FF00) >> 8) << ".";
+	out << ((boot_device & 0x00FF0000) >> 16) << ".";
+	out << ((boot_device & 0xFF000000) >> 24) << "\n";
 }

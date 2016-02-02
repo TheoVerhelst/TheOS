@@ -56,17 +56,17 @@ void Terminal::scrollUp()
 {
 	memcpy(VGA::buffer, &VGA::buffer[VGA::coordToIndex(0, 1)],
 	       (VGA::width * (VGA::height - 1)) * sizeof(VGA::Entry));
-	memset(&VGA::buffer[VGA::coordToIndex(0, VGA::height-1)], _emptyCell.getValue(), VGA::width);
+	_memset(&VGA::buffer[VGA::coordToIndex(0, VGA::height - 1)], _emptyCell.getValue(), VGA::width);
 }
 
 void Terminal::clearScreen()
 {
-	memset(VGA::buffer, _emptyCell.getValue(), VGA::height*VGA::width);
+	_memset(VGA::buffer, _emptyCell.getValue(), VGA::height*VGA::width);
 }
 
 void Terminal::moveCursor(int x, int y)
 {
-	uint16_t location = (y*VGA::width) + x;
+	uint16_t location = (y * VGA::width) + x;
 
 	/* 0x3D4-0x3D5 are in VGA address space */
 	outb(0x3D4, 0x0F);
