@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <memory.hpp>
+#include <memory/MemoryManager.hpp>
 
 //Forward declarations
 struct MultibootInfo;
