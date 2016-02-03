@@ -1,0 +1,70 @@
+#ifndef GDT_HPP
+#define GDT_HPP
+
+#include <stdint.h>
+
+/// Global Descriptor Table Descriptor.
+/// This struct simply holds the address and the size of the Global Descriptor
+/// Table. A global instance of a GDTDescriptor is initialized and set,
+/// then its address is given to the CPU in order to initialize segmentation.
+struct GDTDescriptor
+{
+	uint16_t size;
+	uint32_t address;
+} __attribute__((packed));
+
+/// An entry of the Global Descriptor Table. It represents informations about
+/// a segment that the CPU have to know.
+class GDTEntry
+{
+	public:
+		GDTEntry(uint32_t base = 0, uint32_t limit = 0, uint8_t access = 0, uint8_t flags = 0);
+
+	private:
+		uint16_t _limit0;
+		uint16_t _base0;
+		uint8_t _base1;
+		uint8_t _access;
+		uint8_t _limit1 : 4;
+		uint8_t _flags : 4;
+		uint8_t _base2;
+} __attribute__((packed));
+
+namespace Access
+{
+
+/// The set of bits that can be set in the access byte.
+/// Note that privilege has 2 bits (it may have 4 different values).
+enum Access : uint8_t
+{
+	Accessed            = 1 << 0,
+	ReadWrite           = 1 << 1,
+	DirectionConforming = 1 << 2,
+	Execution           = 1 << 3,
+	CodeData            = 1 << 4,
+	Privilege1          = 1 << 5,
+	Privilege2          = 1 << 6,
+	Present             = 1 << 7
+};
+
+}// namespace Access
+
+namespace Flags
+{
+
+/// The set of bits that can be set in the flags half byte.
+enum Flags : uint8_t
+{
+	SystemAvailable = 1 << 0,
+	LongMode        = 1 << 1,
+	Size            = 1 << 2,
+	Granularity     = 1 << 3
+};
+
+}// namespace Flags
+
+void initializeGDT();
+
+extern "C" void flushGDT();
+
+#endif// GDT_HPP

@@ -28,6 +28,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(src/boot)
 add_subdirectory(src/kernel)
 add_subdirectory(src/io)
+add_subdirectory(src/memory)
 add_subdirectory(src/libc)
 add_subdirectory(src/libc++)
 
@@ -38,6 +39,7 @@ add_executable(${PROJECT_NAME}.bin
 	"$<TARGET_OBJECTS:boot>"
 	"$<TARGET_OBJECTS:kernel>"
 	"$<TARGET_OBJECTS:io>"
+	"$<TARGET_OBJECTS:memory>"
 	"$<TARGET_OBJECTS:libc>"
 	"$<TARGET_OBJECTS:libc++>"
 	"${CRTEND_O}"

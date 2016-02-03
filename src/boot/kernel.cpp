@@ -3,6 +3,7 @@
 #endif
 
 #include <kernel/kernel.hpp>
+#include <memory/GDT.hpp>
 #include <Printer.hpp>
 #include <boot/MultibootInfo.hpp>
 
@@ -41,6 +42,7 @@ extern "C" void kernel_main(const MultibootInfo& info)
 		out << "This kernel has been loaded by \"" << info.boot_loader_name << "\"\n";
 	if(info.flags & InfoAvailable::mmap)
 		initKernelHeap(info.mmap_addr, static_cast<size_t>(info.mmap_length));
+	initializeGDT();
 	//Test heap
 	C* c = new C;
 	out << "c Address = " << c << "\n";
