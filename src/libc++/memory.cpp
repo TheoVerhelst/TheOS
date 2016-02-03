@@ -146,7 +146,9 @@ void MemoryManager::tryMerge(blockIt blockToMergeIt, size_t index)
 			void* baseAddress{*lowerBlockIt};
 			_freeBlocks[index].erase(lowerBlockIt);
 			_freeBlocks[index].erase(upperBlockIt);
-			_freeBlocks[index + 1].pushBack(baseAddress);
+			_freeBlocks[index + 1].pushFront(baseAddress);
+			//Recursively merge bigger blocks
+			tryMerge(_freeBlocks[index + 1].begin(), index + 1);
 			break;
 		}
 	}

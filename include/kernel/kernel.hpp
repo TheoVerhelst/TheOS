@@ -19,8 +19,6 @@ extern "C" void kernel_main(const MultibootInfo& info);
 
 void initKernelHeap(MemoryRegion* address, size_t size);
 
-void initSegments();
-
 void printDeviceInfo(uint32_t boot_device);
 
 #endif// KERNEL_HPP

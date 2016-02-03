@@ -15,6 +15,10 @@ struct GDTDescriptor
 
 /// An entry of the Global Descriptor Table. It represents informations about
 /// a segment that the CPU have to know.
+/// The GDT setup is an obligatory step when booting an OS. This consists in
+/// setting the segments registers correctly in order to let the CPU know
+/// about the segmentation of the OS. In our case, we disable segmentation
+/// by using two pages (code and data) that fit the whole memory.
 class GDTEntry
 {
 	public:
@@ -35,6 +39,7 @@ namespace Access
 
 /// The set of bits that can be set in the access byte.
 /// Note that privilege has 2 bits (it may have 4 different values).
+/// See Intel documentation for complete explanations.
 enum Access : uint8_t
 {
 	Accessed            = 1 << 0,
