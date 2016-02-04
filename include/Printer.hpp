@@ -1,8 +1,8 @@
 #ifndef PRINTER_HPP
 #define PRINTER_HPP
 
-#include <stddef.h>
-#include <stdint.h>
+#include <cstddef>
+#include <cstdint>
 
 class Printer
 {

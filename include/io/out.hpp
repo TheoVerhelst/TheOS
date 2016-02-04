@@ -1,7 +1,7 @@
 #ifndef OUT_HPP
 #define OUT_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 void outb(uint16_t, uint8_t);
 

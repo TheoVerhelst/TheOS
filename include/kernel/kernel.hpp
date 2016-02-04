@@ -1,8 +1,8 @@
 #ifndef KERNEL_HPP
 #define KERNEL_HPP
 
-#include <stddef.h>
-#include <stdint.h>
+#include <cstddef>
+#include <cstdint>
 #include <memory/MemoryManager.hpp>
 
 //Forward declarations

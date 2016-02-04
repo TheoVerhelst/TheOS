@@ -1,8 +1,8 @@
 #ifndef VGA_MANAGEMENT_H
 #define VGA_MANAGEMENT_H
 
-#include <stdint.h>
-#include <stddef.h>
+#include <cstdint>
+#include <cstddef>
 
 // VGA hardware interface
 namespace VGA

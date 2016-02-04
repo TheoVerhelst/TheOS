@@ -1,7 +1,7 @@
 #ifndef TERMINAL_HPP
 #define TERMINAL_HPP
 
-#include <stddef.h>
+#include <cstddef>
 #include <kernel/video/VGA_management.hpp>
 
 /// Class managing the main terminal.

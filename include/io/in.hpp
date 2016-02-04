@@ -1,7 +1,7 @@
 #ifndef IN_HPP
 #define IN_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 uint8_t inb(uint16_t port);
 

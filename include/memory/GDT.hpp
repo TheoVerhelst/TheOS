@@ -1,7 +1,7 @@
 #ifndef GDT_HPP
 #define GDT_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 /// Global Descriptor Table Descriptor.
 /// This struct simply holds the address and the size of the Global Descriptor

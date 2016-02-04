@@ -1,7 +1,7 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
-#include <stddef.h>
+#include <cstddef>
 
 void* operator new(size_t size) throw()
 	__attribute__((__externally_visible__));

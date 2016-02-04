@@ -1,8 +1,8 @@
 #ifndef BITSET_HPP
 #define BITSET_HPP
 
-#include <stddef.h>
-#include <stdint.h>
+#include <cstddef>
+#include <cstdint>
 
 template <size_t N>
 class BitSet

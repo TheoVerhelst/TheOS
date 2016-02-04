@@ -1,7 +1,7 @@
 #ifndef MULTIBOOTINFO_HPP
 #define MULTIBOOTINFO_HPP
 
-#include <stdint.h>
+#include <cstdint>
 
 /// Structure representing data about the a.out
 /// symbol table of the kernel.
