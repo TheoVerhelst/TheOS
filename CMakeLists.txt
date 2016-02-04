@@ -22,7 +22,9 @@ set(CMAKE_CXX_LINK_FLAGS "-nostdlib -T ${LINKER_FILE}")
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 
 #Add include directory
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories("${PROJECT_SOURCE_DIR}/include/c++")
+include_directories("${PROJECT_SOURCE_DIR}/include/c")
 
 #List the main executable source files
 add_subdirectory(src/boot)
