@@ -1,7 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
-#include <utility.hpp>
+#include <utility>
 #include <Printer.hpp>
 
 //Forward declarations
@@ -181,7 +181,7 @@ void List<T, AllocatorType>::pushBack(const T& value)
 template <class T, class AllocatorType>
 void List<T, AllocatorType>::pushBack(T&& value)
 {
-	insert(end(), forward<T>(value));
+	insert(end(), std::forward<T>(value));
 }
 
 template <class T, class AllocatorType>
@@ -193,7 +193,7 @@ void List<T, AllocatorType>::pushFront(const T& value)
 template <class T, class AllocatorType>
 void List<T, AllocatorType>::pushFront(T&& value)
 {
-	insert(begin(), forward<T>(value));
+	insert(begin(), std::forward<T>(value));
 }
 
 template <class T, class AllocatorType>
@@ -244,7 +244,7 @@ template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(List<T, AllocatorType>::iterator pos, T&& value)
 {
 	details::ListNode<T>* node{_allocator.allocate()};
-	node->value = forward<T>(value);
+	node->value = std::forward<T>(value);
 	node->previous = pos._node->previous;
 	node->next = pos._node;
 	pos._node->previous = node;
@@ -263,7 +263,7 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(List<T,
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(List<T, AllocatorType>::constIterator pos, T&& value)
 {
-	return insert(iterator(const_cast<details::ListNode<T>*>(pos._node)), forward<T>(value));
+	return insert(iterator(const_cast<details::ListNode<T>*>(pos._node)), std::forward<T>(value));
 }
 
 template <class T, class AllocatorType>
