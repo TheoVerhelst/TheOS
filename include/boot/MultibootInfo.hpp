@@ -7,8 +7,8 @@
 /// symbol table of the kernel.
 struct AOutSyms
 {
-	uint32_t tabsize;
-	uint32_t strsize;
+	size_t tabsize;
+	size_t strsize;
 	void* addr;
 	uint32_t reserved;
 };
@@ -18,14 +18,14 @@ struct AOutSyms
 struct Elf32Syms
 {
 	uint32_t num;
-	uint32_t size;
+	size_t size;
 	void* addr;
 	uint32_t shndx;
 };
 
 struct MemoryRegion
 {
-	uint32_t size;
+	size_t size;
 	uint64_t base_addr;
 	uint64_t length;
 	uint32_t type;
@@ -38,24 +38,25 @@ struct MemoryRegion
 struct MultibootInfo
 {
 	static_assert(sizeof(void*) == sizeof(uint32_t), "Addresses must be 32-bit");
+	static_assert(sizeof(size_t) == sizeof(uint32_t), "Sizes must be 32-bit");
 	uint32_t flags;            ///< Indicates the presence and validity of the following fields.
-	uint32_t mem_lower;        ///< Amount of lower memory, in kilobytes.
-	uint32_t mem_upper;        ///< Amount of upper memory, in kilobytes.
+	size_t mem_lower;          ///< Amount of lower memory, in kilobytes.
+	size_t mem_upper;          ///< Amount of upper memory, in kilobytes.
 	uint32_t boot_device;      ///< Indicates which bios disk device the boot loader loaded the OS image from.
 	char* cmdline;             ///< Command line to be passed to the kernel.
-	uint32_t mods_count;       ///< The number of modules loaded.
-	void* mods_addr;           ///< Tthe physical address of the first module structure.
+	size_t mods_count;       ///< Number of modules loaded.
+	void* mods_addr;           ///< Physical address of the first module structure.
 	union
 	{
 		AOutSyms a_out_syms;   ///< Present if flags[4] is set.
 		Elf32Syms elf32_syms;  ///< Present if flags[5] is set.
 	};
-	uint32_t mmap_length;      ///< Present if flags[6] is set.
-	MemoryRegion* mmap_addr;   ///< ...
-	uint32_t drives_length;    ///< Present if flags[7] is set.
-	void* drives_addr;         ///< ...
+	size_t mmap_length;        ///< Size of the memory map.
+	MemoryRegion* mmap_addr;   ///< Address of the first memory map entry.
+	size_t drives_length;      ///< Size of the drives structure.
+	void* drives_addr;         ///< Address of the first drives structure entry.
 	uint32_t config_table;     ///< Present if flags[8] is set.
-	char* boot_loader_name;    ///< Present if flags[9] is set.
+	char* boot_loader_name;    ///< Name of the bootloader.
 	void* apm_table;           ///< Present if flags[10] is set.
 	uint32_t vbe_control_info; ///< Present if flags[11] is set.
 	uint32_t vbe_mode_info;    ///< ...
