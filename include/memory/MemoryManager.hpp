@@ -38,7 +38,7 @@ class MemoryManager
 		class ListNodeAllocator
 		{
 			public:
-				typedef details::ListNode<void*> valueType;
+				typedef details::ListNode<intptr_t> valueType;
 				typedef valueType* pointer;
 
 				pointer allocate();
@@ -58,16 +58,16 @@ class MemoryManager
 				static valueType _listNodesArray[_maxBlocksNumber];
 		};
 
-		typedef List<void*, ListNodeAllocator>::iterator blockIt;
+		typedef List<intptr_t, ListNodeAllocator>::iterator blockIt;
 
 		/// Array of list of addresses of free blocks.
 		/// The index indicate the size of the blocks in the list:
 		/// a block in the list at index 4 has a size of 2^4 bytes.
-		List<void*, ListNodeAllocator> _freeBlocks[_addressSize];
+		List<intptr_t, ListNodeAllocator> _freeBlocks[_addressSize];
 
 		/// Array of list of addresses of allocated blocks.
 		/// \see freeBlocks
-		List<void*, ListNodeAllocator> _allocatedBlocks[_addressSize];
+		List<intptr_t, ListNodeAllocator> _allocatedBlocks[_addressSize];
 
 		/// Instance of the allocator used for this MemoryManager.
 		ListNodeAllocator _allocator;
@@ -76,12 +76,12 @@ class MemoryManager
 
 		/// \return A valid iterator in _allocatedBlocks[index] in case of success,
 		/// _allocatedBlocks[index].end() otherwise.
-		blockIt getBlock(size_t index);
+		blockIt allocateBlock(size_t index);
 
 		//TODO try to add constexpr
 		static size_t getIndexFromSize(size_t size);
 
-		static blockIt findBlock(List<void*, ListNodeAllocator>& blockList, void* address);
+		static blockIt findBlock(List<intptr_t, ListNodeAllocator>& blockList, intptr_t address);
 };
 
 #endif// MEMORYMANAGER_HPP

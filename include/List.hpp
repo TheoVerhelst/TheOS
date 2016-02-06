@@ -2,7 +2,6 @@
 #define LIST_HPP
 
 #include <utility>
-#include <Printer.hpp>
 
 //Forward declarations
 template <typename T>
