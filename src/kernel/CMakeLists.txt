@@ -1,4 +1,6 @@
 set(SOURCES
+	"GDT.cpp"
+	"GDT.asm"
 	"terminal/Terminal.cpp"
 	"video/VGA_management.cpp"
 	)

@@ -1,6 +1,4 @@
 set(SOURCES
-	"GDT.cpp"
-	"GDT.asm"
 	"MemoryManager.cpp"
 	)
 

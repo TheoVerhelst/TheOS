@@ -3,7 +3,7 @@
 #endif
 
 #include <kernel/kernel.hpp>
-#include <memory/GDT.hpp>
+#include <kernel/GDT.hpp>
 #include <Printer.hpp>
 #include <boot/MultibootInfo.hpp>
 
@@ -43,19 +43,23 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	if(info.flags & InfoAvailable::mmap)
 		initKernelHeap(info.mmap_addr, static_cast<size_t>(info.mmap_length));
 	initializeGDT();
+	out.setShowPrefix(false);
 	//Test heap
 	C* c = new C;
 	out << "c Address = " << c << "\n";
 	delete c;
 	D* d = new D;
 	out << "d Address = " << d << "\n";
+	c = new C;
+	out << "c Address = " << c << "\n";
 	delete d;
 }
 
 void initKernelHeap(MemoryRegion* address, size_t size)
 {
-	uintptr_t upperAddress{reinterpret_cast<uintptr_t>(address) + size};
-	while(reinterpret_cast<uintptr_t>(address) < upperAddress)
+	uintptr_t rawAddress{reinterpret_cast<uintptr_t>(address)};
+	const uintptr_t upperAddress{rawAddress + size};
+	while(rawAddress < upperAddress)
 	{
 		if(address->type == 1 and static_cast<size_t>(address->length) >= kernelHeapSize)
 		{
@@ -63,7 +67,8 @@ void initKernelHeap(MemoryRegion* address, size_t size)
 			kernelHeapMamanger.addMemoryChunk(baseAddress, kernelHeapSize);
 			out << "Allocated kernel heap of size " << kernelHeapSize/1000 << " Ko starting at " << baseAddress << "\n";
 		}
-		address = reinterpret_cast<MemoryRegion*>(reinterpret_cast<uintptr_t>(address) + address->size + sizeof(address->size));
+		rawAddress += address->size + sizeof(address->size);
+		address = reinterpret_cast<MemoryRegion*>(rawAddress);
 	}
 }
 

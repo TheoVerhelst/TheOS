@@ -1,4 +1,4 @@
-#include <memory/GDT.hpp>
+#include <kernel/GDT.hpp>
 
 GDTEntry globalDescriptorTable[3];
 
