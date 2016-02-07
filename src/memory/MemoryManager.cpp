@@ -8,7 +8,7 @@ MemoryManager::ListNodeAllocator::valueType MemoryManager::ListNodeAllocator::_l
 void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
 {
 	intptr_t convertedBaseAddress{reinterpret_cast<intptr_t>(baseAddress)};
-	//Avoid nullptr in the allocable space
+	// Avoid nullptr in the allocable space
 	if(baseAddress == nullptr)
 	{
 		++convertedBaseAddress;
@@ -22,6 +22,7 @@ void* MemoryManager::allocate(size_t size)
 {
 	const size_t index{getIndexFromSize(size)};
 	blockIt it{allocateBlock(index)};
+	memoryDump();
 	if(it == _allocatedBlocks[index].end())
 	{
 		out << "Error: MemoryMamanger::allocate: no more memory, nullptr returned\n";
@@ -114,7 +115,7 @@ void MemoryManager::tryMerge(blockIt blockToMergeIt, size_t index)
 			_freeBlocks[index].erase(lowerBlockIt);
 			_freeBlocks[index].erase(upperBlockIt);
 			_freeBlocks[index + 1].pushFront(baseAddress);
-			//Recursively merge bigger blocks
+			// Recursively merge bigger blocks
 			tryMerge(_freeBlocks[index + 1].begin(), index + 1);
 			break;
 		}
@@ -123,13 +124,13 @@ void MemoryManager::tryMerge(blockIt blockToMergeIt, size_t index)
 
 MemoryManager::blockIt MemoryManager::allocateBlock(size_t index)
 {
-	//This should never happens (TODO: write an assert instead)
+	// This should never happens (TODO: write an assert instead)
 	if(index >= _addressSize)
 		return _allocatedBlocks[_addressSize].end();
 
 	if(_freeBlocks[index].empty())
 	{
-		//If we ask for the biggest block possible, but there is not a free one
+		// If we ask for the biggest block possible, but there is not a free one
 		if(index + 1 == _addressSize)
 			return _allocatedBlocks[index].end();
 
@@ -139,7 +140,7 @@ MemoryManager::blockIt MemoryManager::allocateBlock(size_t index)
 		if(biggerBlock == _allocatedBlocks[index + 1].end())
 			return _allocatedBlocks[index].end();
 
-		//Erase the bigger allocated block
+		// Erase the bigger allocated block
 		intptr_t baseAddress{*biggerBlock};
 		_allocatedBlocks[index + 1].erase(biggerBlock);
 
@@ -153,6 +154,7 @@ MemoryManager::blockIt MemoryManager::allocateBlock(size_t index)
 	}
 	else
 	{
+		// Move an element from the free list to the allocated list
 		_allocatedBlocks[index].pushFront(_freeBlocks[index].front());
 		_freeBlocks[index].popFront();
 		return _allocatedBlocks[index].begin();
@@ -176,4 +178,16 @@ MemoryManager::blockIt MemoryManager::findBlock(List<intptr_t, ListNodeAllocator
 	while(*it != address and it != blockList.end())
 		++it;
 	return it;
+}
+
+void MemoryManager::memoryDump() const
+{
+	static const char* separator{" | "};
+	out << "A = ";
+	for(size_t i{0}; i < _addressSize; ++i)
+		out << i << " " << _allocatedBlocks[i].size() << separator;
+	out << "\nF = ";
+	for(size_t i{0}; i < _addressSize; ++i)
+		out << i << " " << _freeBlocks[i].size() << separator;
+	out << "\n";
 }

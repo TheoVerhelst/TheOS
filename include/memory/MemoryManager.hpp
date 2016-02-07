@@ -82,6 +82,8 @@ class MemoryManager
 		static size_t getIndexFromSize(size_t size);
 
 		static blockIt findBlock(List<intptr_t, ListNodeAllocator>& blockList, intptr_t address);
+
+		void memoryDump() const;
 };
 
 #endif// MEMORYMANAGER_HPP

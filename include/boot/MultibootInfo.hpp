@@ -67,9 +67,9 @@ struct MultibootInfo
 	uint32_t config_table;     ///< Address of the rom configuration table returned by the GET CONFIGURATION bios call.
 	char* boot_loader_name;    ///< Name of the bootloader.
 	void* apm_table;           ///< Address of an APM table. See Advanced Power Management (APM) BIOS Interface Specification, for more information.
-	uint32_t vbe_control_info; ///< Addresses of VBE control information returned by the VBE Function 00h
-	uint32_t vbe_mode_info;    ///< Addresses of VBE mode information returned by the VBE Function 01h
-	uint16_t vbe_mode;         ///< Current video mode in the format specified in VBE 3.0
+	uint32_t vbe_control_info; ///< Addresses of VBE control information returned by the VBE Function 00h.
+	uint32_t vbe_mode_info;    ///< Addresses of VBE mode information returned by the VBE Function 01h.
+	uint16_t vbe_mode;         ///< Current video mode in the format specified in VBE 3.0.
 	uint16_t vbe_interface_seg;///< The table of a protected mode interface defined in VBE 2.0+.
 	uint16_t vbe_interface_off;///< The table of a protected mode interface defined in VBE 2.0+.
 	uint32_t vbe_interface_len;///< The table of a protected mode interface defined in VBE 2.0+.
