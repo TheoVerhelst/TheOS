@@ -17,7 +17,7 @@ GDTEntry::GDTEntry(uint32_t base, uint32_t limit, uint8_t access, uint8_t flags)
 
 void initializeGDT()
 {
-	descriptor.address = reinterpret_cast<uint32_t>(globalDescriptorTable);
+	descriptor.address = reinterpret_cast<uint32_t>(&globalDescriptorTable);
 	descriptor.size = sizeof(globalDescriptorTable);
 	globalDescriptorTable[1] = GDTEntry(0, 0xFFFFF,
 			Access::ReadWrite | Access::Present | Access::CodeData,

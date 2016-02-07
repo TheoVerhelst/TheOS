@@ -1,9 +1,9 @@
 extern descriptor;
 
-; 0x08 corresponds to a code segment, for a GDT table
+; 0x10 corresponds to a code segment, for a GDT table
 ; and with maximum privileges
 %define CODE_SEGMENT 0x10
-; 0x10 corresponds to a data segment, for a GDT table
+; 0x08 corresponds to a data segment, for a GDT table
 ; and with maximum privileges
 %define DATA_SEGMENT 0x08
 
