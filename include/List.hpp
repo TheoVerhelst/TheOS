@@ -289,7 +289,7 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, 
 	if(last._node == _end)
 		_end->previous = first._node->previous;
 	else if(first != last)
-		last._node->next->previous = first._node->previous;
+		last._node->previous = first._node->previous;
 	while(first != last)
 	{
 		_allocator.deallocate(first._node);
