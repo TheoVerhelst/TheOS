@@ -21,7 +21,13 @@ class Printer
 		template <typename T>
 		Printer& operator<<(const T* arg)
 		{
+			bool oldShowPrefix = _showPrefix;
+			int oldBase = _base;
+			setShowPrefix(true);
+			setBase(16);
 			*this << reinterpret_cast<uintptr_t>(arg);
+			setShowPrefix(oldShowPrefix);
+			setBase(oldBase);
 			return *this;
 		}
 

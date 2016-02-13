@@ -37,7 +37,6 @@ class D
 
 extern "C" void kernel_main(const MultibootInfo& info)
 {
-	out.setBase(16);
 	if(info.flags & InfoAvailable::boot_loader_name)
 		out << "This kernel has been loaded by \"" << info.boot_loader_name << "\"\n";
 	if(info.flags & InfoAvailable::boot_device)
