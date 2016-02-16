@@ -7,34 +7,6 @@
 #include <Printer.hpp>
 #include <boot/MultibootInfo.hpp>
 
-class C
-{
-	public:
-		C()
-		{
-			out << "C()\n";
-		}
-
-		~C()
-		{
-			out << "~C()\n";
-		}
-};
-class D
-{
-	public:
-		D()
-		{
-			out << "D()\n";
-		}
-
-		~D()
-		{
-			out << "~D()\n";
-		}
-		int x;
-};
-
 extern "C" void kernel_main(const MultibootInfo& info)
 {
 	if(info.flags & InfoAvailable::boot_loader_name)
@@ -50,15 +22,6 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	}
 	initializeGDT();
 	out.setShowPrefix(false);
-	//Test heap
-	C* c = new C;
-	out << "c Address = " << c << "\n";
-	delete c;
-	D* d = new D;
-	out << "d Address = " << d << "\n";
-	c = new C;
-	out << "c Address = " << c << "\n";
-	delete d;
 }
 
 void initKernelHeap(MemoryRegion* address, size_t size)
