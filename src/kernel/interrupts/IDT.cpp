@@ -1,8 +1,11 @@
 #include <kernel/interrupts/IDT.hpp>
 
+namespace idt
+{
+
 void setupIdt()
 {
-#define MAKE_IDT_ENTRY(INDEX) idt[INDEX] = {reinterpret_cast<uint32_t>(&isrINDEX)}
+#define MAKE_IDT_ENTRY(INDEX) idt[INDEX] = IdtEntry(reinterpret_cast<uint32_t>(&isr##INDEX))
 	MAKE_IDT_ENTRY(0);
 	MAKE_IDT_ENTRY(1);
 	MAKE_IDT_ENTRY(2);
@@ -46,6 +49,8 @@ IdtEntry::IdtEntry(uint32_t base):
 	_segment{Segment::code},
 	_padding{GateSelector::InterruptGate & GateSelector::Size},
 	_flags{Flags::Present & Flags::Ring0},
-	_base1{static_cast<uint16_t>((base & 0xFFFF0000) >> 16)},
+	_base1{static_cast<uint16_t>((base & 0xFFFF0000) >> 16)}
 {
 }
+
+}// namespace idt

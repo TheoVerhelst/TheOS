@@ -1,5 +1,5 @@
 extern isrDispatcher
-global isrHandler
+global interruptHandler
 
 %define DATA_SEGMENT 0x08
 

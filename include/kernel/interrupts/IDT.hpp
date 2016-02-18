@@ -1,6 +1,9 @@
 #ifndef IDT_HPP
 #define IDT_HPP
 
+#include <cstdint>
+#include <cstddef>
+
 namespace idt
 {
 
@@ -12,15 +15,15 @@ enum Flags : uint8_t
 	Ring1   = 1,
 	Ring2   = 2,
 	Ring3   = 3,
-	Present = 1 << 2;
+	Present = 1 << 2
 };
 
 enum GateSelector : uint16_t
 {
-	TaskGate      = 0x005;
-	InterruptGate = 0x006;
-	TrapGate      = 0x007;
-	Size          = 1 << 3; ///< Set for 32-bit sized gate, unset for 16-bit.
+	TaskGate      = 0x005,
+	InterruptGate = 0x006,
+	TrapGate      = 0x007,
+	Size          = 1 << 3///< Set for 32-bit sized gate, unset for 16-bit.
 };
 
 enum Segment : uint16_t
@@ -52,7 +55,7 @@ constexpr size_t idtSize{32};
 
 IdtEntry idt[idtSize];
 
-IdtDescriptor idtDescriptor{&idt, sizeof(idt) - 1};
+IdtDescriptor idtDescriptor{reinterpret_cast<uint32_t>(&idt), sizeof(idt) - 1};
 
 }// namespace idt
 

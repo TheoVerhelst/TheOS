@@ -3,41 +3,41 @@ set(SOURCES
 	"video/VGA_management.cpp"
 	"GDT.cpp"
 	"GDT.asm"
-	"interrupts/IDT.cpp",
-	"interrupts/interruptHandler.asm",
-	"interrupts/isrDispatcher.asm",
-	"interrupts/ISR/isr0.asm",
-	"interrupts/ISR/isr1.asm",
-	"interrupts/ISR/isr2.asm",
-	"interrupts/ISR/isr3.asm",
-	"interrupts/ISR/isr4.asm",
-	"interrupts/ISR/isr5.asm",
-	"interrupts/ISR/isr6.asm",
-	"interrupts/ISR/isr7.asm",
-	"interrupts/ISR/isr8.asm",
-	"interrupts/ISR/isr9.asm",
-	"interrupts/ISR/isr10.asm",
-	"interrupts/ISR/isr11.asm",
-	"interrupts/ISR/isr12.asm",
-	"interrupts/ISR/isr13.asm",
-	"interrupts/ISR/isr14.asm",
-	"interrupts/ISR/isr15.asm",
-	"interrupts/ISR/isr16.asm",
-	"interrupts/ISR/isr17.asm",
-	"interrupts/ISR/isr18.asm",
-	"interrupts/ISR/isr19.asm",
-	"interrupts/ISR/isr20.asm",
-	"interrupts/ISR/isr21.asm",
-	"interrupts/ISR/isr22.asm",
-	"interrupts/ISR/isr23.asm",
-	"interrupts/ISR/isr24.asm",
-	"interrupts/ISR/isr25.asm",
-	"interrupts/ISR/isr26.asm",
-	"interrupts/ISR/isr27.asm",
-	"interrupts/ISR/isr28.asm",
-	"interrupts/ISR/isr29.asm",
-	"interrupts/ISR/isr30.asm",
-	"interrupts/ISR/isr31.asm",
+	"interrupts/IDT.cpp"
+	"interrupts/interruptHandler.asm"
+	"interrupts/isrDispatcher.cpp"
+	"interrupts/ISR/isr0.asm"
+	"interrupts/ISR/isr1.asm"
+	"interrupts/ISR/isr2.asm"
+	"interrupts/ISR/isr3.asm"
+	"interrupts/ISR/isr4.asm"
+	"interrupts/ISR/isr5.asm"
+	"interrupts/ISR/isr6.asm"
+	"interrupts/ISR/isr7.asm"
+	"interrupts/ISR/isr8.asm"
+	"interrupts/ISR/isr9.asm"
+	"interrupts/ISR/isr10.asm"
+	"interrupts/ISR/isr11.asm"
+	"interrupts/ISR/isr12.asm"
+	"interrupts/ISR/isr13.asm"
+	"interrupts/ISR/isr14.asm"
+	"interrupts/ISR/isr15.asm"
+	"interrupts/ISR/isr16.asm"
+	"interrupts/ISR/isr17.asm"
+	"interrupts/ISR/isr18.asm"
+	"interrupts/ISR/isr19.asm"
+	"interrupts/ISR/isr20.asm"
+	"interrupts/ISR/isr21.asm"
+	"interrupts/ISR/isr22.asm"
+	"interrupts/ISR/isr23.asm"
+	"interrupts/ISR/isr24.asm"
+	"interrupts/ISR/isr25.asm"
+	"interrupts/ISR/isr26.asm"
+	"interrupts/ISR/isr27.asm"
+	"interrupts/ISR/isr28.asm"
+	"interrupts/ISR/isr29.asm"
+	"interrupts/ISR/isr30.asm"
+	"interrupts/ISR/isr31.asm"
 	)
 
 add_library(kernel OBJECT ${SOURCES})
