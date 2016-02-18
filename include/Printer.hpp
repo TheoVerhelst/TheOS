@@ -29,25 +29,8 @@ class Printer
 		Printer& operator<<(long int arg);
 		Printer& operator<<(long unsigned int arg);
 		Printer& operator<<(bool arg);
+		Printer& operator<<(void* arg);
 		Printer& operator<<(void (*manipulator)(Printer&));
-		template <typename T>
-		Printer& operator<<(const T* arg)
-		{
-			const unsigned int oldFlags{_flags};
-			if(_flags & Flags::AutoBase)
-			{
-				setFlags(Flags::Hexadecimal);
-				resetFlags(Flags::AutoBase);
-			}
-			if(_flags & Flags::AutoShowBase)
-			{
-				setFlags(Flags::ShowBase);
-				resetFlags(Flags::AutoShowBase);
-			}
-			*this << reinterpret_cast<uintptr_t>(arg);
-			_flags = oldFlags;
-			return *this;
-		}
 		void setFlags(unsigned int flags);
 		void resetFlags(unsigned int flags);
 

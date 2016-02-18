@@ -160,6 +160,24 @@ Printer& Printer::operator<<(bool arg)
 		return *this << (arg ? "1" : "0");
 }
 
+Printer& Printer::operator<<(void* arg)
+{
+	const unsigned int oldFlags{_flags};
+	if(_flags & Flags::AutoBase)
+	{
+		setFlags(Flags::Hexadecimal);
+		resetFlags(Flags::AutoBase);
+	}
+	if(_flags & Flags::AutoShowBase)
+	{
+		setFlags(Flags::ShowBase);
+		resetFlags(Flags::AutoShowBase);
+	}
+	*this << reinterpret_cast<uintptr_t>(arg);
+	_flags = oldFlags;
+	return *this;
+}
+
 void Printer::setFlags(unsigned int flags)
 {
 	_flags |= flags;
