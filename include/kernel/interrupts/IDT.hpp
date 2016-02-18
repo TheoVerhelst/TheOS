@@ -20,16 +20,16 @@ enum Flags : uint8_t
 
 enum GateSelector : uint16_t
 {
-	TaskGate      = 0x005,
-	InterruptGate = 0x006,
-	TrapGate      = 0x007,
-	Size          = 1 << 3///< Set for 32-bit sized gate, unset for 16-bit.
+	TaskGate      = 5 << 8,
+	InterruptGate = 6 << 8,
+	TrapGate      = 7 << 8,
+	Size          = 1 << 11///< Set for 32-bit sized gate, unset for 16-bit.
 };
 
 enum Segment : uint16_t
 {
-	code = 0x10,
-	data = 0x08
+	Code = 0x10,
+	Data = 0x08
 };
 
 struct IdtEntry
@@ -40,15 +40,15 @@ struct IdtEntry
 	private:
 		uint16_t _base0;
 		uint16_t _segment;
-		uint16_t _padding:13;
+		uint16_t _gateSelector:13;
 		uint8_t _flags:3;
 		uint16_t _base1;
 } __attribute__((packed));
 
 struct IdtDescriptor
 {
-	uint32_t address;
 	uint16_t size;
+	uint32_t address;
 } __attribute__((packed));
 
 constexpr size_t idtSize{32};

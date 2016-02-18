@@ -5,9 +5,7 @@ global interruptHandler
 
 section .text
 interruptHandler:
-	push cs
 	push ds
-	push ss
 	push es
 	push fs
 	push gs
@@ -23,8 +21,6 @@ interruptHandler:
 	pop gs
 	pop fs
 	pop es
-	pop ss
 	pop ds
-	pop cs
 	add esp, 8  ; Cleans up the pushed error code and pushed ISR number
 	iret

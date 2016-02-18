@@ -5,7 +5,7 @@ namespace idt
 
 IdtEntry idt[idtSize];
 
-IdtDescriptor idtDescriptor{reinterpret_cast<uint32_t>(&idt), sizeof(idt) - 1};
+IdtDescriptor idtDescriptor{sizeof(idt) - 1, reinterpret_cast<uint32_t>(&idt)};
 
 void initializeIdt()
 {
@@ -50,9 +50,9 @@ void initializeIdt()
 
 IdtEntry::IdtEntry(uint32_t base):
 	_base0{static_cast<uint16_t>(base & 0x0000FFFF)},
-	_segment{Segment::code},
-	_padding{GateSelector::InterruptGate & GateSelector::Size},
-	_flags{Flags::Present & Flags::Ring0},
+	_segment{Segment::Code},
+	_gateSelector{GateSelector::InterruptGate | GateSelector::Size},
+	_flags{Flags::Ring0 | Flags::Present},
 	_base1{static_cast<uint16_t>((base & 0xFFFF0000) >> 16)}
 {
 }
