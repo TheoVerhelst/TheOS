@@ -5,19 +5,9 @@
 Terminal terminal;
 Printer out;
 
-const char* Printer::_prefixes[] = {"", "0b", "", "", "", "", "", "0", "",
-			"", "", "", "", "", "", "0x", "", "", "", "", "", "", "", "", "", ""};
-
-Printer& Printer::setBase(int newBase)
-{
-	_base = newBase;
-	return *this;
-}
-Printer& Printer::setShowPrefix(bool newShowPrefix)
-{
-	_showPrefix = newShowPrefix;
-	return *this;
-}
+constexpr size_t Printer::_bufferLength;
+constexpr const char* Printer::_alphabet;
+constexpr const char* Printer::_prefixes[];
 
 Printer& Printer::operator<<(char arg)
 {
@@ -56,17 +46,31 @@ Printer& Printer::operator<<(long int arg)
 	const bool negative{arg < 0};
 	char buffer[_bufferLength];
 	int index{0};
+	long int base;
+	if(_flags & Flags::AutoBase)
+		base = 10;
+	else if(_flags & Flags::Hexadecimal)
+		base = 16;
+	else if(_flags & Flags::Binary)
+		base = 2;
+
 	if(negative)
 	{
 		buffer[index++] = '-';
 		arg = -arg;
 	}
-
-	if(_showPrefix)
+	else if(_flags & Flags::ShowPos)
 	{
-		strcpy(&buffer[index], _prefixes[_base - 1]);
-		index += strlen(_prefixes[_base - 1]);
+		buffer[index++] = '+';
+		arg = -arg;
 	}
+
+	if(not (_flags & Flags::AutoShowBase) and  (_flags & Flags::ShowBase))
+	{
+		strcpy(&buffer[index], _prefixes[base - 1]);
+		index += strlen(_prefixes[base - 1]);
+	}
+
 	const int begin{index};
 
 	if(arg == 0)
@@ -74,9 +78,9 @@ Printer& Printer::operator<<(long int arg)
 
 	while(arg > 0)
 	{
-		const long int remainder{arg % _base};
+		const long int remainder{arg % base};
 		buffer[index++] = _alphabet[remainder];
-		arg /= _base;
+		arg /= base;
 	}
 	buffer[index--] = '\0';
 
@@ -97,12 +101,26 @@ Printer& Printer::operator<<(long unsigned int arg)
 {
 	char buffer[_bufferLength];
 	int index{0};
+	size_t base;
+	if(_flags & Flags::AutoBase)
+		base = 10;
+	else if(_flags & Flags::Hexadecimal)
+		base = 16;
+	else if(_flags & Flags::Binary)
+		base = 2;
 
-	if(_showPrefix)
+	if(_flags & Flags::ShowPos)
 	{
-		strcpy(&buffer[index], _prefixes[_base - 1]);
-		index += strlen(_prefixes[_base - 1]);
+		buffer[index++] = '+';
+		arg = -arg;
 	}
+
+	if(not (_flags & Flags::AutoShowBase) and  (_flags & Flags::ShowBase))
+	{
+		strcpy(&buffer[index], _prefixes[base - 1]);
+		index += strlen(_prefixes[base - 1]);
+	}
+
 	const int begin{index};
 
 	if(arg == 0)
@@ -110,9 +128,12 @@ Printer& Printer::operator<<(long unsigned int arg)
 
 	while(arg > 0)
 	{
-		const long unsigned int remainder{arg % _base};
-		buffer[index++] = _alphabet[remainder];
-		arg /= _base;
+		const long unsigned int remainder{arg % base};
+		if(_flags & Flags::Uppercase)
+			buffer[index++] = toUpper(_alphabet[remainder]);
+		else
+			buffer[index++] = _alphabet[remainder];
+		arg /= base;
 	}
 	buffer[index--] = '\0';
 
@@ -133,6 +154,26 @@ Printer& Printer::operator<<(long unsigned int arg)
 
 Printer& Printer::operator<<(bool arg)
 {
-	return *this << (arg ? "true" : "false");
+	if(_flags & Flags::BoolAlpha)
+		return *this << (arg ? "true" : "false");
+	else
+		return *this << (arg ? "1" : "0");
 }
 
+void Printer::setFlags(unsigned int flags)
+{
+	_flags |= flags;
+}
+
+void Printer::resetFlags(unsigned int flags)
+{
+	_flags &= ~flags;
+}
+
+char Printer::toUpper(char ch)
+{
+	if(ch >= 'a' and ch <= 'z')
+		return ch + ('A' - 'a');
+	else
+		return ch;
+}

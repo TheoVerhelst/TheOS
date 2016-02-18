@@ -23,7 +23,6 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	}
 	gdt::initializeGDT();
 	idt::initializeIdt();
-	out.setShowPrefix(false);
 	int x = 1/0;
 }
 
