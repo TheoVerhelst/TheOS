@@ -7,7 +7,7 @@
 namespace idt
 {
 
-void setupIdt();
+void initializeIdt();
 
 enum Flags : uint8_t
 {
@@ -53,9 +53,9 @@ struct IdtDescriptor
 
 constexpr size_t idtSize{32};
 
-IdtEntry idt[idtSize];
+extern IdtEntry idt[idtSize];
 
-IdtDescriptor idtDescriptor{reinterpret_cast<uint32_t>(&idt), sizeof(idt) - 1};
+extern IdtDescriptor idtDescriptor;
 
 }// namespace idt
 

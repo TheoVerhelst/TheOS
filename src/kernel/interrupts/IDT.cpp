@@ -3,7 +3,11 @@
 namespace idt
 {
 
-void setupIdt()
+IdtEntry idt[idtSize];
+
+IdtDescriptor idtDescriptor{reinterpret_cast<uint32_t>(&idt), sizeof(idt) - 1};
+
+void initializeIdt()
 {
 #define MAKE_IDT_ENTRY(INDEX) idt[INDEX] = IdtEntry(reinterpret_cast<uint32_t>(&isr##INDEX))
 	MAKE_IDT_ENTRY(0);

@@ -4,6 +4,7 @@
 
 #include <kernel/kernel.hpp>
 #include <kernel/GDT.hpp>
+#include <kernel/interrupts/IDT.hpp>
 #include <Printer.hpp>
 #include <boot/MultibootInfo.hpp>
 
@@ -20,7 +21,8 @@ extern "C" void kernel_main(const MultibootInfo& info)
 		out << "Memory map not available, aborting\n";
 		return;
 	}
-	initializeGDT();
+	gdt::initializeGDT();
+	idt::initializeIdt();
 	out.setShowPrefix(false);
 }
 

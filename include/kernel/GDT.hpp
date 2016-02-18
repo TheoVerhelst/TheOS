@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+namespace gdt
+{
+
 /// Global Descriptor Table Descriptor.
 /// This struct simply holds the address and the size of the Global Descriptor
 /// Table. A global instance of a GDTDescriptor is initialized and set,
@@ -68,7 +71,13 @@ enum Flags : uint8_t
 
 }// namespace Flags
 
+extern GDTEntry globalDescriptorTable[3];
+
 void initializeGDT();
+
+}// namespace gdt
+
+extern gdt::GDTDescriptor descriptor;
 
 extern "C" void flushGDT();
 

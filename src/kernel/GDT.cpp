@@ -1,8 +1,11 @@
 #include <kernel/GDT.hpp>
 
-GDTEntry globalDescriptorTable[3];
+gdt::GDTDescriptor descriptor;
 
-GDTDescriptor descriptor;
+namespace gdt
+{
+
+GDTEntry globalDescriptorTable[3];
 
 GDTEntry::GDTEntry(uint32_t base, uint32_t limit, uint8_t access, uint8_t flags):
 	_limit0{static_cast<uint16_t>(limit & 0x0000FFFF)},
@@ -27,3 +30,5 @@ void initializeGDT()
 			Flags::Size | Flags::Granularity);
 	flushGDT();
 }
+
+}// namespace gdt
