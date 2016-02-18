@@ -44,12 +44,14 @@ struct IdtEntry
 		uint8_t _flags:3;
 		uint16_t _base1;
 } __attribute__((packed));
+static_assert(sizeof(IdtEntry) == 8, "And IDT entry must be 8-bytes long.");
 
 struct IdtDescriptor
 {
 	uint16_t size;
 	uint32_t address;
 } __attribute__((packed));
+static_assert(sizeof(IdtDescriptor) == 6, "The IDT descriptor must be 6-bytes long.");
 
 constexpr size_t idtSize{32};
 
