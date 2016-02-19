@@ -5,6 +5,7 @@
 #include <kernel/kernel.hpp>
 #include <kernel/GDT.hpp>
 #include <kernel/interrupts/IDT.hpp>
+#include <kernel/interrupts/PIC.hpp>
 #include <Printer.hpp>
 #include <boot/MultibootInfo.hpp>
 
@@ -21,9 +22,11 @@ extern "C" void kernel_main(const MultibootInfo& info)
 		out << "Memory map not available, aborting\n";
 		return;
 	}
-	gdt::initializeGDT();
+	gdt::initializeGdt();
 	idt::initializeIdt();
-	int x = 1/0;
+	pic::initializePic();
+	out << "Ok!\n";
+	while(true);
 }
 
 void initKernelHeap(MemoryRegion* address, size_t size)

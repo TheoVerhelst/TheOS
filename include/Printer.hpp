@@ -20,6 +20,7 @@ class Printer
 			Uppercase    = 1 << 8
 		};
 
+		//TODO Write manipulators
 		Printer& operator<<(char arg);
 		Printer& operator<<(const char* arg);
 		Printer& operator<<(short int arg);

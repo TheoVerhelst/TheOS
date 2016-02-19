@@ -4,6 +4,7 @@ set(SOURCES
 	"GDT.cpp"
 	"GDT.asm"
 	"interrupts/IDT.cpp"
+	"interrupts/PIC.cpp"
 	"interrupts/interruptHandler.asm"
 	"interrupts/isrDispatcher.cpp"
 	"interrupts/ISR/isr0.asm"

@@ -73,7 +73,7 @@ enum Flags : uint8_t
 
 extern GDTEntry globalDescriptorTable[3];
 
-void initializeGDT();
+void initializeGdt();
 
 }// namespace gdt
 

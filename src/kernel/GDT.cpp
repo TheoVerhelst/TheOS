@@ -18,7 +18,7 @@ GDTEntry::GDTEntry(uint32_t base, uint32_t limit, uint8_t access, uint8_t flags)
 {
 }
 
-void initializeGDT()
+void initializeGdt()
 {
 	descriptor.address = reinterpret_cast<uint32_t>(&globalDescriptorTable);
 	descriptor.size = sizeof(globalDescriptorTable);
