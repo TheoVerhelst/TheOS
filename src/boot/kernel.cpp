@@ -25,7 +25,6 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	gdt::initializeGdt();
 	idt::initializeIdt();
 	pic::initializePic();
-	out << "OK\n";
 	while(true);
 }
 

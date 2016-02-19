@@ -3,11 +3,57 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <kernel/interrupts/PIC.hpp>
 
 namespace idt
 {
 
 void initializeIdt();
+
+namespace Interrupt
+{
+
+enum Interrupt : uint32_t
+{
+	DivideError = 0,
+	DebugException,
+	NmiInterrupt,
+	BreakPoint,
+	Overflow,
+	BoundRangeException,
+	InvalidOpcode,
+	DeviceNotAvailable,
+	DoubleFault,
+	CoprocessorSegmentOverrun,
+	InvalidTss,
+	SegmentNotPresent,
+	GeneralProtection,
+	PageFault,
+	X87FpuFloatingPointError,
+	AlignementCheck,
+	MachineCheck,
+	SimdFloatingPointException,
+	VirtualizationException,
+	IntelReserved,
+	Timer = pic::masterOffset,
+	Keyboard,
+	Cascade,
+	Com2,
+	Com1,
+	Lpt2,
+	FloppyDisk,
+	Lpt1,
+	CmosClock = pic::slaveOffset,
+	FreeIrq1,
+	FreeIrq2,
+	FreeIrq3,
+	Ps2Mouse,
+	Fpu,
+	PrimaryAtaHdd,
+	SecondaryAtaHdd
+};
+
+}// namespace Interrupt
 
 enum Flags : uint8_t
 {
