@@ -17,11 +17,10 @@ interruptHandler:
 	mov gs, ax
 	mov eax, isrDispatcher
 	call eax  ; A special call, preserves the 'eip' register
-	pop eax
+	;~pop eax
 	pop gs
 	pop fs
 	pop es
 	pop ds
 	add esp, 8  ; Cleans up the pushed error code and pushed ISR number
-	sti ; Reenable interrupts
 	iret
