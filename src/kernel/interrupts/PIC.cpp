@@ -23,10 +23,6 @@ void sendEndOfInterrupt(uint32_t interruptNumber)
 
 void remap()
 {
-	// Save masks
-	const uint8_t masterMask{inb(masterData)};
-	const uint8_t slaveMask{inb(slaveData)};
-
 	// Send ICW1
 	outb(masterCommand, Command::Init | Command::RequireIcw4);
 	outb(slaveCommand, Command::Init | Command::RequireIcw4);
@@ -36,8 +32,8 @@ void remap()
 	outb(slaveData, slaveOffset);
 
 	// Send ICW3
-	outb(masterData, 1 << 2);// tell master PIC that there is a slave PIC at IRQ2 (0000 0100)
-	outb(slaveData, 1 << 1);// tell slave PIC its cascade identity (0000 0010)
+	outb(masterData, MasterInterrupMask::Cascade);// tell master PIC that there is a slave PIC
+	outb(slaveData, SlaveInterruptMask::CascadeIdentity);// tell slave PIC its cascade identity
 
 	// Send ICW4
 	outb(masterData, InitCommandWord4::Mode8086);
@@ -46,10 +42,6 @@ void remap()
 	// Only enable keyboard
    outb(masterData, ~MasterInterrupMask::Keyboard);
    outb(slaveData, ~UINT8_C(0));
-
-	// Restore saved masks
-	//~outb(masterData, masterMask);
-	//~outb(slaveData, slaveMask);
 }
 
 }// namespace pic

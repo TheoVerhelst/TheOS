@@ -49,7 +49,7 @@ enum MasterInterrupMask : uint8_t
 enum SlaveInterruptMask : uint8_t
 {
 	CmosClock       = 1 << 0,
-	FreeIrq1        = 1 << 1,
+	CascadeIdentity = 1 << 1,
 	FreeIrq2        = 1 << 2,
 	FreeIrq3        = 1 << 3,
 	Ps2Mouse        = 1 << 4,

@@ -17,7 +17,6 @@ interruptHandler:
 	mov gs, ax
 	mov eax, isrDispatcher
 	call eax  ; A special call, preserves the 'eip' register
-	;~pop eax
 	pop gs
 	pop fs
 	pop es
