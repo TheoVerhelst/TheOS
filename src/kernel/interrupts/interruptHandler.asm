@@ -23,4 +23,5 @@ interruptHandler:
 	pop es
 	pop ds
 	add esp, 8  ; Cleans up the pushed error code and pushed ISR number
+	sti ; Reenable interrupts
 	iret

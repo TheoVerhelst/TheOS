@@ -9,11 +9,13 @@ namespace pic
 void initializePic()
 {
 	remap();
+	// Enable interrupts
+	asm volatile("sti");
 }
 
 void sendEndOfInterrupt(unsigned char irq)
 {
-	if(irq >= 8)
+	if(irq >= slaveOffset)
 		outb(slaveCommand, Command::EndOfInterrupt);
 
 	outb(masterCommand, Command::EndOfInterrupt);
@@ -21,29 +23,28 @@ void sendEndOfInterrupt(unsigned char irq)
 
 void remap()
 {
-	const uint8_t masterMask{inb(masterData)};// save masks
+	// Save masks
+	const uint8_t masterMask{inb(masterData)};
 	const uint8_t slaveMask{inb(slaveData)};
 
-	// starts the initialization sequence (in cascade mode)
+	// Send ICW1
 	outb(masterCommand, Command::Init | Command::RequireIcw4);
-	ioWait();
 	outb(slaveCommand, Command::Init | Command::RequireIcw4);
-	ioWait();
-	outb(masterData, masterOffset);// ICW2: master PIC vector offset
-	ioWait();
-	outb(slaveData, slaveOffset);// ICW2: slave PIC vector offset
-	ioWait();
-	outb(masterData, 1 << 2);// ICW3: tell master PIC that there is a slave PIC at IRQ2 (0000 0100)
-	ioWait();
-	outb(slaveData, 1 << 1);// ICW3: tell slave PIC its cascade identity (0000 0010)
-	ioWait();
 
+	// Send ICW2
+	outb(masterData, masterOffset);
+	outb(slaveData, slaveOffset);
+
+	// Send ICW3
+	outb(masterData, 1 << 2);// tell master PIC that there is a slave PIC at IRQ2 (0000 0100)
+	outb(slaveData, 1 << 1);// tell slave PIC its cascade identity (0000 0010)
+
+	// Send ICW4
 	outb(masterData, InitCommandWord4::Mode8086);
-	ioWait();
 	outb(slaveData, InitCommandWord4::Mode8086);
-	ioWait();
 
-	outb(masterData, masterMask);// restore saved masks.
+	// Restore saved masks
+	outb(masterData, masterMask);
 	outb(slaveData, slaveMask);
 }
 

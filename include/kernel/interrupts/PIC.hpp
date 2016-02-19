@@ -27,11 +27,11 @@ enum Command : uint8_t
 
 enum InitCommandWord4 : uint8_t
 {
-	Mode8086           = 1 << 0,                  ///< 8086/88 (MCS-80/85) mode.
-	AutoEndOfInterrupt = 1 << 1,                  ///< Auto (normal) EOI.
-	BufferedSlave      = 1 << 3,                  ///< Buffered mode slave.
-	BufferedMaster     = (1 << 2) | BufferedSlave,///< Buffered mode master
-	SpecialFullyNested = 1 << 4,                  ///< Special fully nested.
+	Mode8086           = 1 << 0,             ///< 8086/88 (MCS-80/85) mode.
+	AutoEndOfInterrupt = 1 << 1,             ///< Auto (normal) EOI.
+	BufferedMaster     = (1 << 2) | (1 << 3),///< Buffered mode master
+	BufferedSlave      = 1 << 3,             ///< Buffered mode slave.
+	SpecialFullyNested = 1 << 4,             ///< Special fully nested.
 };
 
 void initializePic();
