@@ -3,6 +3,10 @@
 
 #include <cstdint>
 #include <Printer.hpp>
+#include <kernel/interrupts/IDT.hpp>
+
+namespace isr
+{
 
 /// When an exception condition is related to a specific segment selector or IDT
 /// vector, the processor pushes an error code onto the stack of the exception
@@ -33,14 +37,32 @@ struct ErrorCode
 	uint16_t reserved;
 } __attribute__((packed));
 
+struct IsrArgs
+{
+	uint32_t gs;
+	uint32_t fs;
+	uint32_t es;
+	uint32_t ds;
+	uint32_t interruptNumber;
+	ErrorCode errorCode;
+	uint32_t eip;
+	uint32_t cs;
+	uint32_t eflags;
+	uint32_t useresp;
+	uint32_t ss;
+};
+
 static_assert(sizeof(ErrorCode) == 4, "Error code structure must be 32-bit");
 
 /// Fancy printing of the error code to \a out.
 Printer& operator<<(Printer& out, const ErrorCode& errorCode);
 
+/// The table of effective ISRs.
+extern void (*isrTable[idt::idtSize]) (IsrArgs);
+
+}// namespace isr
+
 /// Calls the apropriate C-written ISR, and logs the interrupt if needed.
-extern "C" void isrDispatcher(uint32_t gs, uint32_t fs, uint32_t es,
-		uint32_t ds, uint32_t interruptNumber, ErrorCode errorCode, uint32_t eip,
-		uint32_t cs, uint32_t eflags, uint32_t useresp, uint32_t ss);
+extern "C" void isrDispatcher(isr::IsrArgs args);
 
 #endif// ISRDISPATCHER_HPP

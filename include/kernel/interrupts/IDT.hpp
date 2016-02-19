@@ -107,69 +107,9 @@ extern IdtDescriptor idtDescriptor;
 
 }// namespace idt
 
-extern "C" void isr0();
-extern "C" void isr1();
-extern "C" void isr2();
-extern "C" void isr3();
-extern "C" void isr4();
-extern "C" void isr5();
-extern "C" void isr6();
-extern "C" void isr7();
-extern "C" void isr8();
-extern "C" void isr9();
-extern "C" void isr10();
-extern "C" void isr11();
-extern "C" void isr12();
-extern "C" void isr13();
-extern "C" void isr14();
-extern "C" void isr15();
-extern "C" void isr16();
-extern "C" void isr17();
-extern "C" void isr18();
-extern "C" void isr19();
-extern "C" void isr20();
-extern "C" void isr21();
-extern "C" void isr22();
-extern "C" void isr23();
-extern "C" void isr24();
-extern "C" void isr25();
-extern "C" void isr26();
-extern "C" void isr27();
-extern "C" void isr28();
-extern "C" void isr29();
-extern "C" void isr30();
-extern "C" void isr31();
-extern "C" void isr32();
-extern "C" void isr33();
-extern "C" void isr34();
-extern "C" void isr35();
-extern "C" void isr36();
-extern "C" void isr37();
-extern "C" void isr38();
-extern "C" void isr39();
-extern "C" void isr40();
-extern "C" void isr41();
-extern "C" void isr42();
-extern "C" void isr43();
-extern "C" void isr44();
-extern "C" void isr45();
-extern "C" void isr46();
-extern "C" void isr47();
-extern "C" void isr48();
-extern "C" void isr49();
-extern "C" void isr50();
-extern "C" void isr51();
-extern "C" void isr52();
-extern "C" void isr53();
-extern "C" void isr54();
-extern "C" void isr55();
-extern "C" void isr56();
-extern "C" void isr57();
-extern "C" void isr58();
-extern "C" void isr59();
-extern "C" void isr60();
-extern "C" void isr61();
-extern "C" void isr62();
-extern "C" void isr63();
+// Declare all 64 ISR handler with the item trick
+#define ITEM(INDEX) extern "C" void isr##INDEX();
+#include <kernel/item64Helper.itm>
+#undef ITEM
 
 #endif// IDT_HPP
