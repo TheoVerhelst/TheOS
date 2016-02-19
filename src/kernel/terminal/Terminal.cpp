@@ -5,29 +5,29 @@
 Terminal::Terminal():
 	_row{0},
 	_column{0},
-	_profile(VGA::Colour::LightGrey, VGA::Colour::Black),
+	_profile(vga::Colour::LightGrey, vga::Colour::Black),
 	_emptyCell{' ', _profile},
 	_writing{false}
 {
 	clearScreen();
 }
 
-void Terminal::setColourProfile(VGA::ColourProfile profile)
+void Terminal::setColourProfile(vga::ColourProfile profile)
 {
 	_profile = profile;
-	_emptyCell = VGA::Entry(' ', _profile);
+	_emptyCell = vga::Entry(' ', _profile);
 }
 
-void Terminal::putEntryAt(char c, VGA::ColourProfile profile, size_t x, size_t y)
+void Terminal::putEntryAt(char c, vga::ColourProfile profile, size_t x, size_t y)
 {
-	VGA::buffer[VGA::coordToIndex(x, y)] = VGA::Entry(c, profile);
+	vga::buffer[vga::coordToIndex(x, y)] = vga::Entry(c, profile);
 }
 
 void Terminal::newLine(void)
 {
 	_column = 0;
 	++_row;
-	if(_row == VGA::height)
+	if(_row == vga::height)
 		scrollUp();
 }
 
@@ -39,7 +39,7 @@ void Terminal::putChar(char c)
 	{
 		putEntryAt(c, _profile, _column, _row);
 		++_column;
-		if(_column == VGA::width)
+		if(_column == vga::width)
 			newLine();
 	}
 	if(!_writing)
@@ -55,19 +55,19 @@ void Terminal::putString(const char *str)
 void Terminal::scrollUp()
 {
 	--_row;
-	memcpy(VGA::buffer, &VGA::buffer[VGA::coordToIndex(0, 1)],
-	       (VGA::width * (VGA::height - 1)) * sizeof(VGA::Entry));
-	_memset(&VGA::buffer[VGA::coordToIndex(0, VGA::height - 1)], _emptyCell.getValue(), VGA::width);
+	memcpy(vga::buffer, &vga::buffer[vga::coordToIndex(0, 1)],
+	       (vga::width * (vga::height - 1)) * sizeof(vga::Entry));
+	_memset(&vga::buffer[vga::coordToIndex(0, vga::height - 1)], _emptyCell.getValue(), vga::width);
 }
 
 void Terminal::clearScreen()
 {
-	_memset(VGA::buffer, _emptyCell.getValue(), VGA::height*VGA::width);
+	_memset(vga::buffer, _emptyCell.getValue(), vga::height*vga::width);
 }
 
 void Terminal::moveCursor(int x, int y)
 {
-	uint16_t location = (y * VGA::width) + x;
+	uint16_t location = (y * vga::width) + x;
 
 	/* 0x3D4-0x3D5 are in VGA address space */
 	outb(0x3D4, 0x0F);

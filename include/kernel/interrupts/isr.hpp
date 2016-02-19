@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <Printer.hpp>
-#include <kernel/interrupts/IDT.hpp>
+#include <kernel/interrupts/idt.hpp>
 
 namespace isr
 {

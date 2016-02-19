@@ -1,7 +1,7 @@
 #ifndef ISR21_HPP
 #define ISR21_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr21cpp(isr::IsrArgs args);
 

@@ -1,6 +1,6 @@
-#include <kernel/video/VGA_management.hpp>
+#include <kernel/video/vgaManagement.hpp>
 
-namespace VGA
+namespace vga
 {
 
 ColourProfile::ColourProfile(Colour foreground, Colour background)
@@ -23,4 +23,4 @@ uint16_t Entry::getValue() const
 	return _value;
 }
 
-}// namespace VGA
+}// namespace vga

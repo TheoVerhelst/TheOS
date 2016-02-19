@@ -1,4 +1,4 @@
-#include <kernel/interrupts/IDT.hpp>
+#include <kernel/interrupts/idt.hpp>
 
 namespace idt
 {

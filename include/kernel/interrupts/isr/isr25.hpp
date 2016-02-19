@@ -1,7 +1,7 @@
 #ifndef ISR25_HPP
 #define ISR25_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr25cpp(isr::IsrArgs args);
 

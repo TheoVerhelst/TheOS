@@ -2,14 +2,14 @@
 #define TERMINAL_HPP
 
 #include <cstddef>
-#include <kernel/video/VGA_management.hpp>
+#include <kernel/video/vgaManagement.hpp>
 
 /// Class managing the main terminal.
 class Terminal
 {
 	public:
 		Terminal();
-		void setColourProfile(VGA::ColourProfile profile);
+		void setColourProfile(vga::ColourProfile profile);
 		void putChar(char c);
 		void putString(const char * str);
 
@@ -17,13 +17,13 @@ class Terminal
 		void newLine();
 		void scrollUp();
 		void clearScreen();
-		void putEntryAt(char c, VGA::ColourProfile profile, size_t x, size_t y);
+		void putEntryAt(char c, vga::ColourProfile profile, size_t x, size_t y);
 		void moveCursor(int x, int y);
 
 		size_t _row;               /// Y coordinate
 		size_t _column;            /// X coordinate
-		VGA::ColourProfile _profile;/// Colour of the cell
-		VGA::Entry _emptyCell;
+		vga::ColourProfile _profile;/// Colour of the cell
+		vga::Entry _emptyCell;
 		bool _writing;
 
 };

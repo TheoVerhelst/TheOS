@@ -1,7 +1,7 @@
 #ifndef ISR59_HPP
 #define ISR59_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr59cpp(isr::IsrArgs args);
 

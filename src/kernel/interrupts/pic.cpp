@@ -1,7 +1,7 @@
 #include <io/in.hpp>
 #include <io/out.hpp>
 #include <io/ioWait.hpp>
-#include <kernel/interrupts/PIC.hpp>
+#include <kernel/interrupts/pic.hpp>
 
 namespace pic
 {

@@ -1,13 +1,13 @@
-#include <kernel/GDT.hpp>
+#include <kernel/gdt.hpp>
 
-gdt::GDTDescriptor descriptor;
+gdt::GdtDescriptor descriptor;
 
 namespace gdt
 {
 
-GDTEntry globalDescriptorTable[3];
+GdtEntry globalDescriptorTable[3];
 
-GDTEntry::GDTEntry(uint32_t base, uint32_t limit, uint8_t access, uint8_t flags):
+GdtEntry::GdtEntry(uint32_t base, uint32_t limit, uint8_t access, uint8_t flags):
 	_limit0{static_cast<uint16_t>(limit & 0x0000FFFF)},
 	_base0{static_cast<uint16_t>(base & 0x0000FFFF)},
 	_base1{static_cast<uint8_t>((base & 0x00FF0000) >> 16)},
@@ -22,13 +22,13 @@ void initializeGdt()
 {
 	descriptor.address = reinterpret_cast<uint32_t>(&globalDescriptorTable);
 	descriptor.size = sizeof(globalDescriptorTable);
-	globalDescriptorTable[1] = GDTEntry(0, 0xFFFFF,
+	globalDescriptorTable[1] = GdtEntry(0, 0xFFFFF,
 			Access::ReadWrite | Access::Present | Access::CodeData,
 			Flags::Size | Flags::Granularity);
-	globalDescriptorTable[2] = GDTEntry(0, 0xFFFFF,
+	globalDescriptorTable[2] = GdtEntry(0, 0xFFFFF,
 			Access::ReadWrite | Access::Present | Access::Execution | Access::CodeData,
 			Flags::Size | Flags::Granularity);
-	flushGDT();
+	flushGdt();
 }
 
 }// namespace gdt

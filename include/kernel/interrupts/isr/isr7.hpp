@@ -1,7 +1,7 @@
 #ifndef ISR7_HPP
 #define ISR7_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr7cpp(isr::IsrArgs args);
 

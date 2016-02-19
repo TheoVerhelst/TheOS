@@ -1,7 +1,7 @@
 #ifndef ISR3_HPP
 #define ISR3_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr3cpp(isr::IsrArgs args);
 

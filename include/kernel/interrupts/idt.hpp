@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <cstddef>
-#include <kernel/interrupts/PIC.hpp>
+#include <kernel/interrupts/pic.hpp>
 
 namespace idt
 {

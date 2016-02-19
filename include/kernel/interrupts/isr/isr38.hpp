@@ -1,7 +1,7 @@
 #ifndef ISR38_HPP
 #define ISR38_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr38cpp(isr::IsrArgs args);
 

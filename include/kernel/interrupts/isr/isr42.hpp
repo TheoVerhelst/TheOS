@@ -1,7 +1,7 @@
 #ifndef ISR42_HPP
 #define ISR42_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr42cpp(isr::IsrArgs args);
 

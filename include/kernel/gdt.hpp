@@ -8,9 +8,9 @@ namespace gdt
 
 /// Global Descriptor Table Descriptor.
 /// This struct simply holds the address and the size of the Global Descriptor
-/// Table. A global instance of a GDTDescriptor is initialized and set,
+/// Table. A global instance of a GdtDescriptor is initialized and set,
 /// then its address is given to the CPU in order to initialize segmentation.
-struct GDTDescriptor
+struct GdtDescriptor
 {
 	uint16_t size;
 	uint32_t address;
@@ -22,10 +22,10 @@ struct GDTDescriptor
 /// setting the segments registers correctly in order to let the CPU know
 /// about the segmentation of the OS. In our case, we disable segmentation
 /// by using two pages (code and data) that fit the whole memory.
-class GDTEntry
+class GdtEntry
 {
 	public:
-		GDTEntry(uint32_t base = 0, uint32_t limit = 0, uint8_t access = 0, uint8_t flags = 0);
+		GdtEntry(uint32_t base = 0, uint32_t limit = 0, uint8_t access = 0, uint8_t flags = 0);
 
 	private:
 		uint16_t _limit0;
@@ -71,14 +71,14 @@ enum Flags : uint8_t
 
 }// namespace Flags
 
-extern GDTEntry globalDescriptorTable[3];
+extern GdtEntry globalDescriptorTable[3];
 
 void initializeGdt();
 
 }// namespace gdt
 
-extern gdt::GDTDescriptor descriptor;
+extern gdt::GdtDescriptor descriptor;
 
-extern "C" void flushGDT();
+extern "C" void flushGdt();
 
 #endif// GDT_HPP

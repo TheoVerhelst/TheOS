@@ -3,9 +3,9 @@
 #endif
 
 #include <kernel/kernel.hpp>
-#include <kernel/GDT.hpp>
-#include <kernel/interrupts/IDT.hpp>
-#include <kernel/interrupts/PIC.hpp>
+#include <kernel/gdt.hpp>
+#include <kernel/interrupts/idt.hpp>
+#include <kernel/interrupts/pic.hpp>
 #include <Printer.hpp>
 #include <boot/MultibootInfo.hpp>
 

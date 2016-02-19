@@ -1,7 +1,7 @@
 #ifndef ISR55_HPP
 #define ISR55_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr55cpp(isr::IsrArgs args);
 

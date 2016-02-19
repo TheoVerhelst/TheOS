@@ -5,7 +5,7 @@
 #include <cstddef>
 
 // VGA hardware interface
-namespace VGA
+namespace vga
 {
 
 enum class Colour : uint8_t

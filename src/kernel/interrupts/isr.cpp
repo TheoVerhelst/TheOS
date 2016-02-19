@@ -1,7 +1,7 @@
 #include <Printer.hpp>
-#include <kernel/interrupts/isrDispatcher.hpp>
-#include <kernel/interrupts/PIC.hpp>
-#include <kernel/interrupts/IDT.hpp>
+#include <kernel/interrupts/isr.hpp>
+#include <kernel/interrupts/pic.hpp>
+#include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/isr/isr0.hpp>
 #include <kernel/interrupts/isr/isr1.hpp>
 #include <kernel/interrupts/isr/isr2.hpp>

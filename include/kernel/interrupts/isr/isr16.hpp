@@ -1,7 +1,7 @@
 #ifndef ISR16_HPP
 #define ISR16_HPP
 
-#include <kernel/interrupts/isrDispatcher.hpp>
+#include <kernel/interrupts/isr.hpp>
 
 void isr16cpp(isr::IsrArgs args);
 
