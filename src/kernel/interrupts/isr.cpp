@@ -93,13 +93,10 @@ Printer& operator<<(Printer& out, const ErrorCode& errorCode)
 
 extern "C" void isrDispatcher(isr::IsrArgs args)
 {
-	// Log the interrupt
-	out << "Interrupt number " << args.interruptNumber << ", error code " << args.errorCode << "\n";
+	// Call the proper ISR
+	isr::isrTable[args.interruptNumber](args);
 
 	// If the interrupt is a mapped IRQ, then send a EOI command to PIC
 	if(args.interruptNumber >= pic::masterOffset and args.interruptNumber <= pic::slaveOffset + 8)
 		pic::sendEndOfInterrupt(args.interruptNumber);
-
-	// Call the proper ISR
-	isr::isrTable[args.interruptNumber](args);
 }
