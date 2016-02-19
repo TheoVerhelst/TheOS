@@ -53,7 +53,7 @@ struct IdtDescriptor
 } __attribute__((packed));
 static_assert(sizeof(IdtDescriptor) == 6, "The IDT descriptor must be 6-bytes long.");
 
-constexpr size_t idtSize{32};
+constexpr size_t idtSize{64};
 
 extern IdtEntry idt[idtSize];
 
@@ -93,5 +93,37 @@ extern "C" void isr28();
 extern "C" void isr29();
 extern "C" void isr30();
 extern "C" void isr31();
+extern "C" void isr32();
+extern "C" void isr33();
+extern "C" void isr34();
+extern "C" void isr35();
+extern "C" void isr36();
+extern "C" void isr37();
+extern "C" void isr38();
+extern "C" void isr39();
+extern "C" void isr40();
+extern "C" void isr41();
+extern "C" void isr42();
+extern "C" void isr43();
+extern "C" void isr44();
+extern "C" void isr45();
+extern "C" void isr46();
+extern "C" void isr47();
+extern "C" void isr48();
+extern "C" void isr49();
+extern "C" void isr50();
+extern "C" void isr51();
+extern "C" void isr52();
+extern "C" void isr53();
+extern "C" void isr54();
+extern "C" void isr55();
+extern "C" void isr56();
+extern "C" void isr57();
+extern "C" void isr58();
+extern "C" void isr59();
+extern "C" void isr60();
+extern "C" void isr61();
+extern "C" void isr62();
+extern "C" void isr63();
 
 #endif// IDT_HPP
