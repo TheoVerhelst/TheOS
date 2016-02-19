@@ -34,9 +34,33 @@ enum InitCommandWord4 : uint8_t
 	SpecialFullyNested = 1 << 4,             ///< Special fully nested.
 };
 
+enum MasterInterrupMask : uint8_t
+{
+	Timer      = 1 << 0,
+	Keyboard   = 1 << 1,
+	Cascade    = 1 << 2,
+	Com2       = 1 << 3,
+	Com1       = 1 << 4,
+	Lpt2       = 1 << 5,
+	FloppyDisk = 1 << 6,
+	Lpt1       = 1 << 7
+};
+
+enum SlaveInterruptMask : uint8_t
+{
+	CmosClock       = 1 << 0,
+	FreeIrq1        = 1 << 1,
+	FreeIrq2        = 1 << 2,
+	FreeIrq3        = 1 << 3,
+	Ps2Mouse        = 1 << 4,
+	Fpu             = 1 << 5,
+	PrimaryAtaHdd   = 1 << 6,
+	SecondaryAtaHdd = 1 << 7,
+};
+
 void initializePic();
 
-void sendEndOfInterrupt(uint8_t irq);
+void sendEndOfInterrupt(uint32_t interruptNumber);
 
 void remap();
 

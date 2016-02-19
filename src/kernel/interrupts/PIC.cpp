@@ -13,9 +13,9 @@ void initializePic()
 	asm volatile("sti");
 }
 
-void sendEndOfInterrupt(unsigned char irq)
+void sendEndOfInterrupt(uint32_t interruptNumber)
 {
-	if(irq >= slaveOffset)
+	if(interruptNumber >= slaveOffset)
 		outb(slaveCommand, Command::EndOfInterrupt);
 
 	outb(masterCommand, Command::EndOfInterrupt);
@@ -43,9 +43,13 @@ void remap()
 	outb(masterData, InitCommandWord4::Mode8086);
 	outb(slaveData, InitCommandWord4::Mode8086);
 
+	// Only enable keyboard
+   outb(masterData, ~MasterInterrupMask::Keyboard);
+   outb(slaveData, ~UINT8_C(0));
+
 	// Restore saved masks
-	outb(masterData, masterMask);
-	outb(slaveData, slaveMask);
+	//~outb(masterData, masterMask);
+	//~outb(slaveData, slaveMask);
 }
 
 }// namespace pic

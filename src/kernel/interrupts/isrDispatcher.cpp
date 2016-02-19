@@ -5,7 +5,7 @@
 
 Printer& operator<<(Printer& out, const ErrorCode& errorCode)
 {
-	out << errorCode.segmentSelectorIndex << "(";
+	out << errorCode.segmentSelectorIndex << " (";
 	out << (errorCode.externalEvent ? "external" : "internal") << ", ";
 	if(errorCode.descriptorLocation)
 		out << "IDT";
@@ -20,10 +20,10 @@ extern "C" void isrDispatcher(uint32_t gs, uint32_t fs, uint32_t es,
 		uint32_t cs, uint32_t eflags, uint32_t useresp, uint32_t ss)
 {
 	// Log the interrupt
-	out << "Interrupt number " << interruptNumber << ", error code " << errorCode << ".\n";
+	out << "Interrupt number " << interruptNumber << ", error code " << errorCode << "\n";
 
 	// If the interrupt is a mapped IRQ, then send a EOI command to PIC
-	if(interruptNumber > pic::masterOffset and interruptNumber < pic::slaveOffset + 8)
+	if(interruptNumber >= pic::masterOffset and interruptNumber <= pic::slaveOffset + 8)
 		pic::sendEndOfInterrupt(interruptNumber);
 
 	// Return from interrupt if possible
