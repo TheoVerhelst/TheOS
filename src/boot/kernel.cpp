@@ -3,6 +3,7 @@
 #endif
 
 #include <kernel/kernel.hpp>
+#include <boot/Icxxabi.hpp>
 #include <kernel/gdt.hpp>
 #include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/pic.hpp>
@@ -28,6 +29,8 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	pic::initializePic();
 	while(true)
 		ps2::keyboardDriver.flushBuffer();
+	// Call destructors
+	__cxa_finalize(0);
 }
 
 void initKernelHeap(MemoryRegion* address, size_t size)
