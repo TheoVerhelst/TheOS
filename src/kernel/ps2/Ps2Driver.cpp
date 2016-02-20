@@ -8,6 +8,7 @@ namespace ps2
 bool Ps2Driver::read(uint8_t& byte)
 {
 	byte = inb(_dataPort);
+	return byte != 0 and byte != 0xFF;
 }
 
 bool Ps2Driver::write(uint8_t byte)
