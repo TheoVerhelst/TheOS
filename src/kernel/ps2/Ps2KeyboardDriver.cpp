@@ -1,4 +1,5 @@
 #include <kernel/ps2/Ps2KeyboardDriver.hpp>
+#include <Printer.hpp>
 
 namespace ps2
 {
@@ -9,19 +10,22 @@ void Ps2KeyboardDriver::pollKeyboard()
 {
 	uint8_t byte;
 	if(read(byte))
-		_scanCodeBuffer.pushBack(byte);
+	{
+		_bufferEnd = _bufferEnd + 1 >= _bufferSize ? _bufferSize : _bufferEnd + 1;
+		_scanCodeBuffer[_bufferEnd] = byte;
+	}
 }
 
 bool Ps2KeyboardDriver::isBufferEmpty()
 {
-	return _scanCodeBuffer.empty();
+	return _bufferEnd == 0;
 }
 
-List<uint8_t> Ps2KeyboardDriver::flushBuffer()
+void Ps2KeyboardDriver::flushBuffer()
 {
-	List<uint8_t> res(_scanCodeBuffer);
-	_scanCodeBuffer.clear();
-	return res;
+	for(size_t i{0}; i < _bufferEnd; ++i)
+		out << _scanCodeBuffer[i] << ".";
+	_bufferEnd = 0;
 }
 
 }// namespace ps2

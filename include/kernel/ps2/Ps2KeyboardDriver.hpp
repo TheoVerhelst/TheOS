@@ -2,7 +2,7 @@
 #define KEYBOARD_HPP
 
 #include <cstdint>
-#include <List.hpp>
+#include <cstddef>
 #include <kernel/ps2/Ps2Driver.hpp>
 
 namespace ps2
@@ -13,10 +13,12 @@ class Ps2KeyboardDriver : public Ps2Driver
 	public:
 		void pollKeyboard();
 		bool isBufferEmpty();
-		List<uint8_t> flushBuffer();
+		void flushBuffer();
 
 	private:
-		List<uint8_t> _scanCodeBuffer;
+		static constexpr size_t _bufferSize{16};
+		uint8_t _scanCodeBuffer[_bufferSize];
+		size_t _bufferEnd{0};
 
 		enum Command : uint8_t
 		{

@@ -35,7 +35,6 @@
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {
-_GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   // Used, in C++03 mode too, by allocators, etc.
   /**
@@ -50,15 +49,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	(&const_cast<char&>(reinterpret_cast<const volatile char&>(__r)));
     }
 
-_GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
-#if __cplusplus >= 201103L
 #include <type_traits> // Brings in std::declval too.
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {
-_GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   /**
    *  @addtogroup utilities
@@ -146,19 +142,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     }
 
   /// @} group utilities
-_GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
 #define _GLIBCXX_MOVE(__val) std::move(__val)
 #define _GLIBCXX_FORWARD(_Tp, __val) std::forward<_Tp>(__val)
-#else
-#define _GLIBCXX_MOVE(__val) (__val)
-#define _GLIBCXX_FORWARD(_Tp, __val) (__val)
-#endif
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {
-_GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   /**
    *  @addtogroup utilities
@@ -202,7 +192,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     }
 
   /// @} group utilities
-_GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
 #endif /* _MOVE_H */

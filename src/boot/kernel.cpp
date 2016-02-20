@@ -27,9 +27,7 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	idt::initializeIdt();
 	pic::initializePic();
 	while(true)
-		if(not ps2::keyboardDriver.isBufferEmpty())
-			for(auto& ch : ps2::keyboardDriver.flushBuffer())
-				out << ch;
+		ps2::keyboardDriver.flushBuffer();
 }
 
 void initKernelHeap(MemoryRegion* address, size_t size)
