@@ -15,7 +15,7 @@ class Ps2Driver
 
 		static constexpr uint16_t _dataPort{0x60};
 		static constexpr uint16_t _commandPort{0x64};
-		unsigned int _triesMaxNumber{10000};
+		unsigned int _triesMaxNumber{1000000};
 
 		enum Status : uint8_t
 		{

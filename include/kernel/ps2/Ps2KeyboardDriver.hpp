@@ -16,8 +16,8 @@ class Ps2KeyboardDriver : public Ps2Driver
 		void flushBuffer();
 
 	private:
-		static constexpr size_t _bufferSize{16};
-		uint8_t _scanCodeBuffer[_bufferSize];
+		static constexpr size_t _bufferSize{128};
+		uint8_t _buffer[_bufferSize];
 		size_t _bufferEnd{0};
 
 		enum Command : uint8_t

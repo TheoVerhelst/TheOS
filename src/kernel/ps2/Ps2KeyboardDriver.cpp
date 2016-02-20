@@ -9,11 +9,8 @@ Ps2KeyboardDriver keyboardDriver;
 void Ps2KeyboardDriver::pollKeyboard()
 {
 	uint8_t byte;
-	if(read(byte))
-	{
-		_bufferEnd = _bufferEnd + 1 >= _bufferSize ? _bufferSize : _bufferEnd + 1;
-		_scanCodeBuffer[_bufferEnd] = byte;
-	}
+	if(read(byte) and _bufferEnd + 1 < _bufferSize)
+		_buffer[_bufferEnd++] = byte;
 }
 
 bool Ps2KeyboardDriver::isBufferEmpty()
@@ -24,7 +21,7 @@ bool Ps2KeyboardDriver::isBufferEmpty()
 void Ps2KeyboardDriver::flushBuffer()
 {
 	for(size_t i{0}; i < _bufferEnd; ++i)
-		out << _scanCodeBuffer[i] << ".";
+		out << _buffer[i] << ".";
 	_bufferEnd = 0;
 }
 
