@@ -70,21 +70,16 @@ class List
 		typedef NodeConstIterator constIterator;
 
 		List(const AllocatorType& allocator = AllocatorType());
+		List(const List& other);
+		List(List&& other);
+		List& operator=(List other);
 		AllocatorType getAllocator() const;
 		bool empty() const;
 		size_t size() const;
-
-		/// \pre not empty().
-		T& back();
-
-		/// \pre not empty().
-		const T& back() const;
-
-		/// \pre not empty().
-		T& front();
-
-		/// \pre not empty().
-		const T& front() const;
+		T& back();             ///< \pre not empty().
+		const T& back() const; ///< \pre not empty().
+		T& front();            ///< \pre not empty().
+		const T& front() const;///< \pre not empty().
 		void clear();
 		void pushBack(const T& value);
 		void pushBack(T&& value);
@@ -119,6 +114,38 @@ List<T, AllocatorType>::List(const AllocatorType& allocator):
 	_allocator{allocator}
 {
 	_begin = _end = _allocator.allocate();
+}
+
+template <class T, class AllocatorType>
+List<T, AllocatorType>::List(const List<T, AllocatorType>& other):
+	List()
+{
+	details::ListNode<T>* previousNode{_begin};
+	details::ListNode<T>* nextNode;
+	for(const details::ListNode<T>* node{other._begin}; node != other._end; node = node->next)
+	{
+		previousNode->value = node->value;
+		nextNode = _allocator.allocate();
+		nextNode->previous = previousNode;
+		previousNode->next = nextNode;
+		++_size;
+	}
+	_end = nextNode;
+}
+
+template <class T, class AllocatorType>
+List<T, AllocatorType>::List(List<T, AllocatorType>&& other):
+	List()
+{
+	std::swap(_begin, other._begin);
+	std::swap(_end, other._end);
+	std::swap(_size, other._size);
+}
+
+template <class T, class AllocatorType>
+List<T, AllocatorType>& List<T, AllocatorType>::operator=(List<T, AllocatorType> other)
+{
+	std::swap(*this, other);
 }
 
 template <class T, class AllocatorType>
