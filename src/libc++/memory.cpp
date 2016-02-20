@@ -33,15 +33,3 @@ void operator delete[](void* address, size_t size) throw()
 {
 	operator delete(address, size);
 }
-
-template <class T>
-T* Allocator<T>::allocate()
-{
-	return new T;
-}
-
-template <class T>
-void Allocator<T>::deallocate(T* pointer)
-{
-	delete pointer;
-}

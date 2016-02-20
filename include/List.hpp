@@ -2,10 +2,8 @@
 #define LIST_HPP
 
 #include <utility>
-
-//Forward declarations
-template <typename T>
-class Allocator;
+#include <cstddef>
+#include <memory.hpp>
 
 namespace details
 {

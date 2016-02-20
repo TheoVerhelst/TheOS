@@ -20,8 +20,22 @@ template <class T>
 class Allocator
 {
 	public:
+		typedef T valueType;
+		typedef T* pointer;
 		T* allocate();
 		void deallocate(T* pointer);
 };
+
+template <class T>
+T* Allocator<T>::allocate()
+{
+	return new T;
+}
+
+template <class T>
+void Allocator<T>::deallocate(T* pointer)
+{
+	delete pointer;
+}
 
 #endif// MEMORY_HPP
