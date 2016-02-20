@@ -6,6 +6,7 @@
 #include <kernel/gdt.hpp>
 #include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/pic.hpp>
+#include <kernel/ps2/Ps2KeyboardDriver.hpp>
 #include <Printer.hpp>
 #include <boot/MultibootInfo.hpp>
 
@@ -25,7 +26,10 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	gdt::initializeGdt();
 	idt::initializeIdt();
 	pic::initializePic();
-	while(true);
+	while(true)
+		if(not ps2::keyboardDriver.isBufferEmpty())
+			for(auto& ch : ps2::keyboardDriver.flushBuffer())
+				out << ch;
 }
 
 void initKernelHeap(MemoryRegion* address, size_t size)
