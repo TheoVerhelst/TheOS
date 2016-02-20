@@ -1,9 +1,11 @@
-#include <Printer.hpp>
-#include <io/in.hpp>
+#include <kernel/ps2/Ps2KeyboardDriver.hpp>
 #include <kernel/interrupts/isr/isr33.hpp>
 
 void isr33cpp(isr::IsrArgs args)
 {
-	out << "Key pressed or released!\n";
-	inb(0x60);
+	ps2::keyboardDriver.pollKeyboard();
+	out << "Groumf!";
+	if(not ps2::keyboardDriver.isBufferEmpty())
+		out << ps2::keyboardDriver.flushBuffer().size();
+	out << "\n";
 }
