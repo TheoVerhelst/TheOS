@@ -72,6 +72,7 @@ class List
 		List(const AllocatorType& allocator = AllocatorType());
 		List(const List& other);
 		List(List&& other);
+		~List();
 		List& operator=(List other);
 		AllocatorType getAllocator() const;
 		bool empty() const;
@@ -140,6 +141,12 @@ List<T, AllocatorType>::List(List<T, AllocatorType>&& other):
 	std::swap(_begin, other._begin);
 	std::swap(_end, other._end);
 	std::swap(_size, other._size);
+}
+
+template <class T, class AllocatorType>
+List<T, AllocatorType>::~List()
+{
+	clear();
 }
 
 template <class T, class AllocatorType>
