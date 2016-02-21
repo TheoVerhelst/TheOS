@@ -1,10 +1,10 @@
-#ifndef PS2DRIVER_HPP
-#define PS2DRIVER_HPP
+#ifndef Driver_HPP
+#define Driver_HPP
 
 namespace ps2
 {
 
-class Ps2Driver
+class Driver
 {
 	protected:
 		bool read(uint8_t& byte);
@@ -32,4 +32,4 @@ class Ps2Driver
 
 }// namespace ps2
 
-#endif// PS2DRIVER_HPP
+#endif// Driver_HPP

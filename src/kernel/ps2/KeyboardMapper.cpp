@@ -1,14 +1,14 @@
-#include <kernel/ps2/Ps2KeyboardMapper.hpp>
+#include <kernel/ps2/KeyboardMapper.hpp>
 
 namespace ps2
 {
 
-Ps2KeyboardMapper::Ps2KeyboardMapper(Mapping mapping):
+KeyboardMapper::KeyboardMapper(Mapping mapping):
 	_currentMapping{mapping}
 {
 }
 
-const KeyEvent& Ps2KeyboardMapper::get(const ScancodeSequence& sequence)
+const KeyEvent& KeyboardMapper::get(const ScancodeSequence& sequence)
 {
 	const size_t mappingIndex{static_cast<size_t>(_currentMapping)};
 	for(size_t i{0}; i < _scancodeMappingNumber; ++i)
@@ -17,19 +17,19 @@ const KeyEvent& Ps2KeyboardMapper::get(const ScancodeSequence& sequence)
 	return _unknowEvent;
 }
 
-Ps2KeyboardMapper::Mapping Ps2KeyboardMapper::getCurrentMapping() const
+KeyboardMapper::Mapping KeyboardMapper::getCurrentMapping() const
 {
 	return _currentMapping;
 }
 
-void Ps2KeyboardMapper::setCurrentMapping(Mapping newCurrentMapping)
+void KeyboardMapper::setCurrentMapping(Mapping newCurrentMapping)
 {
 	_currentMapping = newCurrentMapping;
 }
 
-constexpr KeyEvent Ps2KeyboardMapper::_unknowEvent;
+constexpr KeyEvent KeyboardMapper::_unknowEvent;
 
-const Ps2KeyboardMapper::ScancodeMapping Ps2KeyboardMapper::_mappings[][Ps2KeyboardMapper::_scancodeMappingNumber] =
+const KeyboardMapper::ScancodeMapping KeyboardMapper::_mappings[][KeyboardMapper::_scancodeMappingNumber] =
 {
 	{
 		{{1, {0x01}}, {Key::Escape, true}},

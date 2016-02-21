@@ -3,12 +3,12 @@
 
 #include <cstdint>
 #include <cstddef>
-#include <kernel/ps2/Ps2Driver.hpp>
+#include <kernel/ps2/Driver.hpp>
 
 namespace ps2
 {
 
-class Ps2KeyboardDriver : public Ps2Driver
+class KeyboardDriver : public Driver
 {
 	public:
 		void pollKeyboard();
@@ -42,7 +42,7 @@ class Ps2KeyboardDriver : public Ps2Driver
 		};
 };
 
-extern Ps2KeyboardDriver keyboardDriver;
+extern KeyboardDriver keyboardDriver;
 
 }// namespace ps2
 

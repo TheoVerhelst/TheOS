@@ -7,7 +7,7 @@
 #include <kernel/gdt.hpp>
 #include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/pic.hpp>
-#include <kernel/ps2/Ps2KeyboardDriver.hpp>
+#include <kernel/ps2/KeyboardDriver.hpp>
 #include <Printer.hpp>
 #include <boot/MultibootInfo.hpp>
 

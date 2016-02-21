@@ -1,5 +1,5 @@
-#ifndef PS2KEYBOARDMAPPER_HPP
-#define PS2KEYBOARDMAPPER_HPP
+#ifndef KeyboardMapper_HPP
+#define KeyboardMapper_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -10,7 +10,7 @@
 namespace ps2
 {
 
-class Ps2KeyboardMapper
+class KeyboardMapper
 {
 	public:
 		enum class Mapping : size_t
@@ -21,7 +21,7 @@ class Ps2KeyboardMapper
 			MappingNumber
 		};
 
-		Ps2KeyboardMapper(Mapping mapping);
+		KeyboardMapper(Mapping mapping);
 		const KeyEvent& get(const ScancodeSequence& sequence);
 		Mapping getCurrentMapping() const;
 		void setCurrentMapping(Mapping newCurrentMapping);
@@ -42,4 +42,4 @@ class Ps2KeyboardMapper
 
 }// namespace ps2
 
-#endif// PS2KEYBOARDMAPPER_HPP
+#endif// KeyboardMapper_HPP
