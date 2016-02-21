@@ -1,5 +1,6 @@
-#include <kernel/ps2/KeyboardDriver.hpp>
 #include <Printer.hpp>
+#include <kernel/ps2/Key.hpp>
+#include <kernel/ps2/KeyboardDriver.hpp>
 
 namespace ps2
 {
@@ -9,21 +10,29 @@ KeyboardDriver keyboardDriver;
 void KeyboardDriver::pollKeyboard()
 {
 	uint8_t byte;
-	if(read(byte) and _bufferEnd + 1 < _bufferSize)
-		_buffer[_bufferEnd++] = byte;
+	if(read(byte))
+	{
+		_currentSequence._scancodes[++_currentSequence._length] = byte;
+		KeyEvent event{_mapper.get(_currentSequence)};
+		// If the current scancode is a valid one
+		if(event._key != Key::Unknown)
+		{
+			_eventQueue.pushBack(event);
+			_currentSequence._length = 0;
+		}
+	}
 }
 
-bool KeyboardDriver::isBufferEmpty()
+bool KeyboardDriver::pendingEvent()
 {
-	return _bufferEnd == 0;
+	return not _eventQueue.empty();
 }
 
-void KeyboardDriver::flushBuffer()
+KeyEvent KeyboardDriver::getEvent()
 {
-	for(size_t i{0}; i < _bufferEnd; ++i)
-		if(not (_buffer[i] & 0x80))
-			out << _buffer[i] << ".";
-	_bufferEnd = 0;
+	KeyEvent res{_eventQueue.back()};
+	_eventQueue.popBack();
+	return res;
 }
 
 }// namespace ps2

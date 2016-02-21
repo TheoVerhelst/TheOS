@@ -3,7 +3,9 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <List.hpp>
 #include <kernel/ps2/Driver.hpp>
+#include <kernel/ps2/KeyboardMapper.hpp>
 
 namespace ps2
 {
@@ -12,13 +14,10 @@ class KeyboardDriver : public Driver
 {
 	public:
 		void pollKeyboard();
-		bool isBufferEmpty();
-		void flushBuffer();
+		bool pendingEvent();// TODO find a better name
+		KeyEvent getEvent();
 
 	private:
-		static constexpr size_t _bufferSize{32};
-		uint8_t _buffer[_bufferSize];
-		size_t _bufferEnd{0};
 
 		enum Command : uint8_t
 		{
@@ -40,6 +39,10 @@ class KeyboardDriver : public Driver
 			Resend                = 0xFE,
 			ResetAndSelfTest      = 0xFF,
 		};
+
+		ScancodeSequence _currentSequence;
+		List<KeyEvent> _eventQueue;
+		KeyboardMapper _mapper{KeyboardMapper::Mapping::ScancodeSet1};
 };
 
 extern KeyboardDriver keyboardDriver;

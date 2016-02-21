@@ -10,6 +10,16 @@ KeyboardMapper::KeyboardMapper(Mapping mapping):
 
 const KeyEvent& KeyboardMapper::get(const ScancodeSequence& sequence)
 {
+	// Some optimizations (don't loop over the whole mapping) with the fact that
+	// the first byte is the escape byte iff length > 0
+	const bool lenghtOne{sequence._length == 1};
+	const bool firstIsEscape{sequence._scancodes[0] == _escapeByte};
+	if(lenghtOne and firstIsEscape)
+		return _unknowEvent;
+	else if(not lenghtOne and not firstIsEscape)
+		return _unknowEvent;
+
+	// Find out the first corresponding sequence
 	const size_t mappingIndex{static_cast<size_t>(_currentMapping)};
 	for(size_t i{0}; i < _scancodeMappingNumber; ++i)
 		if(_mappings[mappingIndex][i]._sequence == sequence)

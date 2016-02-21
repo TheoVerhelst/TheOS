@@ -27,8 +27,7 @@ extern "C" void kernel_main(const MultibootInfo& info)
 	gdt::initializeGdt();
 	idt::initializeIdt();
 	pic::initializePic();
-	while(true)
-		ps2::keyboardDriver.flushBuffer();
+	while(true);
 	// Call destructors
 	__cxa_finalize(0);
 }
