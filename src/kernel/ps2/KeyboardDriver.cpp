@@ -5,8 +5,6 @@
 namespace ps2
 {
 
-KeyboardDriver keyboardDriver;
-
 void KeyboardDriver::pollKeyboard()
 {
 	uint8_t byte;

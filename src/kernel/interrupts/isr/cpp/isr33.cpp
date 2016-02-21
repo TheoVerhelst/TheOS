@@ -1,7 +1,6 @@
-#include <kernel/ps2/KeyboardDriver.hpp>
-#include <kernel/interrupts/isr/isr33.hpp>
+#include <kernel/Kernel.hpp>
 
-void isr33cpp(isr::IsrArgs args)
+void Kernel::isr33(isr::IsrArgs args)
 {
-	ps2::keyboardDriver.pollKeyboard();
+	_keyboardDriver.pollKeyboard();
 }

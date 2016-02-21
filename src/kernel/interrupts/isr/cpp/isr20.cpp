@@ -1,8 +1,8 @@
 #include <Printer.hpp>
-#include <kernel/interrupts/isr/isr20.hpp>
+#include <kernel/Kernel.hpp>
 
-void isr20cpp(isr::IsrArgs args)
+void Kernel::isr20(isr::IsrArgs args)
 {
-	out << "interrupt 20 catched, aborting\n";
-	while(true);
+	out << "Interrupt 20 catched!\n";
+	abort();
 }

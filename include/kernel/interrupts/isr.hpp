@@ -5,6 +5,9 @@
 #include <Printer.hpp>
 #include <kernel/interrupts/idt.hpp>
 
+// Forward declarations
+class Kernel;
+
 namespace isr
 {
 
@@ -57,8 +60,8 @@ static_assert(sizeof(ErrorCode) == 4, "Error code structure must be 32-bit");
 /// Fancy printing of the error code to \a out.
 Printer& operator<<(Printer& out, const ErrorCode& errorCode);
 
-/// The table of effective ISRs.
-extern void (*isrTable[idt::idtSize]) (IsrArgs);
+/// The table of effective ISRs. ISRs are member functions of the kernel.
+extern void (Kernel::*isrTable[idt::idtSize]) (IsrArgs);
 
 }// namespace isr
 

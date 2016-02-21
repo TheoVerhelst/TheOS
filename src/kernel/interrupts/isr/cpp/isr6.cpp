@@ -1,8 +1,8 @@
 #include <Printer.hpp>
-#include <kernel/interrupts/isr/isr6.hpp>
+#include <kernel/Kernel.hpp>
 
-void isr6cpp(isr::IsrArgs args)
+void Kernel::isr6(isr::IsrArgs args)
 {
-	out << "interrupt 6 catched, aborting\n";
-	while(true);
+	out << "Interrupt 6 catched!\n";
+	abort();
 }

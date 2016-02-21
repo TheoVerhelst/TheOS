@@ -45,8 +45,6 @@ class KeyboardDriver : public Driver
 		ScancodeMapper _mapper{ScancodeMapper::Mapping::ScancodeSet1};
 };
 
-extern KeyboardDriver keyboardDriver;
-
 }// namespace ps2
 
 #endif// KEYBOARD_HPP

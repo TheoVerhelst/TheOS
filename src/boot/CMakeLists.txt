@@ -1,5 +1,5 @@
 set(SOURCES
-	"kernel.cpp"
+	"kernelMain.cpp"
 	"boot.asm"
 	"Icxxabi.cpp"
 	)

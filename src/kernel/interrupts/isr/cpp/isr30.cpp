@@ -1,8 +1,8 @@
 #include <Printer.hpp>
-#include <kernel/interrupts/isr/isr30.hpp>
+#include <kernel/Kernel.hpp>
 
-void isr30cpp(isr::IsrArgs args)
+void Kernel::isr30(isr::IsrArgs args)
 {
-	out << "interrupt 30 catched, aborting\n";
-	while(true);
+	out << "Interrupt 30 catched!\n";
+	abort();
 }

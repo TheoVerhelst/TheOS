@@ -5,6 +5,24 @@
 BitSet<MemoryManager::_maxBlocksNumber> MemoryManager::ListNodeAllocator::_usedListNodes;
 MemoryManager::ListNodeAllocator::valueType MemoryManager::ListNodeAllocator::_listNodesArray[MemoryManager::_maxBlocksNumber];
 
+MemoryManager::MemoryManager(MemoryRegion* address, size_t size, size_t neededHeapSize)
+{
+	uintptr_t rawAddress{reinterpret_cast<uintptr_t>(address)};
+	const uintptr_t upperAddress{rawAddress + size};
+	while(rawAddress < upperAddress)
+	{
+		if(address->type == 1 and static_cast<size_t>(address->length) >= neededHeapSize)
+		{
+			void* baseAddress{reinterpret_cast<void*>(address->base_addr)};
+			addMemoryChunk(baseAddress, neededHeapSize);
+			out << "Allocated heap of size " << neededHeapSize/1000 << " Ko starting at " << baseAddress << "\n";
+			return;
+		}
+		rawAddress += address->size + sizeof(address->size);
+		address = reinterpret_cast<MemoryRegion*>(rawAddress);
+	}
+}
+
 void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
 {
 	intptr_t convertedBaseAddress{reinterpret_cast<intptr_t>(baseAddress)};

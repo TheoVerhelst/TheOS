@@ -1,22 +1,22 @@
 #include <memory.hpp>
-#include <memory/MemoryManager.hpp>
+#include <kernel/Kernel.hpp>
 #include <Printer.hpp>
 
 extern MemoryManager kernelHeapMamanger;
 
 void* operator new(size_t size) throw()
 {
-	return kernelHeapMamanger.allocate(size);
+	return kernel.getHeapManager().allocate(size);
 }
 
 void operator delete(void* address) throw()
 {
-	kernelHeapMamanger.deallocate(address);
+	kernel.getHeapManager().deallocate(address);
 }
 
 void operator delete(void* address, size_t size) throw()
 {
-	kernelHeapMamanger.deallocate(address, size);
+	kernel.getHeapManager().deallocate(address, size);
 }
 
 void* operator new[](size_t size) throw()

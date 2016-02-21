@@ -1,8 +1,8 @@
 #include <Printer.hpp>
-#include <kernel/interrupts/isr/isr31.hpp>
+#include <kernel/Kernel.hpp>
 
-void isr31cpp(isr::IsrArgs args)
+void Kernel::isr31(isr::IsrArgs args)
 {
-	out << "interrupt 31 catched, aborting\n";
-	while(true);
+	out << "Interrupt 31 catched!\n";
+	abort();
 }

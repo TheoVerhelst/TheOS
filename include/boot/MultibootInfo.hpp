@@ -2,6 +2,7 @@
 #define MULTIBOOTINFO_HPP
 
 #include <cstdint>
+#include <cstddef>
 
 /// Structure representing data about the a.out
 /// symbol table of the kernel.
@@ -74,6 +75,10 @@ struct MultibootInfo
 	uint16_t vbe_interface_off;///< The table of a protected mode interface defined in VBE 2.0+.
 	uint32_t vbe_interface_len;///< The table of a protected mode interface defined in VBE 2.0+.
 };
+
+/// The address of the structure, it needs to be set (in the boot assembly)
+/// before the static initialization of the Kernel instance.
+extern const MultibootInfo* multibootInfoAddress;
 
 namespace InfoAvailable
 {

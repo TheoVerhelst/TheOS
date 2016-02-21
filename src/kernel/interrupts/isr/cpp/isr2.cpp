@@ -1,8 +1,8 @@
 #include <Printer.hpp>
-#include <kernel/interrupts/isr/isr2.hpp>
+#include <kernel/Kernel.hpp>
 
-void isr2cpp(isr::IsrArgs args)
+void Kernel::isr2(isr::IsrArgs args)
 {
-	out << "interrupt 2 catched, aborting\n";
-	while(true);
+	out << "Interrupt 2 catched!\n";
+	abort();
 }

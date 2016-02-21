@@ -3,17 +3,20 @@
 
 #include <BitSet.hpp>
 #include <List.hpp>
+#include <boot/MultibootInfo.hpp>
 
 /// Holds some things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.
 class MemoryManager
 {
 	public:
-		/// Registers a chunk of memory, making it available for allocations.
-		/// This is not guaranteed that the whole chunk of memory provided
-		/// will really be available (maybe only a smaller chunk, rounded
-		/// to some multiple of power of two, will be used instead).
-		void addMemoryChunk(void* baseAddress, size_t size);
+		/// Constructs the manager from a list of MemoryRegion.
+		/// The arguments match to the ones provided by the multiboot info
+		/// structure.
+		/// \param address The address of the first MemoryRegion structure.
+		/// \param Size the number of memory regions.
+		/// \param neededHeapSize The minimum size that the kernel want for its heap.
+		MemoryManager(MemoryRegion* address, size_t size, size_t neededHeapSize);
 
 		void* allocate(size_t size);
 
@@ -72,15 +75,22 @@ class MemoryManager
 		/// Instance of the allocator used for this MemoryManager.
 		ListNodeAllocator _allocator;
 
+		/// Registers a chunk of memory, making it available for allocations.
+		/// This is not guaranteed that the whole chunk of memory provided
+		/// will really be available (maybe only a smaller chunk, rounded
+		/// to some multiple of power of two, will be used instead).
+		void addMemoryChunk(void* baseAddress, size_t size);
+
 		void tryMerge(blockIt blockToMergeIt, size_t index);
 
 		/// \return A valid iterator in _allocatedBlocks[index] in case of success,
 		/// _allocatedBlocks[index].end() otherwise.
 		blockIt allocateBlock(size_t index);
 
-		//TODO try to add constexpr
+		// TODO try to add constexpr
 		static size_t getIndexFromSize(size_t size);
 
+		// TODO replace by std::find
 		static blockIt findBlock(List<intptr_t, ListNodeAllocator>& blockList, intptr_t address);
 
 		void memoryDump() const;

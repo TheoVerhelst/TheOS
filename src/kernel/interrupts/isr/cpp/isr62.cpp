@@ -1,8 +1,8 @@
 #include <Printer.hpp>
-#include <kernel/interrupts/isr/isr62.hpp>
+#include <kernel/Kernel.hpp>
 
-void isr62cpp(isr::IsrArgs args)
+void Kernel::isr62(isr::IsrArgs args)
 {
-	out << "interrupt 62 catched, aborting\n";
-	while(true);
+	out << "Interrupt 62 catched!\n";
+	abort();
 }

@@ -18,6 +18,12 @@ section .multiboot
 	dd FLAGS
 	dd CHECKSUM
 
+section .bss
+	; this is the multiboot info structure address that is available to
+	; the C++ environnement, it must be defined in assembly.
+	; the keyword common is similar to global, but for variables.
+	common multibootInfoAddress 4
+
 ; precise 'nobits' so that NASM knows that no explicit data is given
 section .bootstrap_stack, nobits
 	align 4
@@ -28,8 +34,12 @@ section .bootstrap_stack, nobits
 section .text
 	; _start is the entry point of the OS kernel where the bootloader jumps when it's done.
 	global _start
-	; kernel_main is the entry point of the C++ code kernel
-	extern kernel_main
+
+	extern setMultibootInfoAddress
+
+	; kernelMain is the entry point of the C++ code kernel
+	extern kernelMain
+
 	; _init and _fini are entry points of routine used for initializing global objects
 	extern _init
 	extern _fini
@@ -38,15 +48,20 @@ section .text
 		; set up a stack by putting TOS in ESP
 		mov esp, stack_top
 
-		; call objects constructors calling routine
+		; set the address of the multiboot info structure
+		mov [multibootInfoAddress], ebx
+
+		; call objects constructors routines
 		call _init
 		call _fini
 
-		; Give multiboot information address to kernel_main
-		push ebx
-		call kernel_main
+		; Let's go for some fun
+		call kernelMain
 
-		cli  ; reset the interrupt flag (IF) to not handle maskable interrupts
+		; reset the interrupt flag (IF) to not handle maskable interrupts
+		cli
+
 	.hang:
-		hlt  ; infinite loop if kernel_main returns
+		; infinite loop if kernelMain returns
+		hlt
 		jmp .hang

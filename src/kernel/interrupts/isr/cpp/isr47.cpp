@@ -1,8 +1,8 @@
 #include <Printer.hpp>
-#include <kernel/interrupts/isr/isr47.hpp>
+#include <kernel/Kernel.hpp>
 
-void isr47cpp(isr::IsrArgs args)
+void Kernel::isr47(isr::IsrArgs args)
 {
-	out << "interrupt 47 catched, aborting\n";
-	while(true);
+	out << "Interrupt 47 catched!\n";
+	abort();
 }
