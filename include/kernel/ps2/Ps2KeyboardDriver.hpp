@@ -16,7 +16,7 @@ class Ps2KeyboardDriver : public Ps2Driver
 		void flushBuffer();
 
 	private:
-		static constexpr size_t _bufferSize{128};
+		static constexpr size_t _bufferSize{32};
 		uint8_t _buffer[_bufferSize];
 		size_t _bufferEnd{0};
 

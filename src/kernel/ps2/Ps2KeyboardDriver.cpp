@@ -21,7 +21,8 @@ bool Ps2KeyboardDriver::isBufferEmpty()
 void Ps2KeyboardDriver::flushBuffer()
 {
 	for(size_t i{0}; i < _bufferEnd; ++i)
-		out << _buffer[i] << ".";
+		if(not (_buffer[i] & 0x80))
+			out << _buffer[i] << ".";
 	_bufferEnd = 0;
 }
 

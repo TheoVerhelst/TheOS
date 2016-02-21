@@ -3,6 +3,7 @@ set(SOURCES
 	"video/vgaManagement.cpp"
 	"ps2/Ps2Driver.cpp"
 	"ps2/Ps2KeyboardDriver.cpp"
+	"ps2/Ps2KeyboardMapper.cpp"
 	"gdt.cpp"
 	"gdt.asm"
 	"interrupts/idt.cpp"
