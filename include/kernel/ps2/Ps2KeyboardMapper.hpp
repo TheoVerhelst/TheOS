@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <type_traits>
 #include <kernel/ps2/Key.hpp>
+#include <kernel/ps2/ScancodeSequence.hpp>
 
 namespace ps2
 {
@@ -12,14 +13,6 @@ namespace ps2
 class Ps2KeyboardMapper
 {
 	public:
-		struct ScancodeSequence
-		{
-			static constexpr size_t _maxLength{6};
-			size_t _length;
-			uint8_t _scancodes[_maxLength];
-			bool operator==(const ScancodeSequence& other) const;
-		};
-
 		enum class Mapping : size_t
 		{
 			ScancodeSet1 = 0,

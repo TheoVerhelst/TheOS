@@ -27,16 +27,6 @@ void Ps2KeyboardMapper::setCurrentMapping(Mapping newCurrentMapping)
 	_currentMapping = newCurrentMapping;
 }
 
-bool Ps2KeyboardMapper::ScancodeSequence::operator==(const ScancodeSequence& other) const
-{
-	if(_length != other._length)
-		return false;
-	for(size_t i{0}; i < _length; ++i)
-		if(_scancodes[i] != other._scancodes[i])
-			return false;
-	return true;
-}
-
 constexpr KeyEvent Ps2KeyboardMapper::_unknowEvent;
 
 const Ps2KeyboardMapper::ScancodeMapping Ps2KeyboardMapper::_mappings[][Ps2KeyboardMapper::_scancodeMappingNumber] =
