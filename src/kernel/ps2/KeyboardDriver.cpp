@@ -12,13 +12,13 @@ void KeyboardDriver::pollKeyboard()
 	uint8_t byte;
 	if(read(byte))
 	{
-		_currentSequence._scancodes[++_currentSequence._length] = byte;
-		KeyEvent event{_mapper.get(_currentSequence)};
+		_currentScancode._bytes[++_currentScancode._length] = byte;
+		KeyEvent event{_mapper.get(_currentScancode)};
 		// If the current scancode is a valid one
 		if(event._key != Key::Unknown)
 		{
 			_eventQueue.pushBack(event);
-			_currentSequence._length = 0;
+			_currentScancode._length = 0;
 		}
 	}
 }

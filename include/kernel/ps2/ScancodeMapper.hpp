@@ -1,16 +1,16 @@
-#ifndef KeyboardMapper_HPP
-#define KeyboardMapper_HPP
+#ifndef SCANCODEMAPPER_HPP
+#define SCANCODEMAPPER_HPP
 
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
 #include <kernel/ps2/Key.hpp>
-#include <kernel/ps2/ScancodeSequence.hpp>
+#include <kernel/ps2/Scancode.hpp>
 
 namespace ps2
 {
 
-class KeyboardMapper
+class ScancodeMapper
 {
 	public:
 		enum class Mapping : size_t
@@ -21,15 +21,15 @@ class KeyboardMapper
 			MappingNumber
 		};
 
-		KeyboardMapper(Mapping mapping);
-		const KeyEvent& get(const ScancodeSequence& sequence);
+		ScancodeMapper(Mapping mapping);
+		const KeyEvent& get(const Scancode& scancode);
 		Mapping getCurrentMapping() const;
 		void setCurrentMapping(Mapping newCurrentMapping);
 
 	private:
 		struct ScancodeMapping
 		{
-			ScancodeSequence _sequence;
+			Scancode _scancode;
 			KeyEvent _keyEvent;
 		};
 
@@ -43,4 +43,4 @@ class KeyboardMapper
 
 }// namespace ps2
 
-#endif// KeyboardMapper_HPP
+#endif// SCANCODEMAPPER_HPP

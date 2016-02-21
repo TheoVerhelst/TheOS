@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <List.hpp>
 #include <kernel/ps2/Driver.hpp>
-#include <kernel/ps2/KeyboardMapper.hpp>
+#include <kernel/ps2/ScancodeMapper.hpp>
 
 namespace ps2
 {
@@ -23,7 +23,7 @@ class KeyboardDriver : public Driver
 		{
 			SetLed                = 0xED,
 			Echo                  = 0xEE,
-			GetSetScanCode        = 0xF0,
+			GetSetScanCodeSet     = 0xF0,
 			IdentifyKeyboard      = 0xF2,
 			SetTypematic          = 0xF3,
 			Enable                = 0xF4,
@@ -40,9 +40,9 @@ class KeyboardDriver : public Driver
 			ResetAndSelfTest      = 0xFF,
 		};
 
-		ScancodeSequence _currentSequence;
+		Scancode _currentScancode;
 		List<KeyEvent> _eventQueue;
-		KeyboardMapper _mapper{KeyboardMapper::Mapping::ScancodeSet1};
+		ScancodeMapper _mapper{ScancodeMapper::Mapping::ScancodeSet1};
 };
 
 extern KeyboardDriver keyboardDriver;

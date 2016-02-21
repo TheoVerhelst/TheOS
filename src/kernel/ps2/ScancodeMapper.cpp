@@ -1,19 +1,19 @@
-#include <kernel/ps2/KeyboardMapper.hpp>
+#include <kernel/ps2/ScancodeMapper.hpp>
 
 namespace ps2
 {
 
-KeyboardMapper::KeyboardMapper(Mapping mapping):
+ScancodeMapper::ScancodeMapper(Mapping mapping):
 	_currentMapping{mapping}
 {
 }
 
-const KeyEvent& KeyboardMapper::get(const ScancodeSequence& sequence)
+const KeyEvent& ScancodeMapper::get(const Scancode& scancode)
 {
 	// Some optimizations (don't loop over the whole mapping) with the fact that
 	// the first byte is the escape byte iff length > 0
-	const bool lenghtOne{sequence._length == 1};
-	const bool firstIsEscape{sequence._scancodes[0] == _escapeByte};
+	const bool lenghtOne{scancode._length == 1};
+	const bool firstIsEscape{scancode._bytes[0] == _escapeByte};
 	if(lenghtOne and firstIsEscape)
 		return _unknowEvent;
 	else if(not lenghtOne and not firstIsEscape)
@@ -22,24 +22,24 @@ const KeyEvent& KeyboardMapper::get(const ScancodeSequence& sequence)
 	// Find out the first corresponding sequence
 	const size_t mappingIndex{static_cast<size_t>(_currentMapping)};
 	for(size_t i{0}; i < _scancodeMappingNumber; ++i)
-		if(_mappings[mappingIndex][i]._sequence == sequence)
+		if(_mappings[mappingIndex][i]._scancode == scancode)
 			return _mappings[mappingIndex][i]._keyEvent;
 	return _unknowEvent;
 }
 
-KeyboardMapper::Mapping KeyboardMapper::getCurrentMapping() const
+ScancodeMapper::Mapping ScancodeMapper::getCurrentMapping() const
 {
 	return _currentMapping;
 }
 
-void KeyboardMapper::setCurrentMapping(Mapping newCurrentMapping)
+void ScancodeMapper::setCurrentMapping(Mapping newCurrentMapping)
 {
 	_currentMapping = newCurrentMapping;
 }
 
-constexpr KeyEvent KeyboardMapper::_unknowEvent;
+constexpr KeyEvent ScancodeMapper::_unknowEvent;
 
-const KeyboardMapper::ScancodeMapping KeyboardMapper::_mappings[][KeyboardMapper::_scancodeMappingNumber] =
+const ScancodeMapper::ScancodeMapping ScancodeMapper::_mappings[][ScancodeMapper::_scancodeMappingNumber] =
 {
 	{
 		{{1, {0x01}}, {Key::Escape, true}},
