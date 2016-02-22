@@ -7,7 +7,7 @@
 Kernel kernel;
 
 Kernel::Kernel():
-	// Give a needed kernel size of zero if multiboot info about memory not available
+	// Give a needed kernel size of zero if info about memory is not available
 	// (that's better than nothing)
 	_heapManager{multibootInfoAddress->mmap_addr,
 			multibootInfoAddress->mmap_length,
@@ -21,6 +21,11 @@ Kernel::Kernel():
 
 void Kernel::run()
 {
+	while(true)
+	{
+		while(_keyboardDriver.pendingCharacter())
+			out << _keyboardDriver.getCharacter();
+	}
 	abort();
 }
 

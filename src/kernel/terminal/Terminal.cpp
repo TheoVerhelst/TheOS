@@ -35,10 +35,13 @@ void Terminal::putChar(char c)
 {
 	if(c == '\n')
 		newLine();
-	else
+	else if(c == '\b')
+		putEntryAt(' ', _profile, --_column, _row);
+	else if(c == '\t')
+		putString("        ");
+	else if(c != '\0')
 	{
-		putEntryAt(c, _profile, _column, _row);
-		++_column;
+		putEntryAt(c, _profile, _column++, _row);
 		if(_column == vga::width)
 			newLine();
 	}

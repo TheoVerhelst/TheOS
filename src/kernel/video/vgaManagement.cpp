@@ -15,7 +15,7 @@ uint8_t ColourProfile::getValue() const
 
 Entry::Entry(char c, const ColourProfile& colour)
 {
-	_value = (uint16_t)(c) | (colour.getValue() << 8);
+	_value = static_cast<uint16_t>(c) | (colour.getValue() << 8);
 }
 
 uint16_t Entry::getValue() const

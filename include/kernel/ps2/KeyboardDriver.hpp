@@ -6,6 +6,7 @@
 #include <List.hpp>
 #include <kernel/ps2/Driver.hpp>
 #include <kernel/ps2/ScancodeMapper.hpp>
+#include <kernel/ps2/KeyEventMapper.hpp>
 
 namespace ps2
 {
@@ -14,8 +15,8 @@ class KeyboardDriver : public Driver
 {
 	public:
 		void pollKeyboard();
-		bool pendingEvent();// TODO find a better name
-		KeyEvent getEvent();
+		bool pendingCharacter();// TODO find a better name
+		char getCharacter();
 
 	private:
 
@@ -41,8 +42,8 @@ class KeyboardDriver : public Driver
 		};
 
 		Scancode _currentScancode;
-		List<KeyEvent> _eventQueue;
-		ScancodeMapper _mapper{ScancodeMapper::Mapping::ScancodeSet1};
+		ScancodeMapper _scancodeMapper{ScancodeMapper::Mapping::ScancodeSet1};
+		KeyEventMapper _keyEventMapper{KeyEventMapper::Mapping::AzertyFr};
 };
 
 }// namespace ps2

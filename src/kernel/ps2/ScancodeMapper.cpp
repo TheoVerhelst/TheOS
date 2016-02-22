@@ -12,12 +12,12 @@ const KeyEvent& ScancodeMapper::get(const Scancode& scancode)
 {
 	// Some optimizations (don't loop over the whole mapping) with the fact that
 	// the first byte is the escape byte iff length > 0
-	const bool lenghtOne{scancode._length == 1};
-	const bool firstIsEscape{scancode._bytes[0] == _escapeByte};
-	if(lenghtOne and firstIsEscape)
-		return _unknowEvent;
-	else if(not lenghtOne and not firstIsEscape)
-		return _unknowEvent;
+	//~const bool lenghtOne{scancode._length == 1};
+	//~const bool firstIsEscape{scancode._bytes[0] == _escapeByte};
+	//~if(lenghtOne and firstIsEscape)
+		//~return _unknowEvent;
+	//~else if(not lenghtOne and not firstIsEscape)
+		//~return _unknowEvent;
 
 	// Find out the first corresponding sequence
 	const size_t mappingIndex{static_cast<size_t>(_currentMapping)};

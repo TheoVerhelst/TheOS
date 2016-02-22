@@ -70,7 +70,7 @@ class List
 		typedef NodeConstIterator constIterator;
 
 		List(const AllocatorType& allocator = AllocatorType());
-		List(const List& other);
+		List(const List& other);// TODO copy constructor does not work
 		List(List&& other);
 		~List();
 		List& operator=(List other);

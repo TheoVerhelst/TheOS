@@ -8,29 +8,30 @@ namespace ps2
 void KeyboardDriver::pollKeyboard()
 {
 	uint8_t byte;
-	if(read(byte))
+	if(read(byte) and _currentScancode._length + 1 <= Scancode::_maxLength)
 	{
-		_currentScancode._bytes[++_currentScancode._length] = byte;
-		KeyEvent event{_mapper.get(_currentScancode)};
+		_currentScancode._bytes[_currentScancode._length++] = byte;
+		KeyEvent event{_scancodeMapper.get(_currentScancode)};
 		// If the current scancode is a valid one
 		if(event._key != Key::Unknown)
 		{
-			_eventQueue.pushBack(event);
+			_keyEventMapper.registerEvent(event);
 			_currentScancode._length = 0;
 		}
 	}
 }
 
-bool KeyboardDriver::pendingEvent()
+bool KeyboardDriver::pendingCharacter()
 {
-	return not _eventQueue.empty();
+	return _keyEventMapper.pendingCharacter();
 }
 
-KeyEvent KeyboardDriver::getEvent()
+char KeyboardDriver::getCharacter()
 {
-	KeyEvent res{_eventQueue.back()};
-	_eventQueue.popBack();
-	return res;
+	if(pendingCharacter())
+		return _keyEventMapper.getCharacter();
+	else
+		return '\0';
 }
 
 }// namespace ps2

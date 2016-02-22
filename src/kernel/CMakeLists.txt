@@ -5,6 +5,7 @@ set(SOURCES
 	"ps2/Driver.cpp"
 	"ps2/KeyboardDriver.cpp"
 	"ps2/ScancodeMapper.cpp"
+	"ps2/KeyEventMapper.cpp"
 	"ps2/Scancode.cpp"
 	"gdt.cpp"
 	"gdt.asm"
