@@ -73,8 +73,8 @@ void KeyEventMapper::setCurrentMapping(Mapping newCurrentMapping)
 
 bool KeyEventMapper::isEventSatisfied(const KeyEventMapping& event) const
 {
-	return ((event._altNeeded and (_lAltPressed or _rAltPressed)) or not event._altNeeded)
-			and ((event._shiftNeeded and (_lShiftPressed or _rShiftPressed or _capsLocked)) or not event._shiftNeeded);
+	return ((event._altNeeded and (_lAltPressed or _rAltPressed)) or (not event._altNeeded and not (_lAltPressed or _rAltPressed)))
+			and ((event._shiftNeeded and (_lShiftPressed or _rShiftPressed or _capsLocked)) or (not event._shiftNeeded and not (_lShiftPressed or _rShiftPressed or _capsLocked)));
 }
 
 const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper::_keyEventMappingNumber] =
@@ -92,17 +92,17 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::Num3, '"', false, false},
 		{Key::Num3, '#', false, true},
 		{Key::RBracket, '$', false, false},
-		{Key::SemiColon, '%', true, false},
+		{Key::Quote, '%', true, false},
 		{Key::Num1, '&', false, false},
 		{Key::Num4, '\'', false, false},
 		{Key::Num5, '(', false, false},
 		{Key::Dash, ')', false, false},
-		{Key::Quote, '*', false, false},
+		{Key::BackSlash, '*', false, false},
 		{Key::Equal, '+', true, false},
 		{Key::M, ',', false, false},
 		{Key::Num6, '-', false, false},
-		{Key::Period, '.', true, false},
-		{Key::Slash, '/', true, false},
+		{Key::Comma, '.', true, false},
+		{Key::Period, '/', true, false},
 		{Key::Num0, '0', true, false},
 		{Key::Num1, '1', true, false},
 		{Key::Num2, '2', true, false},
@@ -113,11 +113,11 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::Num7, '7', true, false},
 		{Key::Num8, '8', true, false},
 		{Key::Num9, '9', true, false},
-		{Key::Slash, ':', false, false},
-		{Key::Period, ';', false, false},
-		{Key::BackSlash, '<', false, false},
+		{Key::Period, ':', false, false},
+		{Key::Comma, ';', false, false},
+		{Key::LeftOfZ, '<', false, false},
 		{Key::Equal, '=', false, false},
-		{Key::BackSlash, '>', true, false},
+		{Key::LeftOfZ, '>', true, false},
 		{Key::M, '?', true, false},
 		{Key::Num0, '@', false, true},
 		{Key::Q, 'A', true, false},
@@ -148,9 +148,9 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::W, 'Z', true, false},
 		{Key::Num5, '[', false, true},
 		{Key::Num8, '\\', false, true},
-		{Key::Num0, ']', false, true},
+		{Key::Dash, ']', false, true},
 		{Key::Num9, '^', false, true},
-		{Key::Num9, '_', false, false},
+		{Key::Num8, '_', false, false},
 		{Key::Num7, '`', false, true},
 		{Key::Q, 'a', false, false},
 		{Key::B, 'b', false, false},
@@ -180,8 +180,13 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::W, 'z', false, false},
 		{Key::Num4, '{', false, true},
 		{Key::Num6, '|', false, true},
-		{Key::Dash, '}', false, true},
-		{Key::Tilde, '~', true, false}
+		{Key::Equal, '}', false, true},
+		{Key::Num2, '~', true, false},
+		{Key::Num2, '\x82', false, false},
+		{Key::Num0, '\x85', false, false},
+		{Key::Num9, '\x87', false, false},
+		{Key::Num7, '\x8A', false, false},
+		{Key::SemiColon, '\x97', false, false}
 	},
 	{
 	}

@@ -1,6 +1,8 @@
 #ifndef KEY_HPP
 #define KEY_HPP
 
+/// Enumeration of all keys on a standard US QWERTY keyboard, plus some extra keys,
+/// such as a key on the left of the Z key.
 enum class Key
 {
 	Unknown = 0, ///< Unhandled key
@@ -30,6 +32,7 @@ enum class Key
 	X,           ///< The X key
 	Y,           ///< The Y key
 	Z,           ///< The Z key
+	LeftOfZ,     ///< The key at left of the Z key, not always present on US QWERTY keyboards
 	Num0,        ///< The 0 key
 	Num1,        ///< The 1 key
 	Num2,        ///< The 2 key
@@ -40,16 +43,16 @@ enum class Key
 	Num7,        ///< The 7 key
 	Num8,        ///< The 8 key
 	Num9,        ///< The 9 key
-	Escape,      ///< The Escape key
-	LControl,    ///< The left Control key
-	LShift,      ///< The left Shift key
-	LAlt,        ///< The left Alt key
+	Escape,      ///< The escape key
+	LControl,    ///< The left control key
+	LShift,      ///< The left shift key
+	LAlt,        ///< The left alt key
 	LSystem,     ///< The left OS specific key
-	RControl,    ///< The right Control key
-	RShift,      ///< The right Shift key
-	RAlt,        ///< The right Alt key
+	RControl,    ///< The right control key
+	RShift,      ///< The right shift key
+	RAlt,        ///< The right alt key
 	RSystem,     ///< The right OS specific key
-	Menu,        ///< The Menu key
+	Menu,        ///< The menu key
 	LBracket,    ///< The [ key
 	RBracket,    ///< The ] key
 	SemiColon,   ///< The ; key
@@ -58,26 +61,26 @@ enum class Key
 	Quote,       ///< The ' key
 	Slash,       ///< The / key
 	BackSlash,   ///< The \ key
-	Tilde,       ///< The ~ key
+	BackTick,    ///< The ` key
 	Equal,       ///< The = key
 	Dash,        ///< The - key
-	Space,       ///< The Space key
-	Return,      ///< The Return key
-	BackSpace,   ///< The Backspace key
-	Tab,         ///< The Tabulation key
+	Space,       ///< The space key
+	Return,      ///< The return key
+	BackSpace,   ///< The backspace key
+	Tab,         ///< The tabulation key
 	CapsLock,    ///< The caps lock key
-	PageUp,      ///< The Page up key
-	PageDown,    ///< The Page down key
+	PageUp,      ///< The page up key
+	PageDown,    ///< The page down key
 	ScrollLock,  ///< The scroll lock key,
-	End,         ///< The End key
-	Home,        ///< The Home key
-	Insert,      ///< The Insert key
-	Delete,      ///< The Delete key
+	End,         ///< The end key
+	Home,        ///< The home key
+	Insert,      ///< The insert key
+	Delete,      ///< The delete key
 	PrintScreen, ///< The print screen key
-	Left,        ///< Left arrow
-	Right,       ///< Right arrow
-	Up,          ///< Up arrow
-	Down,        ///< Down arrow
+	Left,        ///< The left arrow key
+	Right,       ///< The right arrow key
+	Up,          ///< The up arrow key
+	Down,        ///< The Down arrow key
 	Numpad0,     ///< The numpad 0 key
 	Numpad1,     ///< The numpad 1 key
 	Numpad2,     ///< The numpad 2 key
@@ -110,7 +113,7 @@ enum class Key
 	F13,         ///< The F13 key
 	F14,         ///< The F14 key
 	F15,         ///< The F15 key
-	Pause,       ///< The Pause key
+	Pause,       ///< The pause key
 	KeyNumber    ///< The total number of keyboard keys
 };
 
