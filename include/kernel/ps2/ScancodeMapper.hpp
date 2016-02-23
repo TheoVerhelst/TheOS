@@ -35,7 +35,8 @@ class ScancodeMapper
 
 		Mapping _currentMapping{Mapping::ScancodeSet1};
 		static constexpr KeyEvent _unknowEvent{Key::Unknown, false};
-		static constexpr uint8_t _escapeByte{0xE0};
+		static constexpr uint8_t _firstEscapeByte{0xE0};
+		static constexpr uint8_t _secondEscapeByte{0xE1};
 		static constexpr size_t _scancodeMappingNumber{2 * static_cast<size_t>(Key::KeyNumber)};
 		static constexpr size_t _mappingNumber{static_cast<size_t>(Mapping::MappingNumber)};
 		static const ScancodeMapping _mappings[_mappingNumber][_scancodeMappingNumber];

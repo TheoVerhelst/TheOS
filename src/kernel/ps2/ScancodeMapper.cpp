@@ -12,12 +12,13 @@ const KeyEvent& ScancodeMapper::get(const Scancode& scancode)
 {
 	// Some optimizations (don't loop over the whole mapping) with the fact that
 	// the first byte is the escape byte iff length > 0
-	//~const bool lenghtOne{scancode._length == 1};
-	//~const bool firstIsEscape{scancode._bytes[0] == _escapeByte};
-	//~if(lenghtOne and firstIsEscape)
-		//~return _unknowEvent;
-	//~else if(not lenghtOne and not firstIsEscape)
-		//~return _unknowEvent;
+	const bool lenghtOne{scancode._length == 1};
+	const bool firstIsEscape{scancode._bytes[0] == _firstEscapeByte
+			or scancode._bytes[0] == _secondEscapeByte};
+	if(lenghtOne and firstIsEscape)
+		return _unknowEvent;
+	else if(not lenghtOne and not firstIsEscape)
+		return _unknowEvent;
 
 	// Find out the first corresponding sequence
 	const size_t mappingIndex{static_cast<size_t>(_currentMapping)};
@@ -217,6 +218,7 @@ const ScancodeMapper::ScancodeMapping ScancodeMapper::_mappings[][ScancodeMapper
 		{{2, {0xE0, 0x1C}}, {Key::NumpadReturn, true}},
 		{{2, {0xE0, 0x1D}}, {Key::RControl, true}},
 		{{2, {0xE0, 0x35}}, {Key::Divide, true}},
+		{{2, {0xE0, 0x37}}, {Key::PrintScreen, true}},
 		{{2, {0xE0, 0x38}}, {Key::RAlt, true}},
 		{{2, {0xE0, 0x47}}, {Key::Home, true}},
 		{{2, {0xE0, 0x48}}, {Key::Up, true}},
@@ -234,6 +236,7 @@ const ScancodeMapper::ScancodeMapping ScancodeMapper::_mappings[][ScancodeMapper
 		{{2, {0xE0, 0x9C}}, {Key::NumpadReturn, false}},
 		{{2, {0xE0, 0x9D}}, {Key::RControl, false}},
 		{{2, {0xE0, 0xB5}}, {Key::Divide, false}},
+		{{2, {0xE0, 0xB7}}, {Key::PrintScreen, false}},
 		{{2, {0xE0, 0xB8}}, {Key::RAlt, false}},
 		{{2, {0xE0, 0xC7}}, {Key::Home, false}},
 		{{2, {0xE0, 0xC8}}, {Key::Up, false}},
@@ -248,8 +251,6 @@ const ScancodeMapper::ScancodeMapping ScancodeMapper::_mappings[][ScancodeMapper
 		{{2, {0xE0, 0xDB}}, {Key::LSystem, false}},
 		{{2, {0xE0, 0xDC}}, {Key::RSystem, false}},
 		{{2, {0xE0, 0xDD}}, {Key::Menu, false}},
-		{{4, {0xE0, 0x2A, 0xE0, 0x37}}, {Key::PrintScreen, true}},
-		{{4, {0xE0, 0xB7, 0xE0, 0xAA}}, {Key::PrintScreen, false}},
 		{{6, {0xE1, 0x1D, 0x45, 0xE1, 0x9D, 0xC5}}, {Key::Pause, true}}
 	},
 	{
