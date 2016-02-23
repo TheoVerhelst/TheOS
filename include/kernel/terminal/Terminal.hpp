@@ -13,6 +13,8 @@ class Terminal
 		void putChar(char c);
 		void putString(const char * str);
 
+		static const vga::ColourProfile _defaultColourProfile;
+
 	private:
 		void newLine();
 		void scrollUp();
@@ -20,12 +22,14 @@ class Terminal
 		void putEntryAt(char c, vga::ColourProfile profile, size_t x, size_t y);
 		void moveCursor(int x, int y);
 
-		size_t _row;               /// Y coordinate
-		size_t _column;            /// X coordinate
+		size_t _row;                /// Y coordinate
+		size_t _column;             /// X coordinate
 		vga::ColourProfile _profile;/// Colour of the cell
 		vga::Entry _emptyCell;
 		bool _writing;
 
 };
+
+extern Terminal terminal;
 
 #endif// TERMINAL_HPP

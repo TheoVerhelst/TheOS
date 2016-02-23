@@ -82,7 +82,6 @@ MemoryManager<AllocatorType>::MemoryManager(MemoryRegion* address, size_t size, 
 		{
 			void* baseAddress{reinterpret_cast<void*>(address->base_addr)};
 			addMemoryChunk(baseAddress, neededHeapSize);
-			out << "Allocated heap of size " << neededHeapSize/1000 << " Ko starting at " << baseAddress << "\n";
 			return;
 		}
 		rawAddress += address->size + sizeof(address->size);

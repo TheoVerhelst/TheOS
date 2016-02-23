@@ -46,6 +46,8 @@ class Kernel final
 
 		void testHeap();
 
+		void printPrettyAsciiArt();
+
 		/// Size of the heap that will be allocated for the kernel.
 		static constexpr size_t _heapSize{1UL << 20UL};
 

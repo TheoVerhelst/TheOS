@@ -54,7 +54,9 @@ static_assert(sizeof(Entry) == 2, "ColourProfile must be 16-bits");
 
 const size_t width{80};
 const size_t height{25};
-Entry * const buffer{reinterpret_cast<Entry*>(0xB8000)};// defined location on the VGA buffer
+
+/// defined location on the VGA buffer
+Entry * const buffer{reinterpret_cast<Entry *>(0xB8000)};
 
 constexpr inline size_t coordToIndex(size_t x, size_t y)
 {

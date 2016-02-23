@@ -1,4 +1,5 @@
 #include <Printer.hpp>
+#include <kernel/terminal/Terminal.hpp>
 #include <kernel/gdt.hpp>
 #include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/pic.hpp>
@@ -14,6 +15,7 @@ Kernel::Kernel():
 			multibootInfoAddress->mmap_length,
 			(multibootInfoAddress->flags & InfoAvailable::mmap ? _heapSize : 0UL)}
 {
+	printPrettyAsciiArt();
 	processMultibootInfo(*multibootInfoAddress);
 	gdt::initializeGdt();
 	idt::initializeIdt();
@@ -38,13 +40,10 @@ void Kernel::processMultibootInfo(const MultibootInfo& info) const
 {
 	if(info.flags & InfoAvailable::boot_loader_name)
 		out << "This kernel has been loaded by \"" << info.boot_loader_name << "\"\n";
-	if(info.flags & InfoAvailable::boot_device)
-		printDeviceInfo(info.boot_device);
+	//if(info.flags & InfoAvailable::boot_device)
+	//	printDeviceInfo(info.boot_device);
 	if(not (info.flags & InfoAvailable::mmap))
-	{
-		out << "Memory map not available, aborting\n";
-		abort();
-	}
+		abort("Memory map not available, aborting\n");
 }
 
 void Kernel::printDeviceInfo(uint32_t bootDevice)
@@ -97,4 +96,18 @@ void Kernel::testHeap()
 	if(ptr8 != oldPtr8)
 		out << "Memory allocation failure: the same object is not reallocated at the same place after deallocation.\n";
 	delete[] ptr2;
+}
+
+void Kernel::printPrettyAsciiArt()
+{
+	terminal.setColourProfile({vga::Colour::Cyan, vga::Colour::Black});
+	terminal.putString("\n\
+\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\n\
+                         \xDC\xDC\xDC\xDC\xDC \xDC         \xDC\xDC\xDC\xDC \xDC\xDC\xDC\xDC\xDC \n\
+                           \xDB   \xDB\xDC\xDC   \xDC\xDC\xDC \xDB  \xDB \xDB\n\
+                           \xDB   \xDB \xDF\xDB \xDB\xDC\xDC\xDB \xDB  \xDB \xDF\xDF\xDF\xDF\xDB\n\
+                           \xDB   \xDB  \xDB \xDF\xDC\xDC\xDC \xDB\xDC\xDC\xDB \xDC\xDC\xDC\xDC\xDB      Stroustrup powered     \n\
+\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\n\
+");
+	terminal.setColourProfile(Terminal::_defaultColourProfile);
 }

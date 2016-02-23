@@ -2,7 +2,6 @@
 #include <string.hpp>
 #include <kernel/terminal/Terminal.hpp>
 
-Terminal terminal;
 Printer out;
 
 constexpr size_t Printer::_bufferLength;

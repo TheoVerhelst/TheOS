@@ -1,11 +1,15 @@
-#include <kernel/terminal/Terminal.hpp>
 #include <string.hpp>
 #include <io/out.hpp>
+#include <kernel/terminal/Terminal.hpp>
+
+Terminal terminal;
+
+const vga::ColourProfile Terminal::_defaultColourProfile{vga::Colour::LightGrey, vga::Colour::Black};
 
 Terminal::Terminal():
 	_row{0},
 	_column{0},
-	_profile(vga::Colour::LightGrey, vga::Colour::Black),
+	_profile{vga::Colour::LightGrey, vga::Colour::Black},
 	_emptyCell{' ', _profile},
 	_writing{false}
 {
