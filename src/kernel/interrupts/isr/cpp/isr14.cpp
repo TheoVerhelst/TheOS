@@ -1,8 +1,12 @@
-#include <Printer.hpp>
-#include <kernel/Kernel.hpp>
+#include <kernel/abort.hpp>
+#include <kernel/interrupts/isr.hpp>
 
-void Kernel::isr14(isr::IsrArgs /* args */)
+namespace isr
 {
-	out << "Interrupt 14 catched!\n";
-	abort();
+
+void Table::isr14(Arguments /* args */)
+{
+	abort("Interrupt 14 caught!\n");
 }
+
+}// namespace isr

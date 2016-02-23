@@ -1,7 +1,8 @@
+#include <Printer.hpp>
 #include <kernel/gdt.hpp>
 #include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/pic.hpp>
-#include <Printer.hpp>
+#include <kernel/abort.hpp>
 #include <kernel/Kernel.hpp>
 
 Kernel kernel;
@@ -32,12 +33,6 @@ void Kernel::run()
 MemoryManager& Kernel::getHeapManager()
 {
 	return _heapManager;
-}
-
-void Kernel::abort() const
-{
-	out << "Aborting...";
-	while(true);
 }
 
 void Kernel::processMultibootInfo(const MultibootInfo& info) const

@@ -5,9 +5,6 @@
 #include <Printer.hpp>
 #include <kernel/interrupts/idt.hpp>
 
-// Forward declarations
-class Kernel;
-
 namespace isr
 {
 
@@ -39,8 +36,9 @@ struct ErrorCode
 
 	uint16_t reserved;
 } __attribute__((packed));
+static_assert(sizeof(ErrorCode) == 4, "Error code structure must be 32-bit");
 
-struct IsrArgs
+struct Arguments
 {
 	uint32_t gs;
 	uint32_t fs;
@@ -55,17 +53,33 @@ struct IsrArgs
 	uint32_t ss;
 };
 
-static_assert(sizeof(ErrorCode) == 4, "Error code structure must be 32-bit");
+/// Calls the apropriate C-written ISR, and logs the interrupt if needed.
+extern "C" void isrDispatcher(Arguments args);
+
+class Table
+{
+	private:
+		/// Calls the apropriate C-written ISR, and logs the interrupt if needed.
+		friend void isrDispatcher(Arguments args);
+
+		// Declare all interrupts service routines with the item trick
+#define ITEM(INDEX) static void isr##INDEX(Arguments args);
+#include <kernel/item64Helper.itm>
+#undef ITEM
+
+		/// The table of effective ISRs.
+		static constexpr void (*_table[idt::idtSize])(Arguments) =
+		{
+// Assign all 64 ISR table entries with the item trick
+#define ITEM(INDEX) Table::isr##INDEX,
+#include <kernel/item64Helper.itm>
+#undef ITEM
+		};
+};
 
 /// Fancy printing of the error code to \a out.
 Printer& operator<<(Printer& out, const ErrorCode& errorCode);
 
-/// The table of effective ISRs. ISRs are member functions of the kernel.
-extern void (Kernel::*isrTable[idt::idtSize]) (IsrArgs);
-
 }// namespace isr
-
-/// Calls the apropriate C-written ISR, and logs the interrupt if needed.
-extern "C" void isrDispatcher(isr::IsrArgs args);
 
 #endif// ISRDISPATCHER_HPP

@@ -1,6 +1,12 @@
 #include <kernel/Kernel.hpp>
+#include <kernel/interrupts/isr.hpp>
 
-void Kernel::isr33(isr::IsrArgs args)
+namespace isr
 {
-	_keyboardDriver.pollKeyboard();
+
+void Table::isr33(Arguments /* args */)
+{
+	kernel._keyboardDriver.pollKeyboard();
 }
+
+}// namespace isr

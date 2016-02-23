@@ -17,14 +17,10 @@ class Kernel final
 
 		MemoryManager& getHeapManager();
 
-		// Declare all interrupts service routines with the item trick
-#define ITEM(INDEX) void isr##INDEX(isr::IsrArgs args);
-#include <kernel/item64Helper.itm>
-#undef ITEM
-
 	private:
-		/// Aborts the kernel (enters in an infinite loop).
-		[[noreturn]] void abort() const;
+		/// The static class isr::Table have access to member of the kernel
+		/// (so the ISRs can modify the kernel).
+		friend class isr::Table;
 
 		/// Process the information given by the bootloader.
 		/// \param info A multiboot info structure that is given by the

@@ -1,5 +1,6 @@
 set(SOURCES
 	"Kernel.cpp"
+	"abort.cpp"
 	"terminal/Terminal.cpp"
 	"video/vgaManagement.cpp"
 	"ps2/Driver.cpp"
