@@ -32,21 +32,25 @@ class ColourProfile
 {
 	public:
 		ColourProfile(Colour foreground, Colour background);
-		uint8_t getValue() const;
+		explicit operator uint8_t() const;
 
 	private:
-		uint8_t _value;
+		uint8_t _foreground:4;
+		uint8_t _background:4;
 };
+static_assert(sizeof(ColourProfile) == 1, "ColourProfile must be 8-bits");
 
 class Entry
 {
 	public:
-		Entry(char c, const ColourProfile& profile);
-		uint16_t getValue() const;
+		Entry(char character, const ColourProfile& colourProfile);
+		explicit operator uint16_t() const;
 
 	private:
-		uint16_t _value;
+		uint8_t _character;
+		uint8_t _colourProfile;
 };
+static_assert(sizeof(Entry) == 2, "ColourProfile must be 16-bits");
 
 const size_t width{80};
 const size_t height{25};
