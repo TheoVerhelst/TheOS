@@ -1,20 +1,28 @@
 set(SOURCES
+	# Main files
 	"Kernel.cpp"
 	"abort.cpp"
+	# Terminal files
 	"terminal/Terminal.cpp"
+	# Video files
 	"video/vgaManagement.cpp"
+	# Memory files
+	"memory/MemoryManager.cpp"
+	# PS/2 files
 	"ps2/Driver.cpp"
 	"ps2/KeyboardDriver.cpp"
 	"ps2/ScancodeMapper.cpp"
 	"ps2/KeyEventMapper.cpp"
 	"ps2/Scancode.cpp"
+	# GDT files
 	"gdt.cpp"
 	"gdt.asm"
+	# Interrupts files
 	"interrupts/idt.cpp"
 	"interrupts/pic.cpp"
 	"interrupts/interruptHandler.asm"
 	"interrupts/isr.cpp"
-	# The asm interrupt service routines
+	# ASM interrupt service routines
 	"interrupts/isr/asm/isr0.asm"
 	"interrupts/isr/asm/isr1.asm"
 	"interrupts/isr/asm/isr2.asm"
@@ -79,7 +87,7 @@ set(SOURCES
 	"interrupts/isr/asm/isr61.asm"
 	"interrupts/isr/asm/isr62.asm"
 	"interrupts/isr/asm/isr63.asm"
-	# The cpp interrupt service routines
+	# C++ interrupt service routines
 	"interrupts/isr/cpp/isr0.cpp"
 	"interrupts/isr/cpp/isr1.cpp"
 	"interrupts/isr/cpp/isr2.cpp"

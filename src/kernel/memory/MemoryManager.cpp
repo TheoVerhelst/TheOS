@@ -1,4 +1,4 @@
-#include <memory/MemoryManager.hpp>
+#include <kernel/memory/MemoryManager.hpp>
 #include <math.hpp>
 #include <Printer.hpp>
 

@@ -3,7 +3,7 @@
 
 #include <boot/MultibootInfo.hpp>
 #include <kernel/interrupts/isr.hpp>
-#include <memory/MemoryManager.hpp>
+#include <kernel/memory/MemoryManager.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 
 class Kernel final
