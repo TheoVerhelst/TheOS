@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <cstddef>
+#include <type_traits>
 #include <memory.hpp>
 
 namespace details
@@ -21,8 +22,8 @@ struct ListNode
 template <class T, class AllocatorType = Allocator<details::ListNode<T>>>
 class List
 {
-	static_assert(sizeof(typename AllocatorType::valueType) == sizeof(details::ListNode<T>),
-			"AllocatorType cannot be used because it allocates the wrong size");
+	static_assert(std::is_same<typename AllocatorType::ValueType, details::ListNode<T>>::value,
+			"AllocatorType must allocate details::ListNode<T> objects.");
 	private:
 		//TODO template <class U>; typedef NodeIterator<T> iterator; typedef NodeIterator<const T> constIterator;
 		class NodeIterator
@@ -147,6 +148,7 @@ template <class T, class AllocatorType>
 List<T, AllocatorType>::~List()
 {
 	clear();
+	_allocator.deallocate(_end);
 }
 
 template <class T, class AllocatorType>

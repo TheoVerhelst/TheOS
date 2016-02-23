@@ -2,8 +2,6 @@
 #include <kernel/Kernel.hpp>
 #include <Printer.hpp>
 
-extern MemoryManager kernelHeapMamanger;
-
 void* operator new(size_t size) throw()
 {
 	return kernel.getHeapManager().allocate(size);

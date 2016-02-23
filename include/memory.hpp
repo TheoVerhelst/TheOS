@@ -20,8 +20,8 @@ template <class T>
 class Allocator
 {
 	public:
-		typedef T valueType;
-		typedef T* pointer;
+		typedef T ValueType;
+		typedef T* Pointer;
 		T* allocate();
 		void deallocate(T* pointer);
 };

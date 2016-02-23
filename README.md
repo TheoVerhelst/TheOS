@@ -1,6 +1,6 @@
 # TheOS
 
-TheOS is an operating system written is C++ for learning purposes,
+TheOS is an operating system written in C++ for learning purposes,
 forked from BermudOS.
 
 # Why ?

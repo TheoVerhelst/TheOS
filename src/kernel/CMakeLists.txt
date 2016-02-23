@@ -6,8 +6,6 @@ set(SOURCES
 	"terminal/Terminal.cpp"
 	# Video files
 	"video/vgaManagement.cpp"
-	# Memory files
-	"memory/MemoryManager.cpp"
 	# PS/2 files
 	"ps2/Driver.cpp"
 	"ps2/KeyboardDriver.cpp"
