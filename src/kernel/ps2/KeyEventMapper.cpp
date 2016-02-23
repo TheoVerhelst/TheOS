@@ -27,24 +27,33 @@ void KeyEventMapper::registerEvent(const KeyEvent& event)
 		case Key::LAlt:
 			_lAltPressed = event._pressed;
 			break;
+
 		case Key::RAlt:
 			_rAltPressed = event._pressed;
 			break;
+
 		case Key::LControl:
 			_lControlPressed = event._pressed;
 			break;
+
 		case Key::RControl:
 			_rControlPressed = event._pressed;
 			break;
+
 		case Key::LShift:
 			_lShiftPressed = event._pressed;
 			break;
+
 		case Key::RShift:
 			_rShiftPressed = event._pressed;
 			break;
+
 		case Key::CapsLock:
 			if(event._pressed)
 				_capsLocked = not _capsLocked;
+			break;
+
+		default:
 			break;
 	}
 }
@@ -87,6 +96,7 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::BackSpace, '\b', false, false},
 		{Key::Tab, '\t', false, false},
 		{Key::Return, '\n', false, false},
+		{Key::Slash, '\x15', true, false},// The § character
 		{Key::Space, ' ', false, false},
 		{Key::Slash, '!', false, false},
 		{Key::Num3, '"', false, false},
@@ -132,7 +142,7 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::J, 'J', true, false},
 		{Key::K, 'K', true, false},
 		{Key::L, 'L', true, false},
-		{Key::M, 'M', true, false},
+		{Key::SemiColon, 'M', true, false},
 		{Key::N, 'N', true, false},
 		{Key::O, 'O', true, false},
 		{Key::P, 'P', true, false},
@@ -164,7 +174,7 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::J, 'j', false, false},
 		{Key::K, 'k', false, false},
 		{Key::L, 'l', false, false},
-		{Key::M, 'm', false, false},
+		{Key::SemiColon, 'm', false, false},
 		{Key::N, 'n', false, false},
 		{Key::O, 'o', false, false},
 		{Key::P, 'p', false, false},
@@ -181,12 +191,16 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::Num4, '{', false, true},
 		{Key::Num6, '|', false, true},
 		{Key::Equal, '}', false, true},
-		{Key::Num2, '~', true, false},
-		{Key::Num2, '\x82', false, false},
-		{Key::Num0, '\x85', false, false},
-		{Key::Num9, '\x87', false, false},
-		{Key::Num7, '\x8A', false, false},
-		{Key::SemiColon, '\x97', false, false}
+		{Key::Num2, '~', false, true},
+		{Key::Num2, '\x82', false, false},// The é character
+		{Key::Num0, '\x85', false, false},// The à character
+		{Key::Num9, '\x87', false, false},// The ç character
+		{Key::Num7, '\x8A', false, false},// The è character
+		{Key::Quote, '\x97', false, false},// The ù character
+		{Key::RBracket, '\x9C', true, false},// The £ character
+		{Key::BackSlash, '\xE6', true, false},// The µ character
+		{Key::Dash, '\xF8', true, false},// The ù character
+		{Key::BackTick, '\xFD', false, false}// The square (power) character
 	},
 	{
 	}
