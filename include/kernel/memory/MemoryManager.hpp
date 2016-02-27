@@ -2,44 +2,40 @@
 #define MEMORYMANAGER_HPP
 
 #include <cstddef>
-#include <cstdint>
 #include <type_traits>
+#include <kernel/memory/Byte.hpp>
 #include <memory.hpp>
 #include <math.hpp>
 #include <List.hpp>
 #include <Printer.hpp>
-#include <boot/MultibootInfo.hpp>
 
 /// Holds some things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.
-template <class AllocatorType = Allocator<details::ListNode<intptr_t>>>
+template <class AllocatorType = Allocator<details::ListNode<Byte*>>>
 class MemoryManager
 {
 	public:
 		/// The type that the MemoryManager object needs for its internal storage.
-		typedef details::ListNode<intptr_t> AllocatorValueType;
+		typedef details::ListNode<Byte*> AllocatorValueType;
 		static_assert(std::is_same<AllocatorValueType, typename AllocatorType::ValueType>::value,
 				"The AllocatorType must allocate details::ListNode<intptr_t> objects.");
 
-		/// Constructs the manager from a list of MemoryRegion.
-		/// The arguments match to the ones provided by the multiboot info
-		/// structure.
-		/// \param address The address of the first MemoryRegion structure.
-		/// \param Size the number of memory regions.
-		/// \param neededHeapSize The minimum size that the kernel want for its heap.
-		MemoryManager(MemoryRegion* address, size_t size, size_t neededHeapSize);
+		/// Constructs the manager from a memory block.
+		/// \param address The address of the memory block to manage.
+		/// \param Size The size of the memory block to manage.
+		MemoryManager(Byte* address, size_t size);
 
-		void* allocate(size_t size);
+		Byte* allocate(size_t size);
 
-		void deallocate(void* address);
+		void deallocate(Byte* address);
 
-		void deallocate(void* address, size_t size);
+		void deallocate(Byte* address, size_t size);
 
 	private:
 		/// The number of bits in a pointer.
 		static constexpr size_t _addressSize{sizeof(void*) * 8};
 
-		typedef List<intptr_t, AllocatorType> BlockList;
+		typedef List<Byte*, AllocatorType> BlockList;
 
 		/// Array of list of addresses of free blocks.
 		/// The index indicate the size of the blocks in the list:
@@ -54,7 +50,7 @@ class MemoryManager
 		/// This is not guaranteed that the whole chunk of memory provided
 		/// will really be available (maybe only a smaller chunk, rounded
 		/// to some multiple of power of two, will be used instead).
-		void addMemoryChunk(void* baseAddress, size_t size);
+		void addMemoryChunk(Byte* baseAddress, size_t size);
 
 		void tryMerge(typename BlockList::iterator blockToMergeIt, size_t index);
 
@@ -68,43 +64,30 @@ class MemoryManager
 		static size_t getIndexFromSize(size_t size);
 
 		// TODO replace by std::find
-		static typename BlockList::iterator findBlock(BlockList& blockList, intptr_t address);
+		static typename BlockList::iterator findBlock(BlockList& blockList, Byte* address);
 };
 
 template <class AllocatorType>
-MemoryManager<AllocatorType>::MemoryManager(MemoryRegion* address, size_t size, size_t neededHeapSize)
+MemoryManager<AllocatorType>::MemoryManager(Byte* address, size_t size)
 {
-	uintptr_t rawAddress{reinterpret_cast<uintptr_t>(address)};
-	const uintptr_t upperAddress{rawAddress + size};
-	while(rawAddress < upperAddress)
-	{
-		if(address->type == 1 and static_cast<size_t>(address->length) >= neededHeapSize)
-		{
-			void* baseAddress{reinterpret_cast<void*>(address->base_addr)};
-			addMemoryChunk(baseAddress, neededHeapSize);
-			return;
-		}
-		rawAddress += address->size + sizeof(address->size);
-		address = reinterpret_cast<MemoryRegion*>(rawAddress);
-	}
+	addMemoryChunk(address, size);
 }
 
 template <class AllocatorType>
-void MemoryManager<AllocatorType>::addMemoryChunk(void* baseAddress, size_t size)
+void MemoryManager<AllocatorType>::addMemoryChunk(Byte* baseAddress, size_t size)
 {
-	intptr_t convertedBaseAddress{reinterpret_cast<intptr_t>(baseAddress)};
 	// Avoid nullptr in the allocable space
 	if(baseAddress == nullptr)
 	{
-		++convertedBaseAddress;
+		++baseAddress;
 		--size;
 	}
 	const size_t index{getIndexFromSize(size)};
-	_freeBlocks[index].pushBack(convertedBaseAddress);
+	_freeBlocks[index].pushBack(baseAddress);
 }
 
 template <class AllocatorType>
-void* MemoryManager<AllocatorType>::allocate(size_t size)
+Byte* MemoryManager<AllocatorType>::allocate(size_t size)
 {
 	const size_t index{getIndexFromSize(size)};
 	typename BlockList::iterator it{allocateBlock(index)};
@@ -114,29 +97,27 @@ void* MemoryManager<AllocatorType>::allocate(size_t size)
 		return nullptr;
 	}
 	else
-		return reinterpret_cast<void*>(*it);
+		return *it;
 }
 
 template <class AllocatorType>
-void MemoryManager<AllocatorType>::deallocate(void* address)
+void MemoryManager<AllocatorType>::deallocate(Byte* address)
 {
 	if(address == nullptr)
 		return;
-
-	const intptr_t convertedAddress{reinterpret_cast<intptr_t>(address)};
 
 	// Find the block corresponding to the address
 	size_t index{0};
 	typename BlockList::iterator it;
 	while(index < _addressSize)
-		it = findBlock(_allocatedBlocks[index++], convertedAddress);
+		it = findBlock(_allocatedBlocks[index++], address);
 	--index;
 
 	if(it != _allocatedBlocks[index].end())
 	{
 		// Add the freed block to the free list
 		_allocatedBlocks[index].erase(it);
-		_freeBlocks[index].pushFront(convertedAddress);
+		_freeBlocks[index].pushFront(address);
 		tryMerge(_freeBlocks[index].begin(), index);
 	}
 	else
@@ -144,22 +125,20 @@ void MemoryManager<AllocatorType>::deallocate(void* address)
 }
 
 template <class AllocatorType>
-void MemoryManager<AllocatorType>::deallocate(void* address, size_t size)
+void MemoryManager<AllocatorType>::deallocate(Byte* address, size_t size)
 {
 	if(address == nullptr)
 		return;
 
-	const intptr_t convertedAddress{reinterpret_cast<intptr_t>(address)};
-
 	// Find the block corresponding to the address
 	size_t index{getIndexFromSize(size)};
-	typename BlockList::iterator it{findBlock(_allocatedBlocks[index], convertedAddress)};
+	typename BlockList::iterator it{findBlock(_allocatedBlocks[index], address)};
 
 	if(it != _allocatedBlocks[index].end())
 	{
 		// Add the freed block to the free list
 		_allocatedBlocks[index].erase(it);
-		_freeBlocks[index].pushFront(convertedAddress);
+		_freeBlocks[index].pushFront(address);
 		tryMerge(_freeBlocks[index].begin(), index);
 	}
 	else
@@ -182,7 +161,7 @@ void MemoryManager<AllocatorType>::tryMerge(typename BlockList::iterator blockTo
 		{
 			typename BlockList::iterator lowerBlockIt{*it < *blockToMergeIt ? it : blockToMergeIt};
 			typename BlockList::iterator upperBlockIt{lowerBlockIt == blockToMergeIt ? it : blockToMergeIt};
-			intptr_t baseAddress{*lowerBlockIt};
+			Byte* baseAddress{*lowerBlockIt};
 			_freeBlocks[index].erase(lowerBlockIt);
 			_freeBlocks[index].erase(upperBlockIt);
 			_freeBlocks[index + 1].pushFront(baseAddress);
@@ -213,11 +192,11 @@ typename MemoryManager<AllocatorType>::BlockList::iterator MemoryManager<Allocat
 			return _allocatedBlocks[index].end();
 
 		// Erase the bigger allocated block
-		intptr_t baseAddress{*biggerBlock};
+		Byte* baseAddress{*biggerBlock};
 		_allocatedBlocks[index + 1].erase(biggerBlock);
 
 		// Create a block containing the second half of biggerBlock
-		intptr_t midAddress{baseAddress + (1L << index)};
+		Byte* midAddress{baseAddress + (1L << index)};
 		// Add it to free list
 		_freeBlocks[index].pushFront(midAddress);
 		// And add the allocated block (the first half of biggerBlock) to the allocated list
@@ -246,7 +225,7 @@ size_t MemoryManager<AllocatorType>::getIndexFromSize(size_t size)
 }
 
 template <class AllocatorType>
-typename MemoryManager<AllocatorType>::BlockList::iterator MemoryManager<AllocatorType>::findBlock(BlockList& blockList, intptr_t address)
+typename MemoryManager<AllocatorType>::BlockList::iterator MemoryManager<AllocatorType>::findBlock(BlockList& blockList, Byte* address)
 {
 	typename BlockList::iterator it{blockList.begin()};
 	while(*it != address and it != blockList.end())

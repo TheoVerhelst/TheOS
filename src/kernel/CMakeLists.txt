@@ -2,6 +2,8 @@ set(SOURCES
 	# Main files
 	"Kernel.cpp"
 	"abort.cpp"
+	# Memory files
+	"memory/MemoryMapBrowser.cpp"
 	# Terminal files
 	"terminal/Terminal.cpp"
 	# Video files
@@ -153,4 +155,3 @@ set(SOURCES
 	)
 
 add_library(kernel OBJECT ${SOURCES})
-

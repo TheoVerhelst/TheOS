@@ -5,6 +5,8 @@
 #include <kernel/interrupts/isr.hpp>
 #include <kernel/memory/PoolAllocator.hpp>
 #include <kernel/memory/MemoryManager.hpp>
+#include <kernel/memory/MemoryMapBrowser.hpp>
+#include <kernel/memory/Byte.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 
 class Kernel final
@@ -37,9 +39,7 @@ class Kernel final
 		friend class isr::Table;
 
 		/// Process the information given by the bootloader.
-		/// \param info A multiboot info structure that is given by the
-		/// bootloader, containing info about the computer and other things.
-		void processMultibootInfo(const MultibootInfo& info) const;
+		void processMultibootInfo() const;
 
 		/// Print information about the device on which the kernel was loaded.
 		static void printDeviceInfo(uint32_t bootDevice);
@@ -50,6 +50,10 @@ class Kernel final
 
 		/// Size of the heap that will be allocated for the kernel.
 		static constexpr size_t _heapSize{1UL << 20UL};
+
+		MemoryMapBrowser _memoryMapBrowser;
+
+		Byte* _heapAddress;
 
 		/// The kernel memory allocator.
 		HeapManager _heapManager;

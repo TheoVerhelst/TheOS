@@ -9,14 +9,13 @@
 Kernel kernel;
 
 Kernel::Kernel():
+	_heapAddress{_memoryMapBrowser.findMemoryRegion(_heapSize)},
 	// Give a needed kernel size of zero if info about memory is not available
 	// (that's better than nothing)
-	_heapManager{multibootInfoAddress->mmap_addr,
-			multibootInfoAddress->mmap_length,
-			(multibootInfoAddress->flags & InfoAvailable::mmap ? _heapSize : 0UL)}
+	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize}
 {
 	printPrettyAsciiArt();
-	processMultibootInfo(*multibootInfoAddress);
+	processMultibootInfo();
 	gdt::initializeGdt();
 	idt::initializeIdt();
 	pic::initializePic();
@@ -36,13 +35,14 @@ Kernel::HeapManager& Kernel::getHeapManager()
 	return _heapManager;
 }
 
-void Kernel::processMultibootInfo(const MultibootInfo& info) const
+void Kernel::processMultibootInfo() const
 {
-	if(info.flags & InfoAvailable::boot_loader_name)
+	const multiboot::MultibootInfo& info{*multiboot::multibootInfoAddress};
+	if(info.flags & multiboot::InfoAvailable::boot_loader_name)
 		out << "This kernel has been loaded by \"" << info.boot_loader_name << "\"\n";
 	//if(info.flags & InfoAvailable::boot_device)
 	//	printDeviceInfo(info.boot_device);
-	if(not (info.flags & InfoAvailable::mmap))
+	if(not (info.flags & multiboot::InfoAvailable::mmap))
 		abort("Memory map not available, aborting\n");
 }
 

@@ -4,17 +4,17 @@
 
 void* operator new(size_t size) throw()
 {
-	return kernel.getHeapManager().allocate(size);
+	return static_cast<void*>(kernel.getHeapManager().allocate(size));
 }
 
 void operator delete(void* address) throw()
 {
-	kernel.getHeapManager().deallocate(address);
+	kernel.getHeapManager().deallocate(static_cast<Byte*>(address));
 }
 
 void operator delete(void* address, size_t size) throw()
 {
-	kernel.getHeapManager().deallocate(address, size);
+	kernel.getHeapManager().deallocate(static_cast<Byte*>(address), size);
 }
 
 void* operator new[](size_t size) throw()

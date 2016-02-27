@@ -3,6 +3,10 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <kernel/memory/Byte.hpp>
+
+namespace multiboot
+{
 
 /// Structure representing data about the a.out
 /// symbol table of the kernel.
@@ -31,7 +35,7 @@ struct Elf32Syms
 	char** shndx;///< String table used as the index of names.
 };
 
-/// Structure sued to represent a region of the memory that is potentially
+/// Structure used to represent a region of the memory that is potentially
 /// available for the kernel.
 struct MemoryRegion
 {
@@ -39,6 +43,7 @@ struct MemoryRegion
 	uint64_t base_addr;///< Address of the first byte of the region.
 	uint64_t length;   ///< Length of the region.
 	uint32_t type;     ///< 1 if the region is available for use, any other value otherwise.
+	static constexpr uint32_t validType{UINT32_C(1)};
 };
 
 /// This is the Multiboot information data structure,
@@ -78,7 +83,7 @@ struct MultibootInfo
 
 /// The address of the structure, it needs to be set (in the boot assembly)
 /// before the static initialization of the Kernel instance.
-extern const MultibootInfo* multibootInfoAddress;
+extern "C" const MultibootInfo* multibootInfoAddress;
 
 namespace InfoAvailable
 {
@@ -101,5 +106,7 @@ enum InfoAvailable : uint32_t
 };
 
 }// namespace InfoAvailable
+
+}// namespace multiboot
 
 #endif// MULTIBOOTINFO_HPP
