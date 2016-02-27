@@ -170,7 +170,7 @@
     }
 
     namespace tr2 { }
-    
+
     namespace decimal { }
 
     namespace chrono { }
@@ -234,7 +234,7 @@ namespace __gnu_cxx
 
 
 // Defined if inline namespaces are used for versioning.
-# define _GLIBCXX_INLINE_VERSION 0 
+# define _GLIBCXX_INLINE_VERSION 0
 
 // Inline namespace for symbol versioning.
 #if _GLIBCXX_INLINE_VERSION
@@ -477,12 +477,6 @@ namespace std
 
 
 // First includes.
-
-// Pick up any OS-specific definitions.
-#include <bits/os_defines.h>
-
-// Pick up any CPU-specific definitions.
-#include <bits/cpu_defines.h>
 
 // If platform uses neither visibility nor psuedo-visibility,
 // specify empty default for namespace annotation macros.
@@ -1202,7 +1196,7 @@ namespace std
 #define _GLIBCXX_HAVE___CXA_THREAD_ATEXIT_IMPL 1
 
 /* Define as const if the declaration of iconv() needs const. */
-#define _GLIBCXX_ICONV_CONST 
+#define _GLIBCXX_ICONV_CONST
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
@@ -1264,7 +1258,7 @@ namespace std
 #define _GLIBCXX_HAS_GTHREADS 1
 
 /* Define to 1 if a full hosted library is built, or 0 if freestanding. */
-#define _GLIBCXX_HOSTED 1
+#define _GLIBCXX_HOSTED 0
 
 /* Define if compatibility should be provided for -mlong-double-64. */
 

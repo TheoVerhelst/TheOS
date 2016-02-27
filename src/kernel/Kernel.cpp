@@ -5,6 +5,9 @@
 #include <kernel/interrupts/pic.hpp>
 #include <kernel/abort.hpp>
 #include <kernel/Kernel.hpp>
+#include <BitSet.hpp>
+#include <InitializerList.hpp>
+#include <List.hpp>
 
 Kernel kernel;
 
@@ -85,6 +88,7 @@ void Kernel::testHeap()
 	if(ptrA != oldPtrA)
 		out << "Memory allocation failure: the same object is not reallocated at the same place after deallocation.\n";
 	delete ptrB;
+	delete ptrA;
 
 	int *ptr8 = new int[8];
 	int *ptr2 = new int[2];
@@ -96,6 +100,7 @@ void Kernel::testHeap()
 	if(ptr8 != oldPtr8)
 		out << "Memory allocation failure: the same object is not reallocated at the same place after deallocation.\n";
 	delete[] ptr2;
+	delete ptr8;
 }
 
 void Kernel::printPrettyAsciiArt()
