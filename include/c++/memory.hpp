@@ -2,6 +2,7 @@
 #define MEMORY_HPP
 
 #include <cstddef>
+#include <limits>
 
 void* operator new(size_t size) throw()
 	__attribute__((__externally_visible__));
@@ -17,25 +18,85 @@ void operator delete[](void* address, size_t size) throw()
 	__attribute__((__externally_visible__));
 
 template <class T>
-class Allocator
-{
+class Allocator {
 	public:
+		// type definitions
 		typedef T ValueType;
 		typedef T* Pointer;
-		T* allocate();
-		void deallocate(T* pointer);
+		typedef const T* ConstPointer;
+		typedef T& Reference;
+		typedef const T& ConstReference;
+		typedef size_t SizeType;
+		typedef ptrdiff_t DifferenceType;
+
+		template <class U>
+		struct Rebind
+		{
+			typedef Allocator<U> Other;
+		};
+
+		Pointer address(Reference value) const
+		{
+			return &value;
+		}
+		ConstPointer address(ConstReference value) const
+		{
+			return &value;
+		}
+
+		Allocator() throw()
+		{
+		}
+
+		Allocator(const Allocator&) throw()
+		{
+		}
+
+		template <class U>
+		Allocator(const Allocator<U>&) throw()
+		{
+		}
+
+		~Allocator() throw()
+		{
+		}
+
+		SizeType maxSize() const throw()
+		{
+			return std::numeric_limits<SizeType>::max() / sizeof(T);
+		}
+
+		Pointer allocate(const void* = 0)
+		{
+			return static_cast<Pointer>(::operator new(sizeof(T)));
+		}
+
+		void construct(Pointer pointer, const T& value)
+		{
+			new(static_cast<void*>(pointer)) T(value);
+		}
+
+		void destroy(Pointer pointer)
+		{
+			pointer->~T();
+		}
+
+		void deallocate(Pointer pointer)
+		{
+			::operator delete(static_cast<void*>(pointer));
+		}
 };
 
-template <class T>
-T* Allocator<T>::allocate()
+template <class T1, class T2>
+bool operator==(const Allocator<T1>&, const Allocator<T2>&) throw()
 {
-	return new T;
+	return true;
 }
 
-template <class T>
-void Allocator<T>::deallocate(T* pointer)
+template <class T1, class T2>
+bool operator!=(const Allocator<T1>&, const Allocator<T2>&) throw()
 {
-	delete pointer;
+	return false;
 }
 
 #endif// MEMORY_HPP

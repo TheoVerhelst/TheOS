@@ -5,9 +5,6 @@
 #include <kernel/interrupts/pic.hpp>
 #include <kernel/abort.hpp>
 #include <kernel/Kernel.hpp>
-#include <BitSet.hpp>
-#include <InitializerList.hpp>
-#include <List.hpp>
 
 Kernel kernel;
 
