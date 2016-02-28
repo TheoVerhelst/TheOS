@@ -12,9 +12,9 @@ namespace details
 template <class T>
 struct ListNode
 {
-	T value;
-	ListNode* next = nullptr;
-	ListNode* previous = nullptr;
+	T _value;
+	ListNode* _next = nullptr;
+	ListNode* _previous = nullptr;
 };
 
 }// namespace details
@@ -124,12 +124,12 @@ List<T, AllocatorType>::List(const List<T, AllocatorType>& other):
 {
 	details::ListNode<T>* previousNode{_begin};
 	details::ListNode<T>* nextNode;
-	for(const details::ListNode<T>* node{other._begin}; node != other._end; node = node->next)
+	for(const details::ListNode<T>* node{other._begin}; node != other._end; node = node->_next)
 	{
-		previousNode->value = node->value;
+		previousNode->_value = node->_value;
 		nextNode = _allocator.allocate();
-		nextNode->previous = previousNode;
-		previousNode->next = nextNode;
+		nextNode->_previous = previousNode;
+		previousNode->_next = nextNode;
 		++_size;
 	}
 	_end = nextNode;
@@ -178,25 +178,25 @@ size_t List<T, AllocatorType>::size() const
 template <class T, class AllocatorType>
 T& List<T, AllocatorType>::back()
 {
-	return _end->previous->value;
+	return _end->_previous->_value;
 }
 
 template <class T, class AllocatorType>
 const T& List<T, AllocatorType>::back() const
 {
-	return _end->previous->value;
+	return _end->_previous->_value;
 }
 
 template <class T, class AllocatorType>
 T& List<T, AllocatorType>::front()
 {
-	return _begin->value;
+	return _begin->_value;
 }
 
 template <class T, class AllocatorType>
 const T& List<T, AllocatorType>::front() const
 {
-	return _begin->value;
+	return _begin->_value;
 }
 
 template <class T, class AllocatorType>
@@ -267,40 +267,52 @@ typename List<T, AllocatorType>::constIterator List<T, AllocatorType>::cend() co
 }
 
 template <class T, class AllocatorType>
-typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(List<T, AllocatorType>::iterator pos, const T& value)
-{
-	//TODO be sure that this will always be possible, even if T has not move assignment operator
-	return insert(pos, T(value));
-}
-
-template <class T, class AllocatorType>
-typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(List<T, AllocatorType>::iterator pos, T&& value)
+typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(iterator pos, const T& value)
 {
 	details::ListNode<T>* node{_allocator.allocate()};
-	node->value = std::forward<T>(value);
-	node->previous = pos._node->previous;
-	node->next = pos._node;
-	pos._node->previous = node;
-	if(node->previous == nullptr)
+	node->_value = value;
+	node->_previous = pos._node->_previous;
+	node->_next = pos._node;
+	pos._node->_previous = node;
+	if(node->_previous == nullptr)
 		_begin = node;
+	else
+		node->_previous->_next = node;
 	++_size;
 	return iterator(node);
 }
 
 template <class T, class AllocatorType>
-typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(List<T, AllocatorType>::constIterator pos, const T& value)
+typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(iterator pos, T&& value)
+{
+	details::ListNode<T>* node{_allocator.allocate()};
+	node->_value = std::forward<T>(value);
+	node->_previous = pos._node->_previous;
+	node->_next = pos._node;
+
+	pos._node->_previous = node;
+	if(node->_previous == nullptr)
+		_begin = node;
+	else
+		node->_previous->_next = node;
+	++_size;
+	return iterator(node);
+}
+
+template <class T, class AllocatorType>
+typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(constIterator pos, const T& value)
 {
 	return insert(iterator(const_cast<details::ListNode<T>*>(pos._node)), value);
 }
 
 template <class T, class AllocatorType>
-typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(List<T, AllocatorType>::constIterator pos, T&& value)
+typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(constIterator pos, T&& value)
 {
 	return insert(iterator(const_cast<details::ListNode<T>*>(pos._node)), std::forward<T>(value));
 }
 
 template <class T, class AllocatorType>
-typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, AllocatorType>::iterator pos)
+typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(iterator pos)
 {
 	iterator tmp{pos};
 	++tmp;
@@ -308,22 +320,22 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, 
 }
 
 template <class T, class AllocatorType>
-typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, AllocatorType>::constIterator pos)
+typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(constIterator pos)
 {
 	return erase(iterator(const_cast<details::ListNode<T>*>(pos._node)));
 }
 
 template <class T, class AllocatorType>
-typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, AllocatorType>::iterator first, List<T, AllocatorType>::iterator last)
+typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(iterator first, iterator last)
 {
 	if(first._node == _begin)
 		_begin = last._node;
 	else if(first != last)
-		first._node->previous->next = last._node;
+		first._node->_previous->_next = last._node;
 	if(last._node == _end)
-		_end->previous = first._node->previous;
+		_end->_previous = first._node->_previous;
 	else if(first != last)
-		last._node->previous = first._node->previous;
+		last._node->_previous = first._node->_previous;
 	while(first != last)
 	{
 		_allocator.deallocate(first._node);
@@ -334,7 +346,7 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, 
 }
 
 template <class T, class AllocatorType>
-typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(List<T, AllocatorType>::constIterator first, List<T, AllocatorType>::constIterator last)
+typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(constIterator first, constIterator last)
 {
 	return erase(iterator(const_cast<details::ListNode<T>*>(first._node)), iterator(const_cast<details::ListNode<T>*>(last._node)));
 }
@@ -350,19 +362,19 @@ List<T, AllocatorType>::NodeIterator::NodeIterator(details::ListNode<T>* node) n
 template <class T, class AllocatorType>
 T&  List<T, AllocatorType>::NodeIterator::operator*() const noexcept
 {
-	return _node->value;
+	return _node->_value;
 }
 
 template <class T, class AllocatorType>
 T*  List<T, AllocatorType>::NodeIterator::operator->() const noexcept
 {
-	return &_node->value;
+	return &_node->_value;
 }
 
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::NodeIterator& List<T, AllocatorType>::NodeIterator::operator++() noexcept
 {
-	_node = _node->next;
+	_node = _node->_next;
 	return *this;
 }
 
@@ -370,14 +382,14 @@ template <class T, class AllocatorType>
 typename List<T, AllocatorType>::NodeIterator List<T, AllocatorType>::NodeIterator::operator++(int) noexcept
 {
 	NodeIterator tmp{*this};
-	_node = _node->next;
+	_node = _node->_next;
 	return tmp;
 }
 
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::NodeIterator& List<T, AllocatorType>::NodeIterator::operator--() noexcept
 {
-	_node = _node->previous;
+	_node = _node->_previous;
 	return *this;
 }
 
@@ -385,7 +397,7 @@ template <class T, class AllocatorType>
 typename List<T, AllocatorType>::NodeIterator List<T, AllocatorType>::NodeIterator::operator--(int) noexcept
 {
 	NodeIterator tmp{*this};
-	_node = _node->previous;
+	_node = _node->_previous;
 	return tmp;
 }
 
@@ -412,19 +424,19 @@ List<T, AllocatorType>::NodeConstIterator::NodeConstIterator(const details::List
 template <class T, class AllocatorType>
 const T&  List<T, AllocatorType>::NodeConstIterator::operator*() const noexcept
 {
-	return _node->value;
+	return _node->_value;
 }
 
 template <class T, class AllocatorType>
 const T*  List<T, AllocatorType>::NodeConstIterator::operator->() const noexcept
 {
-	return &_node->value;
+	return &_node->_value;
 }
 
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::NodeConstIterator& List<T, AllocatorType>::NodeConstIterator::operator++() noexcept
 {
-	_node = _node->next;
+	_node = _node->_next;
 	return *this;
 }
 
@@ -432,14 +444,14 @@ template <class T, class AllocatorType>
 typename List<T, AllocatorType>::NodeConstIterator List<T, AllocatorType>::NodeConstIterator::operator++(int) noexcept
 {
 	NodeConstIterator tmp{*this};
-	_node = _node->next;
+	_node = _node->_next;
 	return tmp;
 }
 
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::NodeConstIterator& List<T, AllocatorType>::NodeConstIterator::operator--() noexcept
 {
-	_node = _node->previous;
+	_node = _node->_previous;
 	return *this;
 }
 
@@ -447,7 +459,7 @@ template <class T, class AllocatorType>
 typename List<T, AllocatorType>::NodeConstIterator List<T, AllocatorType>::NodeConstIterator::operator--(int) noexcept
 {
 	NodeConstIterator tmp{*this};
-	_node = _node->previous;
+	_node = _node->_previous;
 	return tmp;
 }
 
