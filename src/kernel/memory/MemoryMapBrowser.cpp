@@ -5,25 +5,25 @@
 MemoryMapBrowser::MemoryMapBrowser():
 	_memoryRegions{_memoryRegionsPool}
 {
-	if(not (multiboot::multibootInfoAddress->flags & multiboot::InfoAvailable::mmap))
+	if(not (multiboot::multibootInfoAddress->_flags & multiboot::InfoAvailable::mmap))
 		return;
 
-	multiboot::MemoryRegion* address{multiboot::multibootInfoAddress->mmap_addr};
-	const size_t size{multiboot::multibootInfoAddress->mmap_length};
+	multiboot::MemoryRegion* address{multiboot::multibootInfoAddress->_mmap_addr};
+	const size_t size{multiboot::multibootInfoAddress->_mmap_length};
 
 	Byte* rawAddress{reinterpret_cast<Byte*>(address)};
 	Byte* upperAddress{rawAddress + size};
 	while(rawAddress < upperAddress)
 	{
-		if(address->type == multiboot::MemoryRegion::validType)
+		if(address->_type == multiboot::MemoryRegion::_validType)
 		{
 			MemoryRegion memoryRegion;
 			// address->base_addr is 64-bits, get only the first 32 bits
-			memoryRegion._address = reinterpret_cast<Byte*>(address->base_addr & UINT64_C(0xFFFFFFFF));
-			memoryRegion._size = static_cast<size_t>(address->length);
+			memoryRegion._address = reinterpret_cast<Byte*>(address->_base_addr & UINT64_C(0xFFFFFFFF));
+			memoryRegion._size = static_cast<size_t>(address->_length);
 			_memoryRegions.pushBack(memoryRegion);
 		}
-		rawAddress += address->size + sizeof(address->size);
+		rawAddress += address->_size + sizeof(address->_size);
 		address = reinterpret_cast<multiboot::MemoryRegion*>(rawAddress);
 	}
 }

@@ -20,8 +20,8 @@ GdtEntry::GdtEntry(uint32_t base, uint32_t limit, uint8_t access, uint8_t flags)
 
 void initializeGdt()
 {
-	descriptor.address = reinterpret_cast<uint32_t>(&globalDescriptorTable);
-	descriptor.size = sizeof(globalDescriptorTable);
+	descriptor._address = reinterpret_cast<uint32_t>(&globalDescriptorTable);
+	descriptor._size = sizeof(globalDescriptorTable);
 	globalDescriptorTable[1] = GdtEntry(0, 0xFFFFF,
 			Access::ReadWrite | Access::Present | Access::CodeData,
 			Flags::Size | Flags::Granularity);

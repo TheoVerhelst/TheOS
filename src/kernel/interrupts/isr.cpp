@@ -11,21 +11,21 @@ constexpr void (*Table::_table[idt::idtSize])(Arguments);
 extern "C" void isrDispatcher(Arguments args)
 {
 	// Call the proper ISR
-	Table::_table[args.interruptNumber](args);
+	Table::_table[args._interruptNumber](args);
 
 	// If the interrupt is a mapped IRQ, then send a EOI command to the PIC
-	if(args.interruptNumber >= pic::masterOffset and args.interruptNumber <= pic::slaveOffset + 8)
-		pic::sendEndOfInterrupt(args.interruptNumber);
+	if(args._interruptNumber >= pic::masterOffset and args._interruptNumber <= pic::slaveOffset + 8)
+		pic::sendEndOfInterrupt(args._interruptNumber);
 }
 
 Printer& operator<<(Printer& out, const ErrorCode& errorCode)
 {
-	out << errorCode.segmentSelectorIndex << " (";
-	out << (errorCode.externalEvent ? "external" : "internal") << ", ";
-	if(errorCode.descriptorLocation)
+	out << errorCode._segmentSelectorIndex << " (";
+	out << (errorCode._externalEvent ? "external" : "internal") << ", ";
+	if(errorCode._descriptorLocation)
 		out << "IDT";
 	else
-		out << (errorCode.gdtLdt ? "LDT" : "GDT");
+		out << (errorCode._gdtLdt ? "LDT" : "GDT");
 	out << ")";
 	return out;
 }

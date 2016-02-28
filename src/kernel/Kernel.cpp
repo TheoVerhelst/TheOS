@@ -38,11 +38,11 @@ Kernel::HeapManager& Kernel::getHeapManager()
 void Kernel::processMultibootInfo() const
 {
 	const multiboot::MultibootInfo& info{*multiboot::multibootInfoAddress};
-	if(info.flags & multiboot::InfoAvailable::boot_loader_name)
-		out << "This kernel has been loaded by \"" << info.boot_loader_name << "\"\n";
+	if(info._flags & multiboot::InfoAvailable::boot_loader_name)
+		out << "This kernel has been loaded by \"" << info._boot_loader_name << "\"\n";
 	//if(info.flags & InfoAvailable::boot_device)
 	//	printDeviceInfo(info.boot_device);
-	if(not (info.flags & multiboot::InfoAvailable::mmap))
+	if(not (info._flags & multiboot::InfoAvailable::mmap))
 		abort("Memory map not available, aborting\n");
 }
 

@@ -12,8 +12,8 @@ namespace gdt
 /// then its address is given to the CPU in order to initialize segmentation.
 struct GdtDescriptor
 {
-	uint16_t size;
-	uint32_t address;
+	uint16_t _size;
+	uint32_t _address;
 } __attribute__((packed));
 
 /// An entry of the Global Descriptor Table. It represents informations about
