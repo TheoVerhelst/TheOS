@@ -19,7 +19,7 @@ class MemoryManager
 		/// The type that the MemoryManager object needs for its internal storage.
 		typedef details::ListNode<Byte*> AllocatorValueType;
 		static_assert(std::is_same<AllocatorValueType, typename AllocatorType::ValueType>::value,
-				"The AllocatorType must allocate details::ListNode<intptr_t> objects.");
+				"The AllocatorType must allocate details::ListNode<Byte*> objects.");
 
 		/// Constructs the manager from a memory block.
 		/// \param address The address of the memory block to manage.
@@ -50,6 +50,8 @@ class MemoryManager
 		/// \see freeBlocks
 		Array<BlockList, _addressSize> _allocatedBlocks;
 
+		static constexpr bool _activateMemoryDump{false};
+
 		/// Registers a chunk of memory, making it available for allocations.
 		/// This is not guaranteed that the whole chunk of memory provided
 		/// will really be available (maybe only a smaller chunk, rounded
@@ -64,8 +66,7 @@ class MemoryManager
 
 		void memoryDump() const;
 
-		// TODO try to add constexpr
-		static size_t getIndexFromSize(size_t size);
+		static constexpr size_t getIndexFromSize(size_t size);
 
 		// TODO replace by std::find
 		static typename BlockList::iterator findBlock(BlockList& blockList, Byte* address);
@@ -98,6 +99,8 @@ Byte* MemoryManager<AllocatorType>::allocate(size_t size)
 {
 	const size_t index{getIndexFromSize(size)};
 	typename BlockList::iterator it{allocateBlock(index)};
+	if(_activateMemoryDump)
+		memoryDump();
 	if(it == _allocatedBlocks[index].end())
 	{
 		out << "Error: MemoryMamanger::allocate: no more memory, nullptr returned\n";
@@ -117,8 +120,12 @@ void MemoryManager<AllocatorType>::deallocate(Byte* address)
 	size_t index{0};
 	typename BlockList::iterator it;
 	while(index < _addressSize)
-		it = findBlock(_allocatedBlocks[index++], address);
-	--index;
+	{
+		it = findBlock(_allocatedBlocks[index], address);
+		if(it != _allocatedBlocks[index].end())
+			break;
+		index++;
+	}
 
 	if(it != _allocatedBlocks[index].end())
 	{
@@ -129,6 +136,8 @@ void MemoryManager<AllocatorType>::deallocate(Byte* address)
 	}
 	else
 		out << "Error: MemoryMamanger::deallocate: invalid pointer argument (" << address << ")\n";
+	if(_activateMemoryDump)
+		memoryDump();
 }
 
 template <class AllocatorType>
@@ -138,7 +147,7 @@ void MemoryManager<AllocatorType>::deallocate(Byte* address, size_t size)
 		return;
 
 	// Find the block corresponding to the address
-	size_t index{getIndexFromSize(size)};
+	const size_t index{getIndexFromSize(size)};
 	typename BlockList::iterator it{findBlock(_allocatedBlocks[index], address)};
 
 	if(it != _allocatedBlocks[index].end())
@@ -150,6 +159,8 @@ void MemoryManager<AllocatorType>::deallocate(Byte* address, size_t size)
 	}
 	else
 		out << "Error: MemoryMamanger::deallocate: invalid pointer argument (" << address << ")\n";
+	if(_activateMemoryDump)
+		memoryDump();
 }
 
 template <class AllocatorType>
@@ -220,7 +231,7 @@ typename MemoryManager<AllocatorType>::BlockList::iterator MemoryManager<Allocat
 }
 
 template <class AllocatorType>
-size_t MemoryManager<AllocatorType>::getIndexFromSize(size_t size)
+constexpr size_t MemoryManager<AllocatorType>::getIndexFromSize(size_t size)
 {
 	// Test all power of two until one is bigger than size
 	// Note that when size == 0, 0 is returned (corresponding

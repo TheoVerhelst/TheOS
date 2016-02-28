@@ -19,15 +19,15 @@ void operator delete(void* address, size_t size) throw()
 
 void* operator new[](size_t size) throw()
 {
-	return operator new(size);
+	return ::operator new(size);
 }
 
 void operator delete[](void* address) throw()
 {
-	operator delete(address);
+	::operator delete(address);
 }
 
 void operator delete[](void* address, size_t size) throw()
 {
-	operator delete(address, size);
+	::operator delete(address, size);
 }

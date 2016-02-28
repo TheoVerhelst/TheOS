@@ -14,12 +14,12 @@ Kernel::Kernel():
 	// (that's better than nothing)
 	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize, HeapManagerPoolAllocator(_heapManagerPool)}
 {
+	testHeap();
 	printPrettyAsciiArt();
 	processMultibootInfo();
 	gdt::initializeGdt();
 	idt::initializeIdt();
 	pic::initializePic();
-	testHeap();
 }
 
 void Kernel::run()
@@ -93,11 +93,11 @@ void Kernel::testHeap()
 		out << "Memory allocation failure: allocated 2 differents objects at " << ptr8 << ".\n";
 	int *oldPtr8 = ptr8;
 	delete[] ptr8;
-	ptr8 = new int;
+	ptr8 = new int[8];
 	if(ptr8 != oldPtr8)
 		out << "Memory allocation failure: the same object is not reallocated at the same place after deallocation.\n";
 	delete[] ptr2;
-	delete ptr8;
+	delete[] ptr8;
 }
 
 void Kernel::printPrettyAsciiArt()
