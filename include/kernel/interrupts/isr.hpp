@@ -13,7 +13,7 @@ namespace isr
 /// handler (whether it is a procedure or task). The error code resembles a
 /// segment selector; however, instead of a TI flag and RPL field, the error
 /// code contains 3 flags:
-struct ErrorCode
+struct [[gnu::packed]] ErrorCode
 {
 	/// When set, indicates that the exception occurred during delivery of an
 	/// event external to the program, such as an interrupt or an earlier exception.
@@ -35,10 +35,10 @@ struct ErrorCode
 	uint16_t _segmentSelectorIndex:13;
 
 	uint16_t _reserved;
-} __attribute__((packed));
+};
 static_assert(sizeof(ErrorCode) == 4, "Error code structure must be 32-bit");
 
-struct Arguments
+struct [[gnu::packed]] Arguments
 {
 	uint32_t _gs;
 	uint32_t _fs;

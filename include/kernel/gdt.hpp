@@ -10,11 +10,11 @@ namespace gdt
 /// This struct simply holds the address and the size of the Global Descriptor
 /// Table. A global instance of a GdtDescriptor is initialized and set,
 /// then its address is given to the CPU in order to initialize segmentation.
-struct GdtDescriptor
+struct [[gnu::packed]] GdtDescriptor
 {
 	uint16_t _size;
 	uint32_t _address;
-} __attribute__((packed));
+};
 
 /// An entry of the Global Descriptor Table. It represents informations about
 /// a segment that the CPU have to know.
@@ -22,7 +22,7 @@ struct GdtDescriptor
 /// setting the segments registers correctly in order to let the CPU know
 /// about the segmentation of the OS. In our case, we disable segmentation
 /// by using two pages (code and data) that fit the whole memory.
-class GdtEntry
+class [[gnu::packed]] GdtEntry
 {
 	public:
 		GdtEntry(uint32_t base = 0, uint32_t limit = 0, uint8_t access = 0, uint8_t flags = 0);
@@ -35,7 +35,7 @@ class GdtEntry
 		uint8_t _limit1 : 4;
 		uint8_t _flags : 4;
 		uint8_t _base2;
-} __attribute__((packed));
+};
 
 namespace Access
 {

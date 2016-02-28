@@ -4,22 +4,17 @@
 #include <cstddef>
 #include <limits>
 
-void* operator new(size_t size) throw()
-	__attribute__((__externally_visible__));
-void operator delete(void* address) throw()
-	__attribute__((__externally_visible__));
+[[gnu::__externally_visible__]] void* operator new(size_t size) throw();
 
-void operator delete(void* address, size_t size) throw()
-	__attribute__((__externally_visible__));
+[[gnu::__externally_visible__]] void operator delete(void* address) throw();
 
-void* operator new[](size_t size) throw()
-	__attribute__((__externally_visible__));
+[[gnu::__externally_visible__]] void operator delete(void* address, size_t size) throw();
 
-void operator delete[](void* address) throw()
-	__attribute__((__externally_visible__));
+[[gnu::__externally_visible__]] void* operator new[](size_t size) throw();
 
-void operator delete[](void* address, size_t size) throw()
-	__attribute__((__externally_visible__));
+[[gnu::__externally_visible__]] void operator delete[](void* address) throw();
+
+[[gnu::__externally_visible__]] void operator delete[](void* address, size_t size) throw();
 
 inline void* operator new(size_t, void* address) noexcept
 {
