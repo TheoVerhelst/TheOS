@@ -18,12 +18,18 @@ class Kernel final
 		/// to blocks information will result in bigger kernel.
 		static constexpr size_t _maxBlocksNumber{1 << 16};
 
-		/// The kernel memory allocator type. The complicated template type is a
-		/// special static class that will allocate the internal objects needed
-		/// by the heap manager, using a pool allocation scheme. So in order to
-		/// manage a big heap area, a little pool area is needed, and this is
-		/// the template class that will manage this pool area.
-		typedef MemoryManager<PoolAllocator<MemoryManager<>::AllocatorValueType, _maxBlocksNumber>> HeapManager;
+		/// The type of the allocator that the heap manager will use to allocate
+		/// the elements of its internal lists. In order to manage a big heap
+		/// area, a little pool area is needed. This is a pool allocator that
+		/// uses a pool instance stored as an attribute of the kernel.
+		typedef PoolAllocator<MemoryManager<>::AllocatorValueType, _maxBlocksNumber> HeapManagerPoolAllocator;
+
+		/// The kernel heap allocator type.
+		typedef MemoryManager<HeapManagerPoolAllocator> HeapManager;
+
+		/// The type of the pool used by the internal allocator of the heap
+		/// manager.
+		typedef typename HeapManagerPoolAllocator::PoolType HeapManagerPool;
 
 		/// Constructor.
 		Kernel();
@@ -55,12 +61,14 @@ class Kernel final
 
 		Byte* _heapAddress;
 
+		HeapManagerPool _heapManagerPool;
+
 		/// The kernel memory allocator.
 		HeapManager _heapManager;
 
-		/// The keyboard driver. It needs to be notified when a keyboard interrupt
-		/// occur (with the ISR 33), and it gives a queue of characters that
-		/// the user typed.
+		/// The keyboard driver. It needs to be notified when a keyboard
+		/// interrupt occur (with the ISR 33), and it gives a queue of
+		/// characters that the user typed.
 		ps2::KeyboardDriver _keyboardDriver;
 };
 

@@ -25,18 +25,22 @@ class MemoryMapBrowser
 		Byte* findMemoryRegion(size_t neededRegionSize);
 
 	private:
+		/// The maximum number of memory regions that this class will be able
+		/// to manage. The value is arbitrary, and should reflects the number
+		/// of elements in the multiboot memory map.
+		static constexpr size_t _memoryRegionNumber{16};
+
 		struct MemoryRegion
 		{
 			Byte* _address;
 			size_t _size;
 		};
 
-		/// The maximum number of memory regions that this class will be able
-		/// to manage. The value is arbitrary, and should reflects the number
-		/// of elements in the multiboot memory map.
-		static constexpr size_t _memoryRegionNumber{16};
+		typedef PoolAllocator<details::ListNode<MemoryRegion>, _memoryRegionNumber> RegionsAllocator;
 
-		List<MemoryRegion, PoolAllocator<details::ListNode<MemoryRegion>, _memoryRegionNumber>> _memoryRegions;
+		RegionsAllocator::PoolType _memoryRegionsPool;
+
+		List<MemoryRegion, RegionsAllocator> _memoryRegions;
 };
 
 #endif// MEMORYMAPBROWSER_HPP

@@ -2,7 +2,8 @@
 #include <kernel/memory/MemoryMapBrowser.hpp>
 #include <Printer.hpp>
 
-MemoryMapBrowser::MemoryMapBrowser()
+MemoryMapBrowser::MemoryMapBrowser():
+	_memoryRegions{_memoryRegionsPool}
 {
 	if(not (multiboot::multibootInfoAddress->flags & multiboot::InfoAvailable::mmap))
 		return;

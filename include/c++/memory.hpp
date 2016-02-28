@@ -8,14 +8,36 @@ void* operator new(size_t size) throw()
 	__attribute__((__externally_visible__));
 void operator delete(void* address) throw()
 	__attribute__((__externally_visible__));
+
 void operator delete(void* address, size_t size) throw()
 	__attribute__((__externally_visible__));
+
 void* operator new[](size_t size) throw()
 	__attribute__((__externally_visible__));
+
 void operator delete[](void* address) throw()
 	__attribute__((__externally_visible__));
+
 void operator delete[](void* address, size_t size) throw()
 	__attribute__((__externally_visible__));
+
+inline void* operator new(size_t, void* address) noexcept
+{
+	return address;
+}
+
+inline void* operator new[](size_t, void* address)  noexcept
+{
+	return address;
+}
+
+inline void operator delete(void*, void*) noexcept
+{
+}
+
+inline void operator delete[](void*, void*) noexcept
+{
+}
 
 template <class T>
 class Allocator {
@@ -39,21 +61,22 @@ class Allocator {
 		{
 			return &value;
 		}
+
 		ConstPointer address(ConstReference value) const
 		{
 			return &value;
 		}
 
-		Allocator() throw()
+		Allocator()
 		{
 		}
 
-		Allocator(const Allocator&) throw()
+		Allocator(const Allocator&)
 		{
 		}
 
 		template <class U>
-		Allocator(const Allocator<U>&) throw()
+		Allocator(const Allocator<U>&)
 		{
 		}
 
@@ -61,7 +84,7 @@ class Allocator {
 		{
 		}
 
-		SizeType maxSize() const throw()
+		SizeType maxSize() const
 		{
 			return std::numeric_limits<SizeType>::max() / sizeof(T);
 		}

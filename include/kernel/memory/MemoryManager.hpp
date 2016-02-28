@@ -8,6 +8,7 @@
 #include <math.hpp>
 #include <List.hpp>
 #include <Printer.hpp>
+#include <Array.hpp>
 
 /// Holds some things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.
@@ -23,7 +24,8 @@ class MemoryManager
 		/// Constructs the manager from a memory block.
 		/// \param address The address of the memory block to manage.
 		/// \param Size The size of the memory block to manage.
-		MemoryManager(Byte* address, size_t size);
+		/// \param allocator The allocator to use.
+		MemoryManager(Byte* address, size_t size, AllocatorType allocator = AllocatorType());
 
 		Byte* allocate(size_t size);
 
@@ -32,19 +34,21 @@ class MemoryManager
 		void deallocate(Byte* address, size_t size);
 
 	private:
+		typedef List<Byte*, AllocatorType> BlockList;
+
 		/// The number of bits in a pointer.
 		static constexpr size_t _addressSize{sizeof(void*) * 8};
 
-		typedef List<Byte*, AllocatorType> BlockList;
+		AllocatorType _allocator;
 
 		/// Array of list of addresses of free blocks.
 		/// The index indicate the size of the blocks in the list:
 		/// a block in the list at index 4 has a size of 2^4 bytes.
-		BlockList _freeBlocks[_addressSize];
+		Array<BlockList, _addressSize> _freeBlocks;
 
 		/// Array of list of addresses of allocated blocks.
 		/// \see freeBlocks
-		BlockList _allocatedBlocks[_addressSize];
+		Array<BlockList, _addressSize> _allocatedBlocks;
 
 		/// Registers a chunk of memory, making it available for allocations.
 		/// This is not guaranteed that the whole chunk of memory provided
@@ -68,7 +72,10 @@ class MemoryManager
 };
 
 template <class AllocatorType>
-MemoryManager<AllocatorType>::MemoryManager(Byte* address, size_t size)
+MemoryManager<AllocatorType>::MemoryManager(Byte* address, size_t size, AllocatorType allocator):
+	_allocator{allocator},
+	_freeBlocks{allocator},
+	_allocatedBlocks{_allocator}
 {
 	addMemoryChunk(address, size);
 }

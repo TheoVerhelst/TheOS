@@ -12,7 +12,7 @@ Kernel::Kernel():
 	_heapAddress{_memoryMapBrowser.findMemoryRegion(_heapSize)},
 	// Give a needed kernel size of zero if info about memory is not available
 	// (that's better than nothing)
-	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize}
+	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize, HeapManagerPoolAllocator(_heapManagerPool)}
 {
 	printPrettyAsciiArt();
 	processMultibootInfo();

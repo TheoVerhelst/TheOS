@@ -2,6 +2,7 @@
 #define ARRAY_HPP
 
 #include <cstddef>
+#include <memory.hpp>
 
 template <typename T, size_t N>
 class Array
@@ -88,7 +89,7 @@ Array<T, N>::Array(const Args&... args)
 {
 	T* pointer{_pointer};
 	for(size_t i{0}; i < N; ++i)
-		new(pointer++) T(args...);
+		new (pointer++) T(args...);
 }
 
 template <typename T, size_t N>
@@ -126,7 +127,7 @@ typename Array<T, N>::ConstIterator Array<T, N>::cend()
 template <typename T, size_t N>
 typename Array<T, N>::Reference Array<T, N>::operator[](SizeType pos)
 {
-	return _pointer + size();
+	return _pointer[pos];
 }
 
 template <typename T, size_t N>
