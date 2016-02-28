@@ -55,6 +55,9 @@ enum Interrupt : uint32_t
 
 }// namespace Interrupt
 
+namespace Flags
+{
+
 enum Flags : uint8_t
 {
 	Ring0 = 0,
@@ -64,6 +67,11 @@ enum Flags : uint8_t
 	Present = 1 << 2
 };
 
+}// namespace Flags
+
+namespace GateSelector
+{
+
 enum GateSelector : uint16_t
 {
 	TaskGate      = 5 << 8,
@@ -72,11 +80,18 @@ enum GateSelector : uint16_t
 	Size          = 1 << 11///< Set for 32-bit sized gate, unset for 16-bit.
 };
 
+}// namespace GateSelector
+
+namespace Segment
+{
+
 enum Segment : uint16_t
 {
 	Code = 0x10,
 	Data = 0x08
 };
+
+}// namespace Segment
 
 struct IdtEntry
 {

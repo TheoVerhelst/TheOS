@@ -15,6 +15,9 @@ constexpr uint16_t slaveData{slaveAddress + 1};
 constexpr uint8_t masterOffset{0x20};
 constexpr uint8_t slaveOffset{0x28};
 
+namespace Command
+{
+
 enum Command : uint8_t
 {
 	RequireIcw4    = 1 << 0,
@@ -25,6 +28,11 @@ enum Command : uint8_t
 	EndOfInterrupt = 1 << 5
 };
 
+}// namespace Command
+
+namespace InitCommandWord4
+{
+
 enum InitCommandWord4 : uint8_t
 {
 	Mode8086           = 1 << 0,             ///< 8086/88 (MCS-80/85) mode.
@@ -33,6 +41,11 @@ enum InitCommandWord4 : uint8_t
 	BufferedSlave      = 1 << 3,             ///< Buffered mode slave.
 	SpecialFullyNested = 1 << 4,             ///< Special fully nested.
 };
+
+}// namespace InitCommandWord4
+
+namespace MasterInterrupMask
+{
 
 enum MasterInterrupMask : uint8_t
 {
@@ -46,6 +59,11 @@ enum MasterInterrupMask : uint8_t
 	Lpt1       = 1 << 7
 };
 
+}// namespace MasterInterrupMask
+
+namespace SlaveInterruptMask
+{
+
 enum SlaveInterruptMask : uint8_t
 {
 	CmosClock       = 1 << 0,
@@ -57,6 +75,8 @@ enum SlaveInterruptMask : uint8_t
 	PrimaryAtaHdd   = 1 << 6,
 	SecondaryAtaHdd = 1 << 7,
 };
+
+}// namespace SlaveInterruptMask
 
 void initializePic();
 
