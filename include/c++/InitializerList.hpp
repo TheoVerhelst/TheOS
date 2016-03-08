@@ -30,17 +30,20 @@
 
 #include <bits/c++config.h>
 
-/// InitializerList
+/// Initializer list class helper. This class behaves like std::initialize_list,
+/// and is part of the pseudo-implementation of the standard C++ library.
+/// This class is directly copied from the implementation of
+/// std::initializer_list given in GNU g++-5.2.
 template<class E>
 class InitializerList
 {
 	public:
-		typedef E ValueType;
-		typedef const E& Reference;
-		typedef const E& ConstReference;
-		typedef size_t SizeType;
-		typedef const E* Iterator;
-		typedef const E* ConstIterator;
+		typedef E ValueType;            ///< Contained value type.
+		typedef const E& Reference;     ///< Reference to value type.
+		typedef const E& ConstReference;///< Const reference.
+		typedef size_t SizeType;        ///< The type of the size.
+		typedef const E* Iterator;      ///< Iterator type.
+		typedef const E* ConstIterator; ///< Const iterator type.
 
 	private:
 		Iterator _array;

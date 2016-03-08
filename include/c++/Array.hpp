@@ -4,19 +4,28 @@
 #include <cstddef>
 #include <memory.hpp>
 
+/// Static array encapsulated in a class. This class behaves like std::array,
+/// and is part of the pseudo-implementation of the standard C++ library.
+/// A great difference with std::array and with C-style array is that this
+/// class allows to pass an argument to the constructor of the contained
+/// elements, thus the elements of the array do not need to be
+/// default-constructible. This is implemented with an array of bytes rather
+/// than an array of \a T, and by constructing elements in place.
+/// \tparam T The type of element.
+/// \tparam N The number of elements.
 template <typename T, size_t N>
 class Array
 {
 	public:
-		typedef T ValueType;
-		typedef ValueType& Reference;
-		typedef const ValueType& ConstReference;
-		typedef ValueType* Pointer;
-		typedef const ValueType* ConstPointer;
-		typedef size_t SizeType;
-		typedef ptrdiff_t DifferenceType;
-		typedef T* Iterator;
-		typedef const T* ConstIterator;
+		typedef T ValueType;                    ///< Contained value type.
+		typedef ValueType& Reference;           ///< Reference to value type.
+		typedef const ValueType& ConstReference;///< Const reference.
+		typedef ValueType* Pointer;             ///< Pointer to value type.
+		typedef const ValueType* ConstPointer;  ///< Const pointer.
+		typedef size_t SizeType;                ///< The type of the size.
+		typedef ptrdiff_t DifferenceType;       ///< The type used for indexing.
+		typedef T* Iterator;                    ///< Iterator type.
+		typedef const T* ConstIterator;         ///< Const iterator type.
 
 		/// Default constructor.
 		Array();
@@ -35,32 +44,70 @@ class Array
 		/// Destructor.
 		~Array();
 
+		/// Get an iterator to the first element of the array.
+		/// \return An iterator to the first element of the array.
 		Iterator begin();
 
+		/// Get an iterator to the past-the-end element of the array.
+		/// \return An iterator to the past-the-end element of the array.
 		Iterator end();
 
+		/// Get a constant iterator to the first element of the array.
+		/// \return A constant iterator to the first element of the array.
 		ConstIterator cbegin();
 
+		/// Get a constant iterator to the past-the-end element of the array.
+		/// \return A constant iterator to the past-the-end element of the
+		/// array.
 		ConstIterator cend();
 
+		/// Access the array at position \a pos.
+		/// \param pos The position of the element to access.
+		/// \return at(pos)
 		Reference operator[](SizeType pos);
 
+		/// Access the array at position \a pos.
+		/// \param pos The position of the element to access.
+		/// \return at(pos)
 		constexpr ConstReference operator[](SizeType pos) const;
 
+		/// Access the array at position \a pos.
+		/// \param pos The position of the element to access.
+		/// \return The element at position \a pos.
 		Reference at(SizeType pos);
 
+		/// Access the array at position \a pos.
+		/// \param pos The position of the element to access.
+		/// \return The element at position \a pos.
 		constexpr ConstReference at(SizeType pos) const;
 
-		Reference front(SizeType pos);
+		/// Access the first element of the array.
+		/// \pre not empty()
+		/// \return at(0)
+		Reference front();
 
-		constexpr ConstReference front(SizeType pos) const;
+		/// Access the first element of the array.
+		/// \pre not empty()
+		/// \return at(0)
+		constexpr ConstReference front() const;
 
-		Reference back(SizeType pos);
+		/// Access the last element of the array.
+		/// \pre not empty()
+		/// \return at(size() - 1)
+		Reference back();
 
-		constexpr ConstReference back(SizeType pos) const;
+		/// Access the last element of the array.
+		/// \pre not empty()
+		/// \return at(size() - 1)
+		constexpr ConstReference back() const;
 
+		/// Checks whether the array is empty, i.e. if its template parameter
+		/// \a N is equal to 0.
+		/// \return size() > 0
 		constexpr bool empty() const;
 
+		/// Get the size of the array.
+		/// \return N
 		constexpr SizeType size() const;
 
 	private:
@@ -149,25 +196,25 @@ constexpr typename Array<T, N>::ConstReference Array<T, N>::at(SizeType pos) con
 }
 
 template <typename T, size_t N>
-typename Array<T, N>::Reference Array<T, N>::front(SizeType pos)
+typename Array<T, N>::Reference Array<T, N>::front()
 {
 	return _pointer[0];
 }
 
 template <typename T, size_t N>
-constexpr typename Array<T, N>::ConstReference Array<T, N>::front(SizeType pos) const
+constexpr typename Array<T, N>::ConstReference Array<T, N>::front() const
 {
 	return _pointer[0];
 }
 
 template <typename T, size_t N>
-typename Array<T, N>::Reference Array<T, N>::back(SizeType pos)
+typename Array<T, N>::Reference Array<T, N>::back()
 {
 	return _pointer[size() - 1];
 }
 
 template <typename T, size_t N>
-constexpr typename Array<T, N>::ConstReference Array<T, N>::back(SizeType pos) const
+constexpr typename Array<T, N>::ConstReference Array<T, N>::back() const
 {
 	return _pointer[size() - 1];
 }
