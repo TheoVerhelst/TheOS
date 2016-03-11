@@ -1,4 +1,4 @@
-// std::InitializerList support -*- C++ -*-
+// InitializerList support -*- C++ -*-
 
 // Copyright (C) 2008-2015 Free Software Foundation, Inc.
 //
@@ -33,7 +33,7 @@
 /// Initializer list class helper. This class behaves like std::initialize_list,
 /// and is part of the pseudo-implementation of the standard C++ library.
 /// This class is directly copied from the implementation of
-/// std::initializer_list given in GNU g++-5.2.
+/// std::initializer_list given in GNU g++-5.2, with adapted naming conventions.
 template<class E>
 class InitializerList
 {
@@ -45,56 +45,83 @@ class InitializerList
 		typedef const E* Iterator;      ///< Iterator type.
 		typedef const E* ConstIterator; ///< Const iterator type.
 
+		/// Default constructor.
+		/// \post begin() == end().
+		constexpr InitializerList() noexcept;
+
+		/// Get the number of elements.
+		/// \return The number of elements.
+		constexpr SizeType size() const noexcept;
+
+		/// Get the first element.
+		/// \return The first element.
+		constexpr ConstIterator begin() const noexcept;
+
+		/// Get the past the last element.
+		/// \return The past the last element.
+		constexpr ConstIterator end() const noexcept;
+
 	private:
-		Iterator _array;
-		SizeType _length;
+		/// Constructor. The compiler can call a private constructor.
+		/// \param array An iterator (i.e. a pointer) to the data.
+		/// \param length The number of elements.
+		constexpr InitializerList(ConstIterator array, SizeType length);
 
-		// The compiler can call a private constructor.
-		constexpr InitializerList(ConstIterator array, SizeType length):
-			_array(array),
-			_length(length)
-		{
-		}
-
-	public:
-		constexpr InitializerList() noexcept:
-		_array(0), _length(0)
-		{
-		}
-
-		// Number of elements.
-		constexpr SizeType size() const noexcept
-		{
-			return _length;
-		}
-
-		// First element.
-		constexpr ConstIterator begin() const noexcept
-		{
-			return _array;
-		}
-
-		// One past the last element.
-		constexpr ConstIterator end() const noexcept
-		{
-			return begin() + size();
-		}
+		Iterator _array; ///< Pointer to the underlying data.
+		SizeType _length;///< Number of elements.
 };
 
 /// \brief Returns an Iterator pointing to the first element of
 /// the InitializerList.
 /// \param initializerList Initializer list.
 template<class T>
-constexpr const T* begin(InitializerList<T> initializerList) noexcept
-{
-	return initializerList.begin();
-}
+constexpr const typename InitializerList<T>::Iterator begin(InitializerList<T> initializerList) noexcept;
 
 /// \brief Returns an Iterator pointing to one past the last element
 /// of the InitializerList.
 /// \param initializerList Initializer list.
 template<class T>
-constexpr const T* end(InitializerList<T> initializerList) noexcept
+constexpr const typename InitializerList<T>::Iterator end(InitializerList<T> initializerList) noexcept;
+
+template<class E>
+constexpr InitializerList<E>::InitializerList(ConstIterator array, SizeType length):
+	_array(array),
+	_length(length)
+{
+}
+
+template<class E>
+constexpr InitializerList<E>::InitializerList() noexcept:
+	_array(nullptr), _length(0)
+{
+}
+
+template<class E>
+constexpr typename InitializerList<E>::SizeType InitializerList<E>::size() const noexcept
+{
+	return _length;
+}
+
+template<class E>
+constexpr typename InitializerList<E>::ConstIterator InitializerList<E>::begin() const noexcept
+{
+	return _array;
+}
+
+template<class E>
+constexpr typename InitializerList<E>::ConstIterator InitializerList<E>::end() const noexcept
+{
+	return begin() + size();
+}
+
+template<class T>
+constexpr const typename InitializerList<T>::Iterator begin(InitializerList<T> initializerList) noexcept
+{
+	return initializerList.begin();
+}
+
+template<class T>
+constexpr const typename InitializerList<T>::Iterator end(InitializerList<T> initializerList) noexcept
 {
 	return initializerList.end();
 }
