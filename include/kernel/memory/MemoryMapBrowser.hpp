@@ -13,18 +13,6 @@
 class MemoryMapBrowser
 {
 	public:
-		/// Default constructor. It expects that multiboot::multibootInfoAddress
-		/// is available for use.
-		MemoryMapBrowser();
-
-		/// Gives the address of the beginning of a memory region
-		/// that have the size \a neededRegionSize.
-		/// \param neededRegionSize The size that the returned region must have.
-		/// \return The base address of a memory region of size \a neededRegionSize,
-		/// or nullptr in case of failure.
-		Byte* findMemoryRegion(size_t neededRegionSize);
-
-	private:
 		/// The maximum number of memory regions that this class will be able
 		/// to manage. The value is arbitrary, and should reflects the number
 		/// of elements in the multiboot memory map.
@@ -38,6 +26,30 @@ class MemoryMapBrowser
 
 		typedef PoolAllocator<details::ListNode<MemoryRegion>, _memoryRegionNumber> RegionsAllocator;
 
+		typedef typename List<MemoryRegion, RegionsAllocator>::iterator Iterator;
+
+		typedef typename List<MemoryRegion, RegionsAllocator>::constIterator ConstIterator;
+
+		/// Default constructor. It expects that multiboot::multibootInfoAddress
+		/// is available for use.
+		MemoryMapBrowser();
+
+		/// Gives the address of the beginning of a memory region
+		/// that have the size \a neededRegionSize.
+		/// \param neededRegionSize The size that the returned region must have.
+		/// \return The base address of a memory region of size \a neededRegionSize,
+		/// or nullptr in case of failure.
+		Byte* findMemoryRegion(size_t neededRegionSize);
+
+		Iterator begin();
+
+		ConstIterator cbegin() const;
+
+		Iterator end();
+
+		ConstIterator cend() const;
+
+	private:
 		RegionsAllocator::PoolType _memoryRegionsPool;
 
 		List<MemoryRegion, RegionsAllocator> _memoryRegions;

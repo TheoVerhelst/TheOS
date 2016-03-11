@@ -21,17 +21,27 @@ class MemoryManager
 		static_assert(std::is_same<AllocatorValueType, typename AllocatorType::ValueType>::value,
 				"The AllocatorType must allocate details::ListNode<Byte*> objects.");
 
+		/// Constructs the manager.
+		/// \param allocator The allocator to use.
+		MemoryManager(AllocatorType allocator = AllocatorType());
+
 		/// Constructs the manager from a memory block.
 		/// \param address The address of the memory block to manage.
 		/// \param Size The size of the memory block to manage.
 		/// \param allocator The allocator to use.
 		MemoryManager(Byte* address, size_t size, AllocatorType allocator = AllocatorType());
 
-		Byte* allocate(size_t size);
+		Byte* allocate(size_t size, size_t alignment = 0UL);
 
 		void deallocate(Byte* address);
 
 		void deallocate(Byte* address, size_t size);
+
+		/// Registers a chunk of memory, making it available for allocations.
+		/// This is not guaranteed that the whole chunk of memory provided
+		/// will really be available (maybe only a smaller chunk, rounded
+		/// to some multiple of power of two, will be used instead).
+		void addMemoryChunk(Byte* baseAddress, size_t size);
 
 	private:
 		typedef List<Byte*, AllocatorType> BlockList;
@@ -52,31 +62,33 @@ class MemoryManager
 
 		static constexpr bool _activateMemoryDump{false};
 
-		/// Registers a chunk of memory, making it available for allocations.
-		/// This is not guaranteed that the whole chunk of memory provided
-		/// will really be available (maybe only a smaller chunk, rounded
-		/// to some multiple of power of two, will be used instead).
-		void addMemoryChunk(Byte* baseAddress, size_t size);
-
 		void tryMerge(typename BlockList::iterator blockToMergeIt, size_t index);
 
 		/// \return A valid iterator in _allocatedBlocks[index] in case of success,
 		/// _allocatedBlocks[index].end() otherwise.
 		typename BlockList::iterator allocateBlock(size_t index);
 
+		static inline Byte* getAlignedAddress(typename BlockList::iterator blockIt, size_t alignment);
+
 		void memoryDump() const;
 
 		static constexpr size_t getIndexFromSize(size_t size);
 
 		// TODO replace by std::find
-		static typename BlockList::iterator findBlock(BlockList& blockList, Byte* address);
+		static typename BlockList::iterator findBlock(BlockList& blockList, Byte* address, size_t index);
 };
 
 template <class AllocatorType>
-MemoryManager<AllocatorType>::MemoryManager(Byte* address, size_t size, AllocatorType allocator):
+MemoryManager<AllocatorType>::MemoryManager(AllocatorType allocator):
 	_allocator{allocator},
 	_freeBlocks{allocator},
 	_allocatedBlocks{_allocator}
+{
+}
+
+template <class AllocatorType>
+MemoryManager<AllocatorType>::MemoryManager(Byte* address, size_t size, AllocatorType allocator):
+	MemoryManager{allocator}
 {
 	addMemoryChunk(address, size);
 }
@@ -85,7 +97,7 @@ template <class AllocatorType>
 void MemoryManager<AllocatorType>::addMemoryChunk(Byte* baseAddress, size_t size)
 {
 	// Avoid nullptr in the allocable space
-	if(baseAddress == nullptr)
+	if(baseAddress == nullptr and size > 0)
 	{
 		++baseAddress;
 		--size;
@@ -95,9 +107,9 @@ void MemoryManager<AllocatorType>::addMemoryChunk(Byte* baseAddress, size_t size
 }
 
 template <class AllocatorType>
-Byte* MemoryManager<AllocatorType>::allocate(size_t size)
+Byte* MemoryManager<AllocatorType>::allocate(size_t size, size_t alignment)
 {
-	const size_t index{getIndexFromSize(size)};
+	const size_t index{getIndexFromSize(size + alignment)};
 	typename BlockList::iterator it{allocateBlock(index)};
 	if(_activateMemoryDump)
 		memoryDump();
@@ -107,7 +119,7 @@ Byte* MemoryManager<AllocatorType>::allocate(size_t size)
 		return nullptr;
 	}
 	else
-		return *it;
+		return getAlignedAddress(it, alignment);
 }
 
 template <class AllocatorType>
@@ -121,7 +133,7 @@ void MemoryManager<AllocatorType>::deallocate(Byte* address)
 	typename BlockList::iterator it;
 	while(index < _addressSize)
 	{
-		it = findBlock(_allocatedBlocks[index], address);
+		it = findBlock(_allocatedBlocks[index], address, index);
 		if(it != _allocatedBlocks[index].end())
 			break;
 		index++;
@@ -148,7 +160,7 @@ void MemoryManager<AllocatorType>::deallocate(Byte* address, size_t size)
 
 	// Find the block corresponding to the address
 	const size_t index{getIndexFromSize(size)};
-	typename BlockList::iterator it{findBlock(_allocatedBlocks[index], address)};
+	typename BlockList::iterator it{findBlock(_allocatedBlocks[index], address, index)};
 
 	if(it != _allocatedBlocks[index].end())
 	{
@@ -174,7 +186,7 @@ void MemoryManager<AllocatorType>::tryMerge(typename BlockList::iterator blockTo
 			// that is adjacent to the block to merge...
 			and static_cast<size_t>(abs(*it - *blockToMergeIt)) == blockSize
 			// and that has a size corresponding to index
-			and findBlock(_freeBlocks[index], *it) != _freeBlocks[index].end())
+			and findBlock(_freeBlocks[index], *it, index) != _freeBlocks[index].end())
 
 		{
 			typename BlockList::iterator lowerBlockIt{*it < *blockToMergeIt ? it : blockToMergeIt};
@@ -199,7 +211,7 @@ typename MemoryManager<AllocatorType>::BlockList::iterator MemoryManager<Allocat
 
 	if(_freeBlocks[index].empty())
 	{
-		// If we ask for the biggest block possible, but there is not a free one
+		// If we ask for the biggest block possible, but there is no free one
 		if(index + 1 == _addressSize)
 			return _allocatedBlocks[index].end();
 
@@ -243,12 +255,26 @@ constexpr size_t MemoryManager<AllocatorType>::getIndexFromSize(size_t size)
 }
 
 template <class AllocatorType>
-typename MemoryManager<AllocatorType>::BlockList::iterator MemoryManager<AllocatorType>::findBlock(BlockList& blockList, Byte* address)
+typename MemoryManager<AllocatorType>::BlockList::iterator MemoryManager<AllocatorType>::findBlock(BlockList& blockList, Byte* address, size_t index)
 {
 	typename BlockList::iterator it{blockList.begin()};
-	while(*it != address and it != blockList.end())
+	const size_t blockSize{1UL << index};
+	// Loop while the address is not in the block pointed by it
+	while((address < *it or address >= *it + blockSize) and it != blockList.end())
 		++it;
 	return it;
+}
+
+template <class AllocatorType>
+inline Byte* MemoryManager<AllocatorType>::getAlignedAddress(typename BlockList::iterator blockIt, size_t alignment)
+{
+	if(alignment > 0)
+	{
+		const size_t offset{alignment - (reinterpret_cast<uintptr_t>(*blockIt) % alignment)};
+		return *blockIt + offset;
+	}
+	else
+		return *blockIt;
 }
 
 template <class AllocatorType>

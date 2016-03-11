@@ -54,6 +54,8 @@ class Kernel final
 
 		void printPrettyAsciiArt();
 
+		void initializeMainMemoryManager();
+
 		/// Size of the heap that will be allocated for the kernel.
 		static constexpr size_t _heapSize{1UL << 20UL};
 
@@ -70,6 +72,8 @@ class Kernel final
 		/// interrupt occur (with the ISR 33), and it gives a queue of
 		/// characters that the user typed.
 		ps2::KeyboardDriver _keyboardDriver;
+
+		MemoryManager<> _mainMemoryManager;
 };
 
 /// The main, unique kernel class instance.

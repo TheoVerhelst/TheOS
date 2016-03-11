@@ -47,3 +47,23 @@ Byte* MemoryMapBrowser::findMemoryRegion(size_t neededRegionSize)
 	}
 	return nullptr;
 }
+
+MemoryMapBrowser::Iterator MemoryMapBrowser::begin()
+{
+	return _memoryRegions.begin();
+}
+
+MemoryMapBrowser::ConstIterator MemoryMapBrowser::cbegin() const
+{
+	return _memoryRegions.cbegin();
+}
+
+MemoryMapBrowser::Iterator MemoryMapBrowser::end()
+{
+	return _memoryRegions.end();
+}
+
+MemoryMapBrowser::ConstIterator MemoryMapBrowser::cend() const
+{
+	return _memoryRegions.cend();
+}

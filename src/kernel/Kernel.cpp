@@ -20,6 +20,7 @@ Kernel::Kernel():
 	gdt::initializeGdt();
 	idt::initializeIdt();
 	pic::initializePic();
+	initializeMainMemoryManager();
 }
 
 void Kernel::run()
@@ -112,4 +113,10 @@ void Kernel::printPrettyAsciiArt()
 \xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\n\
 ");
 	terminal.setColourProfile(Terminal::_defaultColourProfile);
+}
+
+void Kernel::initializeMainMemoryManager()
+{
+	for(const auto& memoryRegion : _memoryMapBrowser)
+		_mainMemoryManager.addMemoryChunk(memoryRegion._address, memoryRegion._size);
 }
