@@ -22,94 +22,302 @@ struct ListNode
 
 }// namespace details
 
+/// Dynamic double-linked list. This class has approximatively the same
+/// interface as `std::list`, and is part of the pseudo-implementation of the
+/// standard C++ library.
+///
+/// This class can be used with a custom allocator, which is useful when the
+/// memory have to be used in a certain manner (e.g. when the operator new is
+/// not yet available).
+/// \tparam T The type of element.
+/// \tparam AllocatorType The type of allocator to use.
 template <class T, class AllocatorType = Allocator<details::ListNode<T>>>
 class List
 {
 	static_assert(std::is_same<typename AllocatorType::ValueType, details::ListNode<T>>::value,
 			"AllocatorType must allocate details::ListNode<T> objects.");
 	private:
-		//TODO template <class U>; typedef NodeIterator<T> iterator; typedef NodeIterator<const T> constIterator;
+
+		/// Iterator to an element of the list.
 		class NodeIterator
 		{
 			public:
+				/// Default constructor.
 				NodeIterator() = default;
+
+				/// Copy constructor.
+				/// \param other The other iterator.
 				NodeIterator(const NodeIterator& other) = default;
+
+				/// Constructor from list node.
+				/// \param node The node that the iterator has to point to.
 				explicit NodeIterator(details::ListNode<T>* node) noexcept;
+
+				/// Dereferencement operator.
+				/// \return A reference to the pointed object.
 				T& operator*() const noexcept;
+
+				/// Dereferencement operator.
+				/// \return A pointer to the pointed object.
 				T* operator->() const noexcept;
+
+				/// Increment operator. This advances the iterator by one
+				/// element.
+				/// \return A reference to the advanced iterator.
 				NodeIterator& operator++() noexcept;
+
+				/// Increment operator. This advances the iterator by one
+				/// element.
+				/// \return A reference to the old, non advanced iterator.
 				NodeIterator operator++(int) noexcept;
+
+				/// Decrement operator. This moves the iterator by one
+				/// element back.
+				/// \return A reference to the moved iterator.
 				NodeIterator& operator--() noexcept;
+
+				/// Decrement operator. This moves the iterator by one
+				/// element back.
+				/// \return A reference to the old, non advanced iterator.
 				NodeIterator operator--(int) noexcept;
+
+				/// Comparison operator.
+				/// \param other The other iterator to compare to.
+				/// \return True if the iterators point to the same node, false
+				/// otherwhise.
 				bool operator==(const NodeIterator& other) const noexcept;
+
+				/// Comparison operator.
+				/// \param other The other iterator to compare to.
+				/// \return True if the iterators do not point to the same node,
+				/// false otherwhise.
 				bool operator!=(const NodeIterator& other) const noexcept;
 
 			private:
-				details::ListNode<T>* _node;
+				details::ListNode<T>* _node;///< The underlying node.
 				friend class List;
 		};
 
+		/// Iterator to an element of the list.
 		class NodeConstIterator
 		{
 			public:
+				/// Default constructor.
 				NodeConstIterator() = default;
+
+				/// Copy constructor.
+				/// \param other The other iterator.
 				NodeConstIterator(const NodeConstIterator& other) = default;
+
+				/// Constructor from list node.
+				/// \param node The node that the iterator has to point to.
 				explicit NodeConstIterator(const details::ListNode<T>* node) noexcept;
+
+				/// Dereferencement operator.
+				/// \return A reference to the pointed object.
 				const T& operator*() const noexcept;
+
+				/// Dereferencement operator.
+				/// \return A pointer to the pointed object.
 				const T* operator->() const noexcept;
+
+				/// Increment operator. This advances the iterator by one
+				/// element.
+				/// \return A reference to the advanced iterator.
 				NodeConstIterator& operator++() noexcept;
+
+				/// Increment operator. This advances the iterator by one
+				/// element.
+				/// \return A reference to the old, non advanced iterator.
 				NodeConstIterator operator++(int) noexcept;
+
+				/// Decrement operator. This moves the iterator by one
+				/// element back.
+				/// \return A reference to the moved iterator.
 				NodeConstIterator& operator--() noexcept;
+
+				/// Decrement operator. This moves the iterator by one
+				/// element back.
+				/// \return A reference to the old, non advanced iterator.
 				NodeConstIterator operator--(int) noexcept;
+
+				/// Comparison operator.
+				/// \param other The other iterator to compare to.
+				/// \return True if the iterators point to the same node, false
+				/// otherwhise.
 				bool operator==(const NodeConstIterator& other) const noexcept;
+
+				/// Comparison operator.
+				/// \param other The other iterator to compare to.
+				/// \return True if the iterators do not point to the same node,
+				/// false otherwhise.
 				bool operator!=(const NodeConstIterator& other) const noexcept;
 
 			private:
-				const details::ListNode<T>* _node;
+				const details::ListNode<T>* _node;///< The underlying node.
 				friend class List;
 		};
 
 	public:
-		typedef NodeIterator iterator;
-		typedef NodeConstIterator constIterator;
+		typedef NodeIterator iterator;          ///< Non constant iterator.
+		typedef NodeConstIterator constIterator;///< Constant iterator.
 
+		/// Default constructor.
+		/// \param allocator The allocator to use.
 		List(const AllocatorType& allocator = AllocatorType());
+
+		/// Copy constructor.
+		/// \param other The other list to copy.
 		List(const List& other);// TODO copy constructor does not work
+
+		/// Move constructor.
+		/// \param The other list.
 		List(List&& other);
+
+		/// Destructor.
 		~List();
+
+		/// Copy assignment operator.
+		/// \param other The other list to copy.
+		/// \return *this.
 		List& operator=(List other);
+
+		/// Get the allocator.
+		/// \return The allocator.
 		AllocatorType getAllocator() const;
+
+		/// Checks if the list is empty.
+		/// \return begin() == end().
 		bool empty() const;
+
+		/// Get the number of elements in the list.
+		/// \param The number of elements in the list.
 		size_t size() const;
-		T& back();             ///< \pre not empty().
-		const T& back() const; ///< \pre not empty().
-		T& front();            ///< \pre not empty().
-		const T& front() const;///< \pre not empty().
+
+		/// Get the last element of the list.
+		/// \pre not empty().
+		/// \return The last element of the list.
+		T& back();
+
+		/// Get the last element of the list.
+		/// \pre not empty().
+		/// \return The last element of the list.
+		const T& back() const;
+
+		/// Get the first element of the list.
+		/// \pre not empty().
+		/// \return The first element of the list.
+		T& front();
+
+		/// Get the first element of the list.
+		/// \pre not empty().
+		/// \return The first element of the list.
+		const T& front() const;
+
+		/// Erase all elements of the list, this is equivalent to
+		/// erase(begin(), end()).
+		/// \post empty().
 		void clear();
+
+		/// Add an element at the end of the list, by copying it.
+		/// \param value The value to add to the list.
+		/// \post not empty().
 		void pushBack(const T& value);
+
+		/// Add an element at the end of the list, by moving it.
+		/// \param value The value to add to the list.
+		/// \post not empty().
 		void pushBack(T&& value);
+
+		/// Add an element at the begin of the list, by moving it.
+		/// \param value The value to add to the list.
+		/// \post not empty().
 		void pushFront(const T& value);
+
+		/// Add an element at the begin of the list, by moving it.
+		/// \param value The value to add to the list.
+		/// \post not empty().
 		void pushFront(T&& value);
+
+		/// Remove the last element of the list.
+		/// \pre not empty().
 		void popBack();
+
+		/// Remove the last element of the list.
+		/// \pre not empty().
 		void popFront();
+
+		/// Get an iterator to the first element of the list.
+		/// \return An iterator to the first element of the list.
 		iterator begin();
+
+		/// Get a constant iterator to the first element of the list.
+		/// \return A constant iterator to the first element of the list.
 		constIterator cbegin() const;
+
+		/// Get an iterator to the past the last element of the list.
+		/// \return An iterator to the past the last element of the list.
 		iterator end();
+
+		/// Get a constant iterator to the past the last element of the list.
+		/// \return A constant iterator to the past the last element of the
+		/// list.
 		constIterator cend() const;
+
+		/// Insert an element into the list, before the given position.
+		/// \param pos The position where to put \a value.
+		/// \param value The value to add.
+		/// \return An iterator to the inserted element.
 		iterator insert(iterator pos, const T& value);
+
+		/// Insert an element into the list, before the given position.
+		/// \param pos The position where to put \a value.
+		/// \param value The value to add.
+		/// \return An iterator to the inserted element.
 		iterator insert(iterator pos, T&& value);
+
+		/// Insert an element into the list, before the given position.
+		/// \param pos The position where to put \a value.
+		/// \param value The value to add.
+		/// \return An iterator to the inserted element.
 		iterator insert(constIterator pos, const T& value);
+
+		/// Insert an element into the list, before the given position.
+		/// \param pos The position where to put \a value.
+		/// \param value The value to add.
+		/// \return An iterator to the inserted element.
 		iterator insert(constIterator pos, T&& value);
+
+		/// Erase an element of the list.
+		/// \param pos An iterator to the element to erase.
+		/// \return An iterator to the element following the erased element.
 		iterator erase(iterator pos);
+
+		/// Erase an element of the list.
+		/// \param pos An iterator to the element to erase.
+		/// \return An iterator to the element following the erased element.
 		iterator erase(constIterator pos);
+
+		/// Erase a sequence of elements from the list.
+		/// \param first The first element to erase.
+		/// \param last The element following the last element to erase.
+		/// \return An iterator to the element following the last erased
+		/// element.
 		iterator erase(iterator first, iterator last);
+
+		/// Erase a sequence of elements from the list.
+		/// \param first The first element to erase.
+		/// \param last The element following the last element to erase.
+		/// \return An iterator to the element following the last erased
+		/// element.
 		iterator erase(constIterator first, constIterator last);
 
 	private:
-		details::ListNode<T>* _begin;
-		details::ListNode<T>* _end;
-		size_t _size;
-		AllocatorType _allocator;
+		details::ListNode<T>* _begin;///< The first node of the list.
+		details::ListNode<T>* _end;  ///< The last node of the lise.
+		size_t _size;                ///< The number of elements in the list.
+		AllocatorType _allocator;    ///< The used allocator for allocating
+		                             ///< nodes.
 };
 
 // List
