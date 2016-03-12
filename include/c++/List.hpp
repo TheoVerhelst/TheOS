@@ -313,11 +313,17 @@ class List
 		iterator erase(constIterator first, constIterator last);
 
 	private:
-		details::ListNode<T>* _begin;///< The first node of the list.
-		details::ListNode<T>* _end;  ///< The last node of the lise.
-		size_t _size;                ///< The number of elements in the list.
-		AllocatorType _allocator;    ///< The used allocator for allocating
-		                             ///< nodes.
+		/// The first node of the list.
+		details::ListNode<T>* _begin;
+
+		/// The last node of the list.
+		details::ListNode<T>* _end;
+
+		/// The number of elements in the list.
+		size_t _size;
+
+		/// The used allocator for allocating nodes.
+		AllocatorType _allocator;
 };
 
 // List
