@@ -5,6 +5,9 @@
 #include <BitSet.hpp>
 #include <kernel/memory/Byte.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 /// Manage a pool of memory that has a size of sizeof(T) * Size.
 template <typename T, size_t Size>
 class Pool
@@ -100,5 +103,7 @@ void PoolAllocator<T, Size>::deallocate(Pointer pointer)
 {
 	_pool.deallocate(pointer);
 }
+
+/// \}
 
 #endif// POOLALLOCATOR_HPP

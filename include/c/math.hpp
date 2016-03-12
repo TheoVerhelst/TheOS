@@ -1,6 +1,10 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
+/// \defgroup C C
+/// Pseudo-implementation of the standard C library.
+/// \{
+
 /// Get the absolute value of the given number.
 /// \param n A number.
 /// \return n > 0 ? n : -n;
@@ -15,5 +19,7 @@ long int abs(long int n);
 /// \param n A number.
 /// \return n > 0LL ? n : -n;
 long long int abs(long long int n);
+
+/// \}
 
 #endif// MATH_HPP

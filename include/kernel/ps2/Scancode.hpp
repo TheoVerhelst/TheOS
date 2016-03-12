@@ -4,6 +4,9 @@
 #include <cstddef>
 #include <cstdint>
 
+/// \addtogroup Kernel
+/// \{
+
 namespace ps2
 {
 
@@ -26,5 +29,7 @@ constexpr bool Scancode::operator==(const Scancode& other) const
 }
 
 }// namespace ps2
+
+/// \}
 
 #endif// SCANCODE_HPP

@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+/// \addtogroup Kernel
+/// \{
+
 namespace pic
 {
 
@@ -85,5 +88,7 @@ void sendEndOfInterrupt(uint32_t interruptNumber);
 void remap();
 
 }// namespace pic
+
+/// \}
 
 #endif// PIC_HPP

@@ -4,7 +4,10 @@
 #include <cstdint>
 #include <cstddef>
 
-// VGA hardware interface
+/// \addtogroup Kernel
+/// \{
+
+/// VGA hardware interface
 namespace vga
 {
 
@@ -65,5 +68,7 @@ constexpr inline size_t coordToIndex(size_t x, size_t y)
 
 
 }// namespace VGA
+
+/// \}
 
 #endif// VGA_MANAGEMENT_H

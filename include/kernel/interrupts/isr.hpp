@@ -5,6 +5,9 @@
 #include <Printer.hpp>
 #include <kernel/interrupts/idt.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 namespace isr
 {
 
@@ -81,5 +84,7 @@ class Table
 Printer& operator<<(Printer& out, const ErrorCode& errorCode);
 
 }// namespace isr
+
+/// \}
 
 #endif// ISRDISPATCHER_HPP

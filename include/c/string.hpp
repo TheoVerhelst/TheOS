@@ -4,6 +4,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/// \addtogroup C
+/// \{
+
 extern "C"
 {
 
@@ -86,5 +89,7 @@ void* _memset(void* dest, uint16_t ch, size_t count);
 /// \param ch Fill byte.
 /// \param count Number of bytes to fill.
 void* _memset(void* dest, uint32_t ch, size_t count);
+
+/// \}
 
 #endif// STRING_HPP

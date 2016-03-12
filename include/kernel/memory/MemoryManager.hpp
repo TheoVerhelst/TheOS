@@ -10,6 +10,9 @@
 #include <Printer.hpp>
 #include <Array.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 /// Holds some things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.
 template <class AllocatorType = Allocator<details::ListNode<Byte*>>>
@@ -290,5 +293,6 @@ void MemoryManager<AllocatorType>::memoryDump() const
 	out << "\n";
 }
 
+/// \}
 
 #endif// MEMORYMANAGER_HPP

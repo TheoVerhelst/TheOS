@@ -7,6 +7,9 @@
 #include <List.hpp>
 #include <kernel/memory/PoolAllocator.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 /// Browse the memory map given by the boot loader and give the address
 /// of a region	that have the needed size, and manage the memory map
 /// so that no memory region is wasted.
@@ -54,5 +57,7 @@ class MemoryMapBrowser
 
 		List<MemoryRegion, RegionsAllocator> _memoryRegions;
 };
+
+/// \}
 
 #endif// MEMORYMAPBROWSER_HPP

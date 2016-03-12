@@ -58,8 +58,6 @@
 #pragma GCC system_header
 
 /**
- * @defgroup utilities Utilities
- *
  * Components deemed generally useful. Includes pair, tuple,
  * forward/move helpers, ratio, function object, metaprogramming and
  * type traits, time, date, and memory functions.

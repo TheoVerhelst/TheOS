@@ -40,7 +40,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // Used, in C++03 mode too, by allocators, etc.
   /**
    *  @brief Same as C++11 std::addressof
-   *  @ingroup utilities
    */
   template<typename _Tp>
     inline _Tp*
@@ -59,11 +58,6 @@ _GLIBCXX_END_NAMESPACE_VERSION
 namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
-
-  /**
-   *  @addtogroup utilities
-   *  @{
-   */
 
   /**
    *  @brief  Forward an lvalue.
@@ -145,7 +139,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       return __old_val;
     }
 
-  /// @} group utilities
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
@@ -159,11 +152,6 @@ _GLIBCXX_END_NAMESPACE_VERSION
 namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
-
-  /**
-   *  @addtogroup utilities
-   *  @{
-   */
 
   /**
    *  @brief Swaps two values.
@@ -201,7 +189,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	swap(__a[__n], __b[__n]);
     }
 
-  /// @} group utilities
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 

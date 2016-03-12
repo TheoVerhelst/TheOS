@@ -174,7 +174,7 @@ class List
 		List(const List& other);// TODO copy constructor does not work
 
 		/// Move constructor.
-		/// \param The other list.
+		/// \param other The other list.
 		List(List&& other);
 
 		/// Destructor.
@@ -194,7 +194,7 @@ class List
 		bool empty() const;
 
 		/// Get the number of elements in the list.
-		/// \param The number of elements in the list.
+		/// \return The number of elements in the list.
 		size_t size() const;
 
 		/// Get the last element of the list.

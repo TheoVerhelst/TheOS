@@ -8,6 +8,9 @@
 #include <kernel/ps2/ScancodeMapper.hpp>
 #include <kernel/ps2/KeyEventMapper.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 namespace ps2
 {
 
@@ -47,5 +50,7 @@ class KeyboardDriver : public Driver
 };
 
 }// namespace ps2
+
+/// \}
 
 #endif// KEYBOARD_HPP

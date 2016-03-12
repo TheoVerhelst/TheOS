@@ -5,6 +5,9 @@
 #include <cstddef>
 #include <kernel/interrupts/pic.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 namespace idt
 {
 
@@ -126,5 +129,7 @@ extern IdtDescriptor idtDescriptor;
 #define ITEM(INDEX) extern "C" void isr##INDEX();
 #include <kernel/item64Helper.itm>
 #undef ITEM
+
+/// \}
 
 #endif// IDT_HPP

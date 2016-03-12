@@ -1,6 +1,9 @@
 #ifndef Driver_HPP
 #define Driver_HPP
 
+/// \addtogroup Kernel
+/// \{
+
 namespace ps2
 {
 
@@ -31,5 +34,7 @@ class Driver
 };
 
 }// namespace ps2
+
+/// \}
 
 #endif// Driver_HPP

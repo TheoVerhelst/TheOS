@@ -6,6 +6,9 @@
 #include <List.hpp>
 #include <kernel/ps2/Key.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 namespace ps2
 {
 
@@ -55,5 +58,7 @@ class KeyEventMapper
 };
 
 }// namespace ps2
+
+/// \}
 
 #endif// KEYEVENTMAPPER_HPP

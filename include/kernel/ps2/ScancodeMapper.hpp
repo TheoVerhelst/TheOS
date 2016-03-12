@@ -7,6 +7,9 @@
 #include <kernel/ps2/Key.hpp>
 #include <kernel/ps2/Scancode.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 namespace ps2
 {
 
@@ -43,5 +46,7 @@ class ScancodeMapper
 };
 
 }// namespace ps2
+
+/// \}
 
 #endif// SCANCODEMAPPER_HPP

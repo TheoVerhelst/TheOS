@@ -1,6 +1,9 @@
 #ifndef KEY_HPP
 #define KEY_HPP
 
+/// \addtogroup Kernel
+/// \{
+
 /// Enumeration of all keys on a standard US QWERTY keyboard, plus some extra keys,
 /// such as a key on the left of the Z key.
 enum class Key
@@ -122,5 +125,7 @@ struct KeyEvent
 	Key _key;
 	bool _pressed;
 };
+
+/// \}
 
 #endif// KEY_HPP

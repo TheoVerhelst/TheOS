@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+/// \addtogroup Kernel
+/// \{
+
 namespace gdt
 {
 
@@ -80,5 +83,7 @@ void initializeGdt();
 extern gdt::GdtDescriptor descriptor;
 
 extern "C" void flushGdt();
+
+/// \}
 
 #endif// GDT_HPP

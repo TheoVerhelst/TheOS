@@ -9,6 +9,10 @@
 #include <kernel/memory/Byte.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 
+/// \defgroup Kernel Kernel
+/// All classes and functions directly related to the kernel
+/// \{
+
 class Kernel final
 {
 	public:
@@ -78,5 +82,7 @@ class Kernel final
 
 /// The main, unique kernel class instance.
 extern Kernel kernel;
+
+/// \}
 
 #endif// KERNEL_HPP

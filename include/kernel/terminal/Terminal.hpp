@@ -4,6 +4,9 @@
 #include <cstddef>
 #include <kernel/video/vgaManagement.hpp>
 
+/// \addtogroup Kernel
+/// \{
+
 /// Class managing the main terminal.
 class Terminal
 {
@@ -31,5 +34,7 @@ class Terminal
 };
 
 extern Terminal terminal;
+
+/// \}
 
 #endif// TERMINAL_HPP
