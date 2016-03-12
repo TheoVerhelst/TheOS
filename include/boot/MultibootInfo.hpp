@@ -5,6 +5,8 @@
 #include <cstddef>
 #include <kernel/memory/Byte.hpp>
 
+/// Contains structs related to the Multiboot Specification version 0.6.96,
+/// which is applied by the bootloader used by the kernel.
 namespace multiboot
 {
 

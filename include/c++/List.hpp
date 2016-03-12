@@ -6,15 +6,18 @@
 #include <type_traits>
 #include <memory.hpp>
 
+/// Classes used in the implementation of the class List.
 namespace details
 {
 
+/// Represents a node in the list.
+/// \tparam T The type of element to store as value of the node.
 template <class T>
 struct ListNode
 {
-	T _value;
-	ListNode* _next = nullptr;
-	ListNode* _previous = nullptr;
+	T _value;                     ///< The value of the node.
+	ListNode* _next = nullptr;    ///< The next node.
+	ListNode* _previous = nullptr;///< The previous node.
 };
 
 }// namespace details
