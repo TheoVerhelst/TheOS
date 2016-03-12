@@ -4,6 +4,9 @@
 #include <cstddef>
 #include <cstdint>
 
+/// \addtogroup Cpp
+/// \{
+
 /// Class that prints various fundamental types to the kernel terminal.
 /// This class behaves a bit like std::basic_ostream, and is is part of the
 /// pseudo-implementation of the standard C++ library. This class has far less
@@ -157,5 +160,7 @@ class Printer
 
 /// The main printer instance.
 extern Printer out;
+
+/// \}
 
 #endif// PRINTER_HPP

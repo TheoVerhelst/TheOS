@@ -6,6 +6,9 @@
 #include <type_traits>
 #include <memory.hpp>
 
+/// \addtogroup Cpp
+/// \{
+
 /// Classes used in the implementation of the class List.
 namespace details
 {
@@ -325,6 +328,8 @@ class List
 		/// The used allocator for allocating nodes.
 		AllocatorType _allocator;
 };
+
+/// \}
 
 // List
 template <class T, class AllocatorType>

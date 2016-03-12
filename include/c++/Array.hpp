@@ -4,6 +4,10 @@
 #include <cstddef>
 #include <memory.hpp>
 
+/// \defgroup Cpp C++
+/// Pseudo-implementation of the standard C++ library.
+/// \{
+
 /// Static array encapsulated in a class. This class behaves like std::array,
 /// and is part of the pseudo-implementation of the standard C++ library.
 /// A great difference with std::array and with C-style array is that this
@@ -230,5 +234,7 @@ constexpr typename Array<T, N>::SizeType Array<T, N>::size() const
 {
 	return N;
 }
+
+/// \}
 
 #endif// ARRAY_HPP

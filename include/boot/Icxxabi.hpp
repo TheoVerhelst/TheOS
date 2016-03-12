@@ -3,6 +3,9 @@
 
 #define ATEXIT_MAX_FUNCS 128
 
+/// \addtogroup Boot
+/// \{
+
 extern "C"
 {
 
@@ -22,5 +25,7 @@ int __cxa_atexit(void (*f)(void *), void *objptr, void *dso);
 void __cxa_finalize(void *f);
 
 }// extern "C"
+
+/// \}
 
 #endif// ICXXABI_HPP

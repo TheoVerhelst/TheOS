@@ -30,6 +30,9 @@
 
 #include <bits/c++config.h>
 
+/// \addtogroup Cpp
+/// \{
+
 /// Initializer list class helper. This class behaves like std::initialize_list,
 /// and is part of the pseudo-implementation of the standard C++ library.
 /// This class is directly copied from the implementation of
@@ -86,6 +89,8 @@ constexpr const typename InitializerList<T>::Iterator begin(InitializerList<T> i
 /// \tparam T The type of element.
 template<class T>
 constexpr const typename InitializerList<T>::Iterator end(InitializerList<T> initializerList) noexcept;
+
+/// \}
 
 template<class T>
 constexpr InitializerList<T>::InitializerList(ConstIterator array, SizeType length):
