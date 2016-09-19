@@ -55,7 +55,7 @@ section .text
 		call _init
 		call _fini
 
-		; Let's go for some fun
+		; let's go for some fun
 		call kernelMain
 
 		; reset the interrupt flag (IF) to not handle maskable interrupts

@@ -3,7 +3,10 @@ ENTRY(_start)
 
 SECTIONS
 {
-	. = 1M;  /* 1 MiB is the common place in memory for the bootloader to find the kernel */
+	. = 1M;
+
+	/* A symbol to retrieve the beginning of the kernel in memory */
+	beginKernel = ALIGN(4K);
 
 	/* Place the header first for the bootloader to recognize the kernel */
 	.text BLOCK(4K) : ALIGN(4K)
@@ -31,4 +34,7 @@ SECTIONS
 		*(.bss)
 		*(.bootstrap_stack)
 	}
+
+	/* A symbol to retrieve the end of the kernel in memory */
+	endKernel = ALIGN(4K);
 }

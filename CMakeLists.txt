@@ -6,7 +6,7 @@ project(TheOS LANGUAGES CXX ASM_NASM)
 
 #Set up the C++ compiler
 set(CMAKE_CXX_COMPILER "i686-elf-g++")
-set(CMAKE_CXX_FLAGS "-std=c++14 -ffreestanding -O0 -Wall -Wextra -fno-exceptions -fno-rtti")
+set(CMAKE_CXX_FLAGS "-std=c++14 -ffreestanding -O0 -Wall -Wextra -fno-exceptions -fno-rtti -g")
 
 #Set up the linker
 #Path to crtbegin.o and crtend.o
@@ -59,4 +59,3 @@ add_custom_command(TARGET ${PROJECT_NAME}.bin POST_BUILD COMMAND
 #Finaly create the iso with grub
 add_custom_command(TARGET ${PROJECT_NAME}.bin POST_BUILD COMMAND
 	grub-mkrescue -o ${PROJECT_NAME}.iso ${CMAKE_BINARY_DIR}/iso 2> /dev/null)
-

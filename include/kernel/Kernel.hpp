@@ -5,7 +5,7 @@
 #include <kernel/interrupts/isr.hpp>
 #include <kernel/memory/PoolAllocator.hpp>
 #include <kernel/memory/MemoryManager.hpp>
-#include <kernel/memory/MemoryMapBrowser.hpp>
+#include <kernel/memory/PhysicalMemoryManager.hpp>
 #include <kernel/memory/Byte.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 
@@ -58,12 +58,10 @@ class Kernel final
 
 		void printPrettyAsciiArt();
 
-		void initializeMainMemoryManager();
-
 		/// Size of the heap that will be allocated for the kernel.
-		static constexpr size_t _heapSize{1UL << 20UL};
+		static constexpr size_t _heapSize{1UL << 12UL};
 
-		MemoryMapBrowser _memoryMapBrowser;
+		PhysicalMemoryManager _physicalMemoryManager;
 
 		Byte* _heapAddress;
 

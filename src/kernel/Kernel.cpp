@@ -9,7 +9,7 @@
 Kernel kernel;
 
 Kernel::Kernel():
-	_heapAddress{_memoryMapBrowser.findMemoryRegion(_heapSize)},
+	_heapAddress{_physicalMemoryManager.allocateFrame()},
 	// Give a needed kernel size of zero if info about memory is not available
 	// (that's better than nothing)
 	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize, HeapManagerPoolAllocator(_heapManagerPool)}
@@ -20,7 +20,6 @@ Kernel::Kernel():
 	gdt::initializeGdt();
 	idt::initializeIdt();
 	pic::initializePic();
-	initializeMainMemoryManager();
 }
 
 void Kernel::run()
@@ -41,8 +40,8 @@ void Kernel::processMultibootInfo() const
 	const multiboot::MultibootInfo& info{*multiboot::multibootInfoAddress};
 	if(info._flags & multiboot::InfoAvailable::boot_loader_name)
 		out << "This kernel has been loaded by \"" << info._boot_loader_name << "\"\n";
-	//if(info.flags & InfoAvailable::boot_device)
-	//	printDeviceInfo(info.boot_device);
+	if(info._flags & multiboot::InfoAvailable::boot_device)
+		printDeviceInfo(info._boot_device);
 	if(not (info._flags & multiboot::InfoAvailable::mmap))
 		abort("Memory map not available, aborting\n");
 }
@@ -113,10 +112,4 @@ void Kernel::printPrettyAsciiArt()
 \xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\xCD\n\
 ");
 	terminal.setColourProfile(Terminal::_defaultColourProfile);
-}
-
-void Kernel::initializeMainMemoryManager()
-{
-	for(const auto& memoryRegion : _memoryMapBrowser)
-		_mainMemoryManager.addMemoryChunk(memoryRegion._address, memoryRegion._size);
 }

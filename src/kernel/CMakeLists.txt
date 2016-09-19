@@ -3,7 +3,7 @@ set(SOURCES
 	"Kernel.cpp"
 	"abort.cpp"
 	# Memory files
-	"memory/MemoryMapBrowser.cpp"
+	"memory/PhysicalMemoryManager.cpp"
 	# Terminal files
 	"terminal/Terminal.cpp"
 	# Video files
