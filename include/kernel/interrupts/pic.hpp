@@ -6,21 +6,42 @@
 /// \addtogroup Kernel
 /// \{
 
+/// Objects related to the Programmable Interrupt Controller (PIC). The PIC is
+/// an hardware device that manages the interrupts before passing them to the
+/// CPU. And this device is programmable by the OS, and this namespace holds
+/// things useful for this programmation.
 namespace pic
 {
 
-constexpr uint16_t masterAddress{0x20};///< IO base address for master PIC
-constexpr uint16_t slaveAddress{0xA0}; ///< IO base address for slave PIC
+/// IO base address for master PIC.
+constexpr uint16_t masterAddress{0x20};
+
+/// IO base address for slave PIC.
+constexpr uint16_t slaveAddress{0xA0};
+
+/// IO address to use when sending commands to the master PIC.
 constexpr uint16_t masterCommand{masterAddress};
+
+/// IO address to use when sending data to the master PIC.
 constexpr uint16_t masterData{masterAddress + 1};
+
+/// IO address to use when sending commands to the slave PIC.
 constexpr uint16_t slaveCommand{slaveAddress};
+
+/// IO address to use when sending data to the slave PIC.
 constexpr uint16_t slaveData{slaveAddress + 1};
+
+/// Index of the first interrupt sent by the master PIC in the IDT.
 constexpr uint8_t masterOffset{0x20};
+
+/// Index of the first interrupt sent by the slave PIC in the IDT.
 constexpr uint8_t slaveOffset{0x28};
 
+/// Namespace for the enumeration of the commands that can be sent to the PIC.
 namespace Command
 {
 
+/// Enumeration of the commands that can be sent to the PIC.
 enum Command : uint8_t
 {
 	RequireIcw4    = 1 << 0,
