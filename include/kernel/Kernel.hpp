@@ -15,12 +15,17 @@
 
 class Kernel final
 {
+	private:
+		/// Size of the heap that will be allocated for the kernel.
+		static constexpr size_t _heapSize{frameSize};
+
 	public:
 		/// Maximum number of blocks in the MemoryManager. Even if the memory is
 		/// not full, memory allocation will fail if there is too much blocks.
 		/// The limit of blocks must be static, and reserve too much room
 		/// to blocks information will result in bigger kernel.
-		static constexpr size_t _maxBlocksNumber{1 << 16};
+		/// The value 8 is totally arbitrary.
+		static constexpr size_t _maxBlocksNumber{_heapSize / 8};
 
 		/// The type of the allocator that the heap manager will use to allocate
 		/// the elements of its internal lists. In order to manage a big heap
@@ -58,9 +63,6 @@ class Kernel final
 
 		void printPrettyAsciiArt();
 
-		/// Size of the heap that will be allocated for the kernel.
-		static constexpr size_t _heapSize{1UL << 12UL};
-
 		PhysicalMemoryManager _physicalMemoryManager;
 
 		Byte* _heapAddress;
@@ -74,8 +76,6 @@ class Kernel final
 		/// interrupt occur (with the ISR 33), and it gives a queue of
 		/// characters that the user typed.
 		ps2::KeyboardDriver _keyboardDriver;
-
-		MemoryManager<> _mainMemoryManager;
 };
 
 /// The main, unique kernel class instance.
