@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <kernel/memory/Byte.hpp>
+#include <kernel/memory/paging.hpp>
 #include <boot/MultibootInfo.hpp>
 #include <List.hpp>
 #include <kernel/memory/PoolAllocator.hpp>
@@ -60,38 +61,30 @@ class PhysicalMemoryManager final
 
 		/// The top of stack. See main description for more info.
 		Byte* _topOfStack;
-
-		/// The address of the beginning of the upper memory, i.e. the memory
-		/// after the 1Mo limit. Lower memory shouldn't be used, since only
-		/// a very short part is usable (about 640Ko).
-		static constexpr Byte* _upperMemoryBegin{reinterpret_cast<Byte*>(0x100000)};
 };
 
 /// A symbol located at the beginning of the kernel image in memory.
 /// It is used to retrieve the exact position of the kernel in memory, and its
 /// value should not be used. Only its address can be used.
-extern "C" void* beginKernel;
+extern "C" void* kernelHighHalfStart;
 
 /// A symbol located at the end of the kernel image in memory.
 /// It is used to retrieve the exact position of the kernel in memory, and its
 /// value should not be used. Only its address can be used.
-extern "C" void* endKernel;
+extern "C" void* kernelHighHalfEnd;
 
 /// \}
 
 constexpr Byte* PhysicalMemoryManager::alignUp(Byte* address)
 {
 	const uintptr_t uintAddress{reinterpret_cast<uintptr_t>(address)};
-	if(uintAddress % frameSize == 0)
-		return address;
-	else
-		return reinterpret_cast<Byte*>(uintAddress + frameSize - (uintAddress % frameSize));
+	return reinterpret_cast<Byte*>((uintAddress + paging::pageSize - 1) & ~(paging::pageSize - 1));
 }
 
 constexpr Byte* PhysicalMemoryManager::alignDown(Byte* address)
 {
 	const uintptr_t uintAddress{reinterpret_cast<uintptr_t>(address)};
-	return reinterpret_cast<Byte*>(uintAddress & ~(frameSize - 1));
+	return reinterpret_cast<Byte*>(uintAddress & ~(paging::pageSize - 1));
 }
 
 #endif// PHYSICALMEMORYMANAGER_HPP

@@ -33,7 +33,8 @@ void PhysicalMemoryManager::freeFrame(Byte* address)
 
 	// FIXME: If this condition is removed, the boot sequence crashes
 	// This may be a special area not told by the BIOS
-	if(reinterpret_cast<uintptr_t>(address) <= 0x1D5000 or reinterpret_cast<uintptr_t>(address) > 0x250000)
+	if(reinterpret_cast<uintptr_t>(address) <= 0x1D5000
+			or reinterpret_cast<uintptr_t>(address) > 0x250000)
 	{
 		*reinterpret_cast<Byte**>(address) = _topOfStack;
 		_topOfStack = address;
@@ -59,7 +60,7 @@ void PhysicalMemoryManager::parseMemoryMap(multiboot::MemoryRegion* address)
 	// Now we can free the memory, since all regions has been parsed
 	if(region._type == multiboot::MemoryRegion::_validType
 			// Avoid to use the first megabyte
-			and baseAddress >= _upperMemoryBegin)
+			and baseAddress >= paging::lowerMemoryLimit)
 		freeMemoryRegion(region);
 
 }
@@ -73,8 +74,9 @@ void PhysicalMemoryManager::freeMemoryRegion(const multiboot::MemoryRegion& regi
 	Byte * upperBound{alignDown(address + size)};
 	address = alignUp(address);
 
-	for(Byte* frame{upperBound - frameSize}; frame >= address; frame -= frameSize)
+	for(Byte* frame{upperBound - paging::pageSize}; frame >= address; frame -= paging::pageSize)
 		// Ensure that the kernel is not added to the free frames
-		if(frame + frameSize < reinterpret_cast<Byte*>(&beginKernel) or frame > reinterpret_cast<Byte*>(&endKernel))
+		if(frame + paging::pageSize < reinterpret_cast<Byte*>(&kernelStart)
+				or frame > reinterpret_cast<Byte*>(&kernelEnd))
 			freeFrame(frame);
 }

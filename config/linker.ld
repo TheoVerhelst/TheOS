@@ -1,40 +1,54 @@
 /* Entry point is the assembly label _start */
 ENTRY(_start)
 
+kernelVirtualOffset = 0xC0000000;
+
 SECTIONS
 {
 	. = 1M;
 
+	/**** BOOTSTRAP INIT PART ****/
+
+	.init ALIGN(4K) :
+	{
+		*(.multiboot);
+		*(.init);
+		*(.pagingTables);
+	}
+
+	/**** HIGHER HALF KERNEL PART ****/
+
+	. += kernelVirtualOffset;
+
 	/* A symbol to retrieve the beginning of the kernel in memory */
-	beginKernel = ALIGN(4K);
+	kernelHighHalfStart = ALIGN(4K);
 
 	/* Place the header first for the bootloader to recognize the kernel */
-	.text BLOCK(4K) : ALIGN(4K)
+	.text ALIGN(4K) : AT(ADDR(.text) - kernelVirtualOffset)
 	{
-		*(.multiboot)
 		*(.text)
 	}
 
 	/* RO data. */
-	.rodata BLOCK(4K) : ALIGN(4K)
+	.rodata ALIGN(4K) : AT(ADDR(.rodata) - kernelVirtualOffset)
 	{
 		*(.rodata)
 	}
 
 	/* RW data (initialized) */
-	.data BLOCK(4K) : ALIGN(4K)
+	.data ALIGN(4K) : AT(ADDR(.data) - kernelVirtualOffset)
 	{
 		*(.data)
 	}
 
 	/* RW data (uninitialized) and stack */
-	.bss BLOCK(4K) : ALIGN(4K)
+	.bss ALIGN(4K) : AT(ADDR(.bss) - kernelVirtualOffset)
 	{
-		*(COMMON)
 		*(.bss)
-		*(.bootstrap_stack)
+		*(COMMON)
+		*(.kernelStack)
 	}
 
 	/* A symbol to retrieve the end of the kernel in memory */
-	endKernel = ALIGN(4K);
+	kernelHighHalfEnd = .;
 }

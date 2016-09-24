@@ -17,7 +17,7 @@ class Kernel final
 {
 	private:
 		/// Size of the heap that will be allocated for the kernel.
-		static constexpr size_t _heapSize{frameSize};
+		static constexpr size_t _heapSize{paging::pageSize};
 
 	public:
 		/// Maximum number of blocks in the MemoryManager. Even if the memory is

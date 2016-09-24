@@ -8,7 +8,7 @@
 
 /// Objects related to the Programmable Interrupt Controller (PIC). The PIC is
 /// an hardware device that manages the interrupts before passing them to the
-/// CPU. And this device is programmable by the OS, and this namespace holds
+/// CPU. This device is programmable by the OS, and this namespace holds
 /// things useful for this programmation.
 namespace pic
 {

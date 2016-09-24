@@ -4,6 +4,7 @@ set(SOURCES
 	"abort.cpp"
 	# Memory files
 	"memory/PhysicalMemoryManager.cpp"
+	"memory/paging.cpp"
 	# Terminal files
 	"terminal/Terminal.cpp"
 	# Video files
