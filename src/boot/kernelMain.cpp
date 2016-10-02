@@ -1,5 +1,5 @@
 #if defined (__linux__) || !defined (__i386__)
- #error "Must be cross-compiled i686-elf to work properly!"
+ #error "Must be cross-compiled i386-elf to work properly!"
 #endif
 
 #include <kernel/Kernel.hpp>

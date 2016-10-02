@@ -72,7 +72,7 @@ template <typename T, size_t Size>
 typename Pool<T, Size>::Pointer Pool<T, Size>::allocate()
 {
 	const size_t blockIndex{_usedBlocks.find(false)};
-	if(blockIndex == ~0UL)
+	if(blockIndex == _usedBlocks._invalidIndex)
 		return nullptr;
 	_usedBlocks.set(blockIndex);
 	return reinterpret_cast<Pointer>(&_array[blockIndex * _blockSize]);

@@ -15,9 +15,11 @@ template <size_t N>
 class BitSet
 {
 	public:
+		size_t _invalidIndex{~0UL};
 
 		/// Constructor.
-		BitSet();
+		/// \param value The value to set to every bit of the bitset.
+		BitSet(bool value = false);
 
 		/// Set all bits to 1.
 		/// \post all()
@@ -65,7 +67,7 @@ class BitSet
 		/// Get the index of the first bit with the value \a value.
 		/// \param value The value that must have the bit to find.
 		/// \return The index of the first bit with the value \a value, or
-		/// ~0UL if no bits have the given value.
+		/// invalidIndex if no bits have the given value.
 		size_t find(bool value);
 
 	private:
@@ -75,24 +77,31 @@ class BitSet
 		static constexpr size_t _wordsSize = 64;
 
 		/// The number of words needed to have at least N bits.
-		static constexpr size_t _wordsNumber = (N - 1) / 64 + 1;
+		static constexpr size_t _wordsNumber = (N - 1) / _wordsSize + 1;
 
 		/// The bits, stocked as an array of words.
 		uint64_t _words[_wordsNumber];
 
-		/// An index pointing to the last element reached in a call to find().
+		/// An index pointing to the last word reached in a call to find().
 		/// It is useful because a common use case of a BitSet is to
-		/// repeatitively call find() and then set the result, so this variable
-		/// avoid a lot of useless tests.
-		size_t _lastIndex = 0;
+		/// repeatitively call find() and then toggle the result, so this
+		/// attribute avoids a lot of useless tests.
+		/// \note This attributes is an index to a word in _words, not to a bit.
+		/// \note We do not worry about the fact that we can search for set or
+		/// unset bit, because these two use cases are generaly not met at the
+		/// same time.
+		size_t _lastIndex;
 };
 
 /// \}
 
 template <size_t N>
-BitSet<N>::BitSet()
+BitSet<N>::BitSet(bool value):
+	_words{}, // zero-initialize the elements in the array
+	_lastIndex{0}
 {
-	reset();
+	if(value)
+		set();
 }
 
 template <size_t N>
@@ -170,14 +179,21 @@ bool BitSet<N>::test(size_t index) const
 template <size_t N>
 size_t BitSet<N>::find(bool value)
 {
-	const size_t firstTry{_lastIndex};
+	size_t firstTriedWord{_lastIndex};
 	do
-		if(test(_lastIndex) == value)
-			return _lastIndex;
+	{
+		// Get the index of the first set or cleared bit in the word.
+		// __builtin_ffsll is a GCC extension that maps to the CPU bit find function
+		int result{__builtin_ffsll(value ? _words[_lastIndex] : ~_words[_lastIndex])};
+		if(result == 0)
+			// No bit was found, go to the next word
+			_lastIndex = (_lastIndex + 1) % _wordsNumber;
 		else
-			_lastIndex = (_lastIndex + 1) % N;
-	while(_lastIndex != firstTry);
-	return ~0UL;
+			return _lastIndex * _wordsSize + result - 1;
+	// Loop until we tested each word
+	} while(_lastIndex != firstTriedWord);
+
+	return _invalidIndex;
 }
 
 #endif// BITSET_HPP

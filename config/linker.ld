@@ -9,6 +9,7 @@ SECTIONS
 
 	/**** BOOTSTRAP INIT PART ****/
 
+	/* Place the header first for the bootloader to recognize the kernel */
 	.init ALIGN(4K) :
 	{
 		*(.multiboot);
@@ -20,10 +21,11 @@ SECTIONS
 
 	. += kernelVirtualOffset;
 
-	/* A symbol to retrieve the beginning of the kernel in memory */
-	kernelHighHalfStart = ALIGN(4K);
+	/* Symbols to retrieve the beginning of the kernel in memory */
+	kernelVirtualStart = ALIGN(4K);
+	kernelPhysicalStart = kernelVirtualStart - kernelVirtualOffset;
 
-	/* Place the header first for the bootloader to recognize the kernel */
+	/* Text. */
 	.text ALIGN(4K) : AT(ADDR(.text) - kernelVirtualOffset)
 	{
 		*(.text)
@@ -49,6 +51,7 @@ SECTIONS
 		*(.kernelStack)
 	}
 
-	/* A symbol to retrieve the end of the kernel in memory */
-	kernelHighHalfEnd = .;
+	/* Symbols to retrieve the end of the kernel in memory */
+	kernelVirtualEnd = .;
+	kernelPhysicalEnd = kernelVirtualEnd - kernelVirtualOffset;
 }

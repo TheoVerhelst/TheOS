@@ -5,8 +5,7 @@
 #include <kernel/memory/Byte.hpp>
 #include <kernel/memory/paging.hpp>
 #include <boot/MultibootInfo.hpp>
-#include <List.hpp>
-#include <kernel/memory/PoolAllocator.hpp>
+#include <BitSet.hpp>
 
 /// \addtogroup Kernel
 /// \{
@@ -16,15 +15,8 @@
 /// It is final because there can be only one physical memory manager, so
 /// inheritance would make no sense.
 ///
-/// The frames are managed as follow: we construct a simply linked list of
-/// free frames, where the first word of each free frame is a pointer to the
-/// next free frame.
-/// We only remember the address of the first free frame (named top of stack),
-/// and when a free frame is asked by the kernel, the top of stack is given and
-/// the new top of stack is the frame pointed by the old one.
-/// When a frame is freed by the kernel, it become the new top of stack, and the
-/// address of the old top of stack is written in the first word of the freed
-/// frame.
+/// The frames are managed with a bitmap, where each bit represent an usable
+/// frame of memory.
 class PhysicalMemoryManager final
 {
 	public:
@@ -32,46 +24,46 @@ class PhysicalMemoryManager final
 		/// to be available for use.
 		PhysicalMemoryManager();
 
+		/// Allocate a frame and return its address.
+		/// \return the address of the allocated frame.
 		Byte* allocateFrame();
+
+		/// Free a previously allocated frame.
+		/// \param the address of the frame to free.
 		void freeFrame(Byte* address);
 
 	private:
-		/// Parses an element in the memory map, and call itself recursively to
-		/// parse the next element. If there is no more element, add it to the
-		/// frame stack.
-		/// We do a recursive call because we want to copy a buffer of an
-		/// unknown size at compile time without heap allocation (because at
-		/// this stage there is no heap).
-		/// With a recursive call, the data structure is allocated on the stack.
-		/// We could use assembly langage to do the same work, but we prefer to
-		/// use C++ as much as possible.
-		///
-		/// \param address The address of the current element in the memory map.
-		void parseMemoryMap(multiboot::MemoryRegion* address);
+		/// Parses the memory map info structure and creates a bitmap of the
+		/// available memory.
+		void parseMemoryMap();
 
 		/// Frees the set of frames contained in the given region.
 		/// \param region The region to free.
 		void freeMemoryRegion(const multiboot::MemoryRegion& region);
 
+		/// Get the first 4k-aligned address that is greater or equal to
+		/// \a address.
+		/// \param address The address to convert.
+		/// \return The first 4k-aligned address that is greater or equal to
+		/// \a address.
 		static constexpr Byte* alignUp(Byte* address);
+
+		/// Get the first 4k-aligned address that is less or equal to
+		/// \a address.
+		/// \param address The address to convert.
+		/// \return The first 4k-aligned address that is less or equal to
+		/// \a address.
 		static constexpr Byte* alignDown(Byte* address);
 
-		/// The upper limit of the memory map
-		Byte* _memoryMapUpperBound;
-
-		/// The top of stack. See main description for more info.
-		Byte* _topOfStack;
+		BitSet<-reinterpret_cast<size_t>(paging::lowerMemoryLimit)> _freeFrames;
 };
 
-/// A symbol located at the beginning of the kernel image in memory.
-/// It is used to retrieve the exact position of the kernel in memory, and its
-/// value should not be used. Only its address can be used.
-extern "C" void* kernelHighHalfStart;
-
-/// A symbol located at the end of the kernel image in memory.
-/// It is used to retrieve the exact position of the kernel in memory, and its
-/// value should not be used. Only its address can be used.
-extern "C" void* kernelHighHalfEnd;
+/// Symbols located at precise places in the kernel image, allowing to retrieve
+/// the position and size of the kernel in memory.
+extern "C" void* kernelVirtualStart;
+extern "C" void* kernelVirtualEnd;
+extern "C" void* kernelPhysicalStart;
+extern "C" void* kernelPhysicalEnd;
 
 /// \}
 
