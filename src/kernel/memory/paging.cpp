@@ -3,13 +3,6 @@
 namespace paging
 {
 
-alignas(pageSize) [[gnu::section(".pagingTables")]] PageDirectoryEntry kernelPageDirectory[entriesNumber];
-
-alignas(pageSize) [[gnu::section(".pagingTables")]] PageTableEntry lowerMemoryPageTable[entriesNumber];
-
-alignas(pageSize) [[gnu::section(".pagingTables")]] PageTableEntry higherHalfPageTables[higherHalfPageTablesNumber][entriesNumber];
-
-
 PageTableEntry::PageTableEntry(Byte* physicalAddress, uint16_t flags)
 {
 	set(physicalAddress, flags);
@@ -32,6 +25,16 @@ void PageDirectoryEntry::set(PageTableEntry* pageTable, uint16_t flags)
 	_flags = flags;
 }
 
+namespace bootstrap
+{
+
+alignas(pageSize) [[gnu::section(".pagingTables")]] uint32_t kernelPageDirectory[entriesNumber];
+
+alignas(pageSize) [[gnu::section(".pagingTables")]] uint32_t lowerMemoryPageTable[entriesNumber];
+
+alignas(pageSize) [[gnu::section(".pagingTables")]] uint32_t higherHalfPageTables[higherHalfPageTablesNumber][entriesNumber];
+
+
 extern "C" [[gnu::section(".init")]] void initKernelPaging()
 {
 	initLowerMemory();
@@ -40,10 +43,10 @@ extern "C" [[gnu::section(".init")]] void initKernelPaging()
 
 [[gnu::section(".init")]] void initLowerMemory()
 {
-	kernelPageDirectory[0].set(lowerMemoryPageTable, Flags::Present | Flags::ReadWrite);
+	FILL_ENTRY(kernelPageDirectory[0], lowerMemoryPageTable, Flags::Present | Flags::ReadWrite);
 	// For each page in the lower memory
 	for(size_t i{0}; reinterpret_cast<Byte*>(i * pageSize) < lowerMemoryLimit; ++i)
-		lowerMemoryPageTable[i].set(reinterpret_cast<Byte*>(i * pageSize), Flags::Present | Flags::ReadWrite);
+		FILL_ENTRY(lowerMemoryPageTable[i], i * pageSize, Flags::Present | Flags::ReadWrite);
 }
 
 [[gnu::section(".init")]] void initHigherHalf()
@@ -55,13 +58,13 @@ extern "C" [[gnu::section(".init")]] void initKernelPaging()
 	// For each page table of the higher half
 	for(size_t i{0}; i < higherHalfPageTablesNumber; ++i)
 	{
-		kernelPageDirectory[i + offset].set(higherHalfPageTables[i],
-				Flags::Present | Flags::ReadWrite);
+		FILL_ENTRY(kernelPageDirectory[i + offset], higherHalfPageTables[i], Flags::Present | Flags::ReadWrite);
 		// For each page of this page table
 		for(size_t j{0}; j < entriesNumber; ++j)
-			higherHalfPageTables[i][j].set(reinterpret_cast<Byte*>((i * entriesNumber * pageSize) + (j * pageSize)),
-					Flags::Present | Flags::ReadWrite);
+			FILL_ENTRY(higherHalfPageTables[i][j], (i * entriesNumber * pageSize) + (j * pageSize), Flags::Present | Flags::ReadWrite);
 	}
 }
+
+}// namespace bootstrap
 
 }// namespace paging

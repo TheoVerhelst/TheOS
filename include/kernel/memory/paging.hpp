@@ -92,15 +92,32 @@ class PageDirectoryEntry
 };
 static_assert(sizeof(PageDirectoryEntry) == 4, "PageDirectoryEntry must be 32-bit.");
 
-extern "C" alignas(pageSize) [[gnu::section(".pagingTables")]] PageDirectoryEntry kernelPageDirectory[entriesNumber];
+/// This is a namespace that includes all functions and structures used in the
+/// early initialization of the kernel when paging is not yet enabled.
+/// The job of these guys is in fact to enable paging.
+///
+/// This is why they have special compiler directive: they need to be
+/// linked in special sections that are not in the higher half.
+///
+/// And because of this, we cannot use the classes above, because the text of
+/// the methods is linked in the higher half.
+namespace bootstrap
+{
 
-alignas(pageSize) [[gnu::section(".pagingTables")]] extern PageTableEntry lowerMemoryPageTable[entriesNumber];
+#define FILL_ENTRY(entry, address, flags)                                      \
+	entry = (reinterpret_cast<uint32_t>(address) & 0xFFFFF) | ((flags) << 20UL)
 
-alignas(pageSize) [[gnu::section(".pagingTables")]] extern PageTableEntry higherHalfPageTables[higherHalfPageTablesNumber][entriesNumber];
+extern "C" alignas(pageSize) [[gnu::section(".pagingTables")]] uint32_t kernelPageDirectory[entriesNumber];
+
+alignas(pageSize) [[gnu::section(".pagingTables")]] extern uint32_t lowerMemoryPageTable[entriesNumber];
+
+alignas(pageSize) [[gnu::section(".pagingTables")]] extern uint32_t higherHalfPageTables[higherHalfPageTablesNumber][entriesNumber];
 
 extern "C" [[gnu::section(".init")]] void initKernelPaging();
 [[gnu::section(".init")]] void initLowerMemory();
 [[gnu::section(".init")]] void initHigherHalf();
+
+}// namespace bootstrap
 
 }// namespace paging
 
