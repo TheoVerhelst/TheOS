@@ -22,14 +22,13 @@ constexpr size_t pageSize{4096};
 constexpr Byte* lowerMemoryLimit{reinterpret_cast<Byte*>(0x100000)};
 
 /// The offset between the physical and te logical location of the kernel in the
-/// memory. This value is defined in the linker script.
+/// memory. This value is defined in the linker script, but we redefine it here
+/// in order to be able to use it as a constexpr (such as for array sizing).
 constexpr size_t kernelVirtualOffset{0xC0000000};
 
 /// The size of the memory that is paged to the higher half. If the offset is
 /// 3Go, then the size is 1Go. In fact, this is 4Go - offset.
 constexpr size_t higherHalfSize{-kernelVirtualOffset};
-
-constexpr size_t higherHalfPageTablesNumber{1 + ((higherHalfSize - 1) / (entriesNumber*pageSize))};
 
 namespace Flags
 {
@@ -104,17 +103,37 @@ static_assert(sizeof(PageDirectoryEntry) == 4, "PageDirectoryEntry must be 32-bi
 namespace bootstrap
 {
 
+/// Help to fill an entry with the proper address and flags.
+/// \param entry The lvalue representing the page {table|directory} entry to
+/// fill.
+/// \param address The address to put in the entry.
+/// \param flags The flags to put in the entry, they must already be OR'ed.
+/// \example FILL_ENTRY(pageDirectory[0], anAddress, Flags::Present | Flags::ReadWrite);
 #define FILL_ENTRY(entry, address, flags)                                      \
 	entry = (reinterpret_cast<uint32_t>(address) & 0xFFFFF) | ((flags) << 20UL)
 
+/// The page directory that is primarily used by the kernel, when the paging is
+/// enabled .
 extern "C" alignas(pageSize) [[gnu::section(".pagingTables")]] uint32_t kernelPageDirectory[entriesNumber];
 
+/// A page table used to identity-map the lower memory.
 alignas(pageSize) [[gnu::section(".pagingTables")]] extern uint32_t lowerMemoryPageTable[entriesNumber];
 
+/// The number of pages needed to map the kernel in the higher half
+constexpr size_t higherHalfPageTablesNumber{1 + ((higherHalfSize - 1) / (entriesNumber*pageSize))};
+
+/// The page tables used to map the kernel in the higher half.
 alignas(pageSize) [[gnu::section(".pagingTables")]] extern uint32_t higherHalfPageTables[higherHalfPageTablesNumber][entriesNumber];
 
+/// Initialize the kernel paging by just setting up the page directory and the
+/// page tables. The assembly operations (modifying CR3 or whatever) are not
+/// done here, but rather in the assembly routine that is calling this function.
 extern "C" [[gnu::section(".init")]] void initKernelPaging();
+
+/// Identity-map the lower memory by filling lowerMemoryPageTable.
 [[gnu::section(".init")]] void initLowerMemory();
+
+/// Map the kernel to the higher half by filling higherHalfPageTables.
 [[gnu::section(".init")]] void initHigherHalf();
 
 }// namespace bootstrap
