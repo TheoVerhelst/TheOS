@@ -16,6 +16,9 @@ constexpr size_t entriesNumber{1024};
 /// The size of a page, in bytes.
 constexpr size_t pageSize{4096};
 
+/// The quantity of memory that a page table maps when used, in bytes.
+constexpr size_t pageTableCoverage{entriesNumber * pageSize};
+
 /// The address of the end of the lower memory, i.e. the memory
 /// before the 1Mo limit. Lower memory shouldn't be used, since only
 /// a very short part is usable (about 640Ko).
@@ -26,9 +29,10 @@ constexpr Byte* lowerMemoryLimit{reinterpret_cast<Byte*>(0x100000)};
 /// in order to be able to use it as a constexpr (such as for array sizing).
 constexpr size_t kernelVirtualOffset{0xC0000000};
 
-/// The size of the memory that is paged to the higher half. If the offset is
-/// 3Go, then the size is 1Go. In fact, this is 4Go - offset.
-constexpr size_t higherHalfSize{-kernelVirtualOffset};
+/// Arbitrary number (yet another) that is the supposed maximum number of page
+/// tables that the kernel would need to map itself. 16 page tables allows to
+/// have a kernel image of 64Mb at max.
+constexpr size_t kernelPageTablesNumber{16};
 
 namespace Flags
 {
@@ -91,8 +95,22 @@ class PageDirectoryEntry
 };
 static_assert(sizeof(PageDirectoryEntry) == 4, "PageDirectoryEntry must be 32-bit.");
 
+/// Get the first 4k-aligned address that is greater or equal to
+/// \a address.
+/// \param address The address to convert.
+/// \return The first 4k-aligned address that is greater or equal to
+/// \a address.
+constexpr Byte* alignUp(Byte* address);
+
+/// Get the first 4k-aligned address that is less or equal to
+/// \a address.
+/// \param address The address to convert.
+/// \return The first 4k-aligned address that is less or equal to
+/// \a address.
+constexpr Byte* alignDown(Byte* address);
+
 /// This is a namespace that includes all functions and structures used in the
-/// early initialization of the kernel when paging is not yet enabled.
+/// early initialization of the kernel (when paging is not yet enabled).
 /// The job of these guys is in fact to enable paging.
 ///
 /// This is why they have special compiler directive: they need to be
@@ -109,34 +127,49 @@ namespace bootstrap
 /// \param address The address to put in the entry.
 /// \param flags The flags to put in the entry, they must already be OR'ed.
 /// \example FILL_ENTRY(pageDirectory[0], anAddress, Flags::Present | Flags::ReadWrite);
-#define FILL_ENTRY(entry, address, flags)                                      \
-	entry = (reinterpret_cast<uint32_t>(address) & 0xFFFFF) | ((flags) << 20UL)
+#define BOOTSTRAP_FILL_ENTRY(entry, address, flags)                            \
+	entry = (reinterpret_cast<uintptr_t>(address) & 0xFFFFF000) | ((flags) & 0xFFF)
+
+#define BOOTSTRAP_ALIGN_UP(address)                                            \
+	reinterpret_cast<Byte*>((reinterpret_cast<uintptr_t>(address) + pageSize - 1) & ~(pageSize - 1))
+
+#define BOOTSTRAP_ALIGN_DOWN(address)                                          \
+	reinterpret_cast<Byte*>(reinterpret_cast<uintptr_t>(address) & ~(pageSize - 1))
 
 /// The page directory that is primarily used by the kernel, when the paging is
 /// enabled .
 extern "C" alignas(pageSize) [[gnu::section(".pagingTables")]] uint32_t kernelPageDirectory[entriesNumber];
+static_assert(sizeof(kernelPageDirectory) == pageSize, "The page directory must fit in one frame.");
 
-/// A page table used to identity-map the lower memory.
-alignas(pageSize) [[gnu::section(".pagingTables")]] extern uint32_t lowerMemoryPageTable[entriesNumber];
+/// The page tables used to map the kernel.
+alignas(pageSize) [[gnu::section(".pagingTables")]] extern uint32_t kernelPageTables[kernelPageTablesNumber][entriesNumber];
+static_assert(sizeof(kernelPageTables[0]) == pageSize, "The page table must fit in one frame.");
 
-/// The number of pages needed to map the kernel in the higher half
-constexpr size_t higherHalfPageTablesNumber{1 + ((higherHalfSize - 1) / (entriesNumber*pageSize))};
+extern "C" void* lowKernelStart;
+extern "C" void* lowKernelEnd;
+extern size_t usedPageTables;
+constexpr uint16_t kernelPagingFlags{Flags::Present | Flags::ReadWrite | Flags::UserSupervisor};
 
-/// The page tables used to map the kernel in the higher half.
-alignas(pageSize) [[gnu::section(".pagingTables")]] extern uint32_t higherHalfPageTables[higherHalfPageTablesNumber][entriesNumber];
-
-/// Initialize the kernel paging by just setting up the page directory and the
+/// Initializes the kernel paging by just setting up the page directory and the
 /// page tables. The assembly operations (modifying CR3 or whatever) are not
 /// done here, but rather in the assembly routine that is calling this function.
-extern "C" [[gnu::section(".init")]] void initKernelPaging();
+extern "C" [[gnu::section(".bootInit")]] void initKernelPaging();
 
-/// Identity-map the lower memory by filling lowerMemoryPageTable.
-[[gnu::section(".init")]] void initLowerMemory();
-
-/// Map the kernel to the higher half by filling higherHalfPageTables.
-[[gnu::section(".init")]] void initHigherHalf();
+[[gnu::section(".bootInit")]] void mapMemory(Byte* start, Byte* end, bool higherHalf);
 
 }// namespace bootstrap
+
+constexpr Byte* alignUp(Byte* address)
+{
+	const uintptr_t uintAddress{reinterpret_cast<uintptr_t>(address)};
+	return reinterpret_cast<Byte*>((uintAddress + paging::pageSize - 1) & ~(paging::pageSize - 1));
+}
+
+constexpr Byte* alignDown(Byte* address)
+{
+	const uintptr_t uintAddress{reinterpret_cast<uintptr_t>(address)};
+	return reinterpret_cast<Byte*>(uintAddress & ~(paging::pageSize - 1));
+}
 
 }// namespace paging
 

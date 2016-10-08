@@ -23,9 +23,10 @@ extern kernelPageDirectory
 ; kernelMain is the entry point of the C++ code kernel
 extern kernelMain
 
-; _init and _fini are entry points of routine used for initializing global objects
+; _init is entry point of routine used for initializing global objects
 extern _init
-extern _fini
+
+extern test
 
 
 ; make a new section so data are ordered in a true header
@@ -35,7 +36,7 @@ section .multiboot
 	dd FLAGS
 	dd CHECKSUM
 
-section .init
+section .bootInit
 	align 4
 	initStackBottom:
 	resb 0x1000  ; make a 4KB stack
@@ -53,11 +54,10 @@ section .init
 		; activate paging by setting registers
 		mov eax, kernelPageDirectory
 		mov cr3, eax
-		mov eax, cr0
 		; turn on paging bit
+		mov eax, cr0
 		or eax, 0x80000000
 		mov cr0, eax
-
 
 		; set up a stack by putting TOS in ESP
 		mov esp, kernelStackTop
@@ -67,7 +67,6 @@ section .init
 
 		; call objects constructors routines
 		call _init
-		call _fini
 
 		; let's go for some fun
 		call kernelMain

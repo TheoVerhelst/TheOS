@@ -82,4 +82,3 @@ void Terminal::moveCursor(int x, int y)
 	outb(0x3D4, 0x0E);
 	outb(0x3D5, (uint8_t)((location>>8) & 0xFF));
 }
-

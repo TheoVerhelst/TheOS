@@ -62,8 +62,8 @@ void PhysicalMemoryManager::freeMemoryRegion(const multiboot::MemoryRegion& regi
 	Byte* address{reinterpret_cast<Byte*>(region._base_addr & UINT64_C(0xFFFFFFFF))};
 	const size_t size{static_cast<size_t>(region._length)};
 	// Get the upper bound aligned to 4k (rounded down to the first 4k multiple)
-	Byte * upperBound{alignDown(address + size)};
-	address = alignUp(address);
+	Byte * upperBound{paging::alignDown(address + size)};
+	address = paging::alignUp(address);
 
 	for(Byte* frame{upperBound - paging::pageSize}; frame >= address; frame -= paging::pageSize)
 		// Ensure that the kernel is not added to the free frames

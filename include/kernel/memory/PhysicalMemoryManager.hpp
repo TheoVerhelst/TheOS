@@ -41,20 +41,6 @@ class PhysicalMemoryManager final
 		/// \param region The region to free.
 		void freeMemoryRegion(const multiboot::MemoryRegion& region);
 
-		/// Get the first 4k-aligned address that is greater or equal to
-		/// \a address.
-		/// \param address The address to convert.
-		/// \return The first 4k-aligned address that is greater or equal to
-		/// \a address.
-		static constexpr Byte* alignUp(Byte* address);
-
-		/// Get the first 4k-aligned address that is less or equal to
-		/// \a address.
-		/// \param address The address to convert.
-		/// \return The first 4k-aligned address that is less or equal to
-		/// \a address.
-		static constexpr Byte* alignDown(Byte* address);
-
 		BitSet<-reinterpret_cast<size_t>(paging::lowerMemoryLimit)> _freeFrames;
 };
 
@@ -66,17 +52,5 @@ extern "C" void* kernelPhysicalStart;
 extern "C" void* kernelPhysicalEnd;
 
 /// \}
-
-constexpr Byte* PhysicalMemoryManager::alignUp(Byte* address)
-{
-	const uintptr_t uintAddress{reinterpret_cast<uintptr_t>(address)};
-	return reinterpret_cast<Byte*>((uintAddress + paging::pageSize - 1) & ~(paging::pageSize - 1));
-}
-
-constexpr Byte* PhysicalMemoryManager::alignDown(Byte* address)
-{
-	const uintptr_t uintAddress{reinterpret_cast<uintptr_t>(address)};
-	return reinterpret_cast<Byte*>(uintAddress & ~(paging::pageSize - 1));
-}
 
 #endif// PHYSICALMEMORYMANAGER_HPP

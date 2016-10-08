@@ -53,7 +53,7 @@ class Entry
 		uint8_t _character;
 		uint8_t _colourProfile;
 };
-static_assert(sizeof(Entry) == 2, "ColourProfile must be 16-bits");
+static_assert(sizeof(Entry) == 2, "Entry must be 16-bits");
 
 const size_t width{80};
 const size_t height{25};

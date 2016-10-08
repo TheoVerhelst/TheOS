@@ -8,6 +8,4 @@
 extern "C" void kernelMain()
 {
 	kernel.run();
-	// Call destructors, in doubt
-	__cxa_finalize(0);
 }

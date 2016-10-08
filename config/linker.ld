@@ -7,15 +7,19 @@ SECTIONS
 {
 	. = 1M;
 
+	lowKernelStart = ALIGN(4K);
+
 	/**** BOOTSTRAP INIT PART ****/
 
 	/* Place the header first for the bootloader to recognize the kernel */
-	.init ALIGN(4K) :
+	.bootInit ALIGN(4K) :
 	{
-		*(.multiboot);
-		*(.init);
-		*(.pagingTables);
+		*(.multiboot)
+		*(.bootInit)
+		*(.pagingTables)
 	}
+
+	lowKernelEnd = .;
 
 	/**** HIGHER HALF KERNEL PART ****/
 
