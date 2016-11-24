@@ -1,7 +1,7 @@
 /* Entry point is the assembly label _start */
 ENTRY(_start)
 
-kernelVirtualOffset = 0xC0000000;
+kernelVirtualOffset = 0x00000000;
 
 SECTIONS
 {
@@ -52,7 +52,6 @@ SECTIONS
 	{
 		*(.bss)
 		*(COMMON)
-		*(.kernelStack)
 	}
 
 	/* Symbols to retrieve the end of the kernel in memory */
