@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "-std=c++14 -ffreestanding -O0 -Wall -Wextra -fno-exceptions
 
 #Set up the linker
 #Path to crtbegin.o and crtend.o
-set(CRT_PATH "/usr/local/cross/lib/gcc/i686-elf/5.3.0")
+set(CRT_PATH "/usr/local/cross/lib/gcc/i686-elf/6.2.0")
 set(CRTBEGIN_O "${CRT_PATH}/crtbegin.o")
 set(CRTEND_O "${CRT_PATH}/crtend.o")
 
@@ -58,4 +58,4 @@ add_custom_command(TARGET ${PROJECT_NAME}.bin POST_BUILD COMMAND
 	cp ${PROJECT_NAME}.bin ${CMAKE_BINARY_DIR}/iso/boot/${PROJECT_NAME}.bin)
 #Finaly create the iso with grub
 add_custom_command(TARGET ${PROJECT_NAME}.bin POST_BUILD COMMAND
-	grub-mkrescue -o ${PROJECT_NAME}.iso ${CMAKE_BINARY_DIR}/iso 2> /dev/null)
+	grub-mkrescue -o ${PROJECT_NAME}.iso ${CMAKE_BINARY_DIR}/iso)

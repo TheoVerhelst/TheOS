@@ -8,7 +8,7 @@ See https://github.com/RobinPetit/BermudOS for rationale.
 
 # Requirements
  * CMake 3.2 or higher
- * i686-elf-g++ 5.3
+ * i686-elf-g++ 6.2
  * nasm
 
 # Installation

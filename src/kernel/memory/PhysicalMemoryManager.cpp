@@ -15,21 +15,22 @@ Byte* PhysicalMemoryManager::allocateFrame()
 	size_t index{_freeFrames.find(true)};
 	// The bitmap doesn't includes the lower memory limit, we have to take this
 	// into account
-	return index == _freeFrames._invalidIndex ? nullptr : paging::lowerMemoryLimit + index * paging::pageSize;
+	return index == _freeFrames._invalidIndex ? nullptr :
+			reinterpret_cast<Byte*>(paging::lowerMemoryLimit) + index * paging::pageSize;
 }
 
 void PhysicalMemoryManager::freeFrame(Byte* address)
 {
+	uintptr_t intAddress{reinterpret_cast<uintptr_t>(address)};
 	// If the address is not 4k-aligned
-	if((reinterpret_cast<uintptr_t>(address) & 0xFFF) != 0)
+	if((intAddress & 0xFFF) != 0)
 		return;
 
 	// FIXME: If this condition is removed, the boot sequence crashes
 	// This may be a special area not told by the BIOS
-	if(reinterpret_cast<uintptr_t>(address) <= 0x1D5000
-			or reinterpret_cast<uintptr_t>(address) > 0x250000)
+	if(intAddress <= 0x1D5000 or intAddress > 0x250000)
 	{
-		size_t index{(address - paging::lowerMemoryLimit) / paging::pageSize};
+		size_t index{(intAddress - paging::lowerMemoryLimit) / paging::pageSize};
 		_freeFrames.reset(index);
 	}
 }
@@ -43,10 +44,9 @@ void PhysicalMemoryManager::parseMemoryMap()
 	Byte* rawAddress{reinterpret_cast<Byte*>(region)};
 	do
 	{
-		Byte* baseAddress{reinterpret_cast<Byte*>(region->_base_addr)};
 		if(region->_type == multiboot::MemoryRegion::_validType
 				// Avoid to use the first megabyte
-				and baseAddress >= paging::lowerMemoryLimit)
+				and region->_base_addr >= paging::lowerMemoryLimit)
 			freeMemoryRegion(*region);
 
 		rawAddress += region->_size + sizeof(region->_size);

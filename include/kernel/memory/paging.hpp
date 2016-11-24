@@ -22,7 +22,7 @@ constexpr size_t pageTableCoverage{entriesNumber * pageSize};
 /// The address of the end of the lower memory, i.e. the memory
 /// before the 1Mo limit. Lower memory shouldn't be used, since only
 /// a very short part is usable (about 640Ko).
-constexpr Byte* lowerMemoryLimit{reinterpret_cast<Byte*>(0x100000)};
+constexpr uintptr_t lowerMemoryLimit{0x100000};
 
 /// The offset between the physical and te logical location of the kernel in the
 /// memory. This value is defined in the linker script, but we redefine it here
@@ -128,7 +128,7 @@ namespace bootstrap
 /// \param flags The flags to put in the entry, they must already be OR'ed.
 /// \example FILL_ENTRY(pageDirectory[0], anAddress, Flags::Present | Flags::ReadWrite);
 #define BOOTSTRAP_FILL_ENTRY(entry, address, flags)                            \
-	entry = (reinterpret_cast<uintptr_t>(address) & 0xFFFFF000) | ((flags) & 0xFFF)
+	entry = (reinterpret_cast<uint32_t>(address) & 0xFFFFF000) | (flags & 0xFFF)
 
 #define BOOTSTRAP_ALIGN_UP(address)                                            \
 	reinterpret_cast<Byte*>((reinterpret_cast<uintptr_t>(address) + pageSize - 1) & ~(pageSize - 1))

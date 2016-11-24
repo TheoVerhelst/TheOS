@@ -41,7 +41,7 @@ class PhysicalMemoryManager final
 		/// \param region The region to free.
 		void freeMemoryRegion(const multiboot::MemoryRegion& region);
 
-		BitSet<-reinterpret_cast<size_t>(paging::lowerMemoryLimit)> _freeFrames;
+		BitSet<-static_cast<size_t>(paging::lowerMemoryLimit)> _freeFrames;
 };
 
 /// Symbols located at precise places in the kernel image, allowing to retrieve
