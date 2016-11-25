@@ -1,7 +1,7 @@
 /* Entry point is the assembly label _start */
 ENTRY(_start)
 
-kernelVirtualOffset = 0x00000000;
+kernelVirtualOffset = 0xC0000000;
 
 SECTIONS
 {

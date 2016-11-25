@@ -1,7 +1,7 @@
 #include <kernel/memory/paging.hpp>
 #include <kernel/memory/PhysicalMemoryManager.hpp>
 
-extern "C" [[gnu::section(".bootInit")]] void test()
+extern "C" void test()
 {
 	unsigned char c{'\x0'};
 	unsigned int i{0u};
@@ -65,22 +65,29 @@ extern "C" [[gnu::section(".bootInit")]] void initKernelPaging()
 		for(size_t j{0UL}; j < kernelPageTablesNumber; ++j)
 			kernelPageTables[j][i] = 0UL;
 	}
-/*
-	for(size_t i{0}; i < 16; ++i)
+
+	for(size_t i{0}; i < 8; ++i)
 	{
-		kernelPageDirectory[i] = (reinterpret_cast<uintptr_t>(&(kernelPageTables[i])) & 0xFFFFF000) | kernelPagingFlags;
+		kernelPageDirectory[i] = (reinterpret_cast<uintptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
 		for(size_t j{0}; j < entriesNumber; ++j)
 			kernelPageTables[i][j] = ((i * entriesNumber + j) * pageSize) | kernelPagingFlags;
-	}*/
+	}
+
+	for(size_t i{8}; i < 16; ++i)
+	{
+		kernelPageDirectory[i-8 + (kernelVirtualOffset / pageTableCoverage)] = (reinterpret_cast<uintptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
+		for(size_t j{0}; j < entriesNumber; ++j)
+			kernelPageTables[i][j] = (((i-8) * entriesNumber + j) * pageSize) | kernelPagingFlags;
+	}
 
 	// map lower memory
-	mapMemory(reinterpret_cast<Byte*>(0), reinterpret_cast<Byte*>(16*1024*4096), false);
+	//mapMemory(reinterpret_cast<Byte*>(0), reinterpret_cast<Byte*>(16*1024*4096), false);
 
 	// map low kernel
 	//mapMemory(reinterpret_cast<Byte*>(&lowKernelStart), reinterpret_cast<Byte*>(&lowKernelEnd), false);
 
 	// map higher half kernel
-	mapMemory(reinterpret_cast<Byte*>(&kernelPhysicalStart), reinterpret_cast<Byte*>(&kernelPhysicalEnd), true);
+	//mapMemory(reinterpret_cast<Byte*>(&kernelPhysicalStart), reinterpret_cast<Byte*>(&kernelPhysicalEnd), true);
 }
 
 [[gnu::section(".bootInit")]] void mapMemory(Byte* start, Byte* end, bool higherHalf)
