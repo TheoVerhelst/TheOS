@@ -62,57 +62,57 @@ class Printer
 
 		//TODO Write manipulators
 
-		/// Print a character to the terminal.
+		/// Prints a character to the terminal.
 		/// \param arg The character to print.
 		/// \return *this.
 		Printer& operator<<(char arg);
 
-		/// Print a character string to the terminal.
+		/// Prints a character string to the terminal.
 		/// \param arg The character string to print.
 		/// \return *this.
 		Printer& operator<<(const char* arg);
 
-		/// Print a number to the terminal.
+		/// Prints a number to the terminal.
 		/// \param arg The number to print.
 		/// \return *this.
 		Printer& operator<<(short int arg);
 
-		/// Print a number to the terminal.
+		/// Prints a number to the terminal.
 		/// \param arg The number to print.
 		/// \return *this.
 		Printer& operator<<(short unsigned int arg);
 
-		/// Print a number to the terminal.
+		/// Prints a number to the terminal.
 		/// \param arg The number to print.
 		/// \return *this.
 		Printer& operator<<(int arg);
 
-		/// Print a number to the terminal.
+		/// Prints a number to the terminal.
 		/// \param arg The number to print.
 		/// \return *this.
 		Printer& operator<<(unsigned int arg);
 
-		/// Print a number to the terminal.
+		/// Prints a number to the terminal.
 		/// \param arg The number to print.
 		/// \return *this.
 		Printer& operator<<(long int arg);
 
-		/// Print a number to the terminal.
+		/// Prints a number to the terminal.
 		/// \param arg The number to print.
 		/// \return *this.
 		Printer& operator<<(long unsigned int arg);
 
-		/// Print a boolean to the terminal.
+		/// Prints a boolean to the terminal.
 		/// \param arg The boolean to print.
 		/// \return *this.
 		Printer& operator<<(bool arg);
 
-		/// Print a pointer to the terminal.
+		/// Prints a pointer to the terminal.
 		/// \param arg The pointer to print.
 		/// \return *this.
 		Printer& operator<<(void* arg);
 
-		/// Modify some flags of the printer by using a manipulator. This is
+		/// Modifies some flags of the printer by using a manipulator. This is
 		/// intended to be used like this:
 		/// \code
 		/// out << hexadecimal << 32; // Prints "B0"
@@ -121,33 +121,33 @@ class Printer
 		/// \return *this.
 		Printer& operator<<(void (*manipulator)(Printer&));
 
-		/// Set some of the internal flags. Manipulators should be used instead
+		/// Sets some of the internal flags. Manipulators should be used instead
 		/// of this methods.
 		/// \param flags The flags to set.
 		void setFlags(unsigned int flags);
 
-		/// Reset some of the internal flags. Manipulators should be used
+		/// Resets some of the internal flags. Manipulators should be used
 		/// instead of this methods.
 		/// \param flags The flags to reset.
 		void resetFlags(unsigned int flags);
 
 	private:
-		/// Get the corresponding uppsercase character if there is one, \a ch
+		/// Returns the corresponding uppercase character if there is one, \a ch
 		/// otherwhise. This differs from the standard std::to_upper because
 		/// this only work for the 26 letters of the basic ASCII character set.
 		/// \param ch The character to convert.
 		/// \return ch + ('A' - 'a') if ch >= 'a' and ch <= 'z', ch otherwhise.
 		static char toUpper(char ch);
 
-		/// The flags used to parametrize the manner of how are printed
-		/// variables. Inteded to be used with Flags.
+		/// The flags used to determine how variables are printed.
+		/// Inteded to be used with Flags.
 		/// \see Flags
 		unsigned int _flags{Flags::AutoBase | Flags::BoolAlpha | Flags::AutoShowBase | Flags::Uppercase};
 
-		/// The length of the buffer internally to display numbers. This should
-		/// be equal or greater than the maximum number of digit that a number
-		/// can have it the smallest displayable base (binary).
-		static constexpr size_t _bufferLength{32UL};
+		/// The length of the buffer used internally to display numbers. This
+		/// should be equal or greater than the maximum number of digit that a
+		/// number can have in the smallest displayable base (binary).
+		static constexpr size_t _bufferLength{sizeof(uintmax_t) * 8};
 
 		/// The alphabet used for numbers.
 		static constexpr const char* _alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";

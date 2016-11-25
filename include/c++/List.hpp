@@ -185,7 +185,7 @@ class List
 		/// \return *this.
 		List& operator=(List other);
 
-		/// Get the allocator.
+		/// Gets the allocator.
 		/// \return The allocator.
 		AllocatorType getAllocator() const;
 
@@ -193,122 +193,122 @@ class List
 		/// \return begin() == end().
 		bool empty() const;
 
-		/// Get the number of elements in the list.
+		/// Gets the number of elements in the list.
 		/// \return The number of elements in the list.
 		size_t size() const;
 
-		/// Get the last element of the list.
+		/// Gets the last element of the list.
 		/// \pre not empty().
 		/// \return The last element of the list.
 		T& back();
 
-		/// Get the last element of the list.
+		/// Gets the last element of the list.
 		/// \pre not empty().
 		/// \return The last element of the list.
 		const T& back() const;
 
-		/// Get the first element of the list.
+		/// Gets the first element of the list.
 		/// \pre not empty().
 		/// \return The first element of the list.
 		T& front();
 
-		/// Get the first element of the list.
+		/// Gets the first element of the list.
 		/// \pre not empty().
 		/// \return The first element of the list.
 		const T& front() const;
 
-		/// Erase all elements of the list, this is equivalent to
+		/// Erases all elements of the list, this is equivalent to
 		/// erase(begin(), end()).
 		/// \post empty().
 		void clear();
 
-		/// Add an element at the end of the list, by copying it.
+		/// Adds an element at the end of the list, by copying it.
 		/// \param value The value to add to the list.
 		/// \post not empty().
 		void pushBack(const T& value);
 
-		/// Add an element at the end of the list, by moving it.
+		/// Adds an element at the end of the list, by moving it.
 		/// \param value The value to add to the list.
 		/// \post not empty().
 		void pushBack(T&& value);
 
-		/// Add an element at the begin of the list, by moving it.
+		/// Adds an element at the begin of the list, by moving it.
 		/// \param value The value to add to the list.
 		/// \post not empty().
 		void pushFront(const T& value);
 
-		/// Add an element at the begin of the list, by moving it.
+		/// Adds an element at the begin of the list, by moving it.
 		/// \param value The value to add to the list.
 		/// \post not empty().
 		void pushFront(T&& value);
 
-		/// Remove the last element of the list.
+		/// Removes the last element of the list.
 		/// \pre not empty().
 		void popBack();
 
-		/// Remove the last element of the list.
+		/// Removes the last element of the list.
 		/// \pre not empty().
 		void popFront();
 
-		/// Get an iterator to the first element of the list.
+		/// Gets an iterator to the first element of the list.
 		/// \return An iterator to the first element of the list.
 		iterator begin();
 
-		/// Get a constant iterator to the first element of the list.
+		/// Gets a constant iterator to the first element of the list.
 		/// \return A constant iterator to the first element of the list.
 		constIterator cbegin() const;
 
-		/// Get an iterator to the past the last element of the list.
+		/// Gets an iterator to the past the last element of the list.
 		/// \return An iterator to the past the last element of the list.
 		iterator end();
 
-		/// Get a constant iterator to the past the last element of the list.
+		/// Gets a constant iterator to the past the last element of the list.
 		/// \return A constant iterator to the past the last element of the
 		/// list.
 		constIterator cend() const;
 
-		/// Insert an element into the list, before the given position.
+		/// Inserts an element into the list, before the given position.
 		/// \param pos The position where to put \a value.
 		/// \param value The value to add.
 		/// \return An iterator to the inserted element.
 		iterator insert(iterator pos, const T& value);
 
-		/// Insert an element into the list, before the given position.
+		/// Inserts an element into the list, before the given position.
 		/// \param pos The position where to put \a value.
 		/// \param value The value to add.
 		/// \return An iterator to the inserted element.
 		iterator insert(iterator pos, T&& value);
 
-		/// Insert an element into the list, before the given position.
+		/// Inserts an element into the list, before the given position.
 		/// \param pos The position where to put \a value.
 		/// \param value The value to add.
 		/// \return An iterator to the inserted element.
 		iterator insert(constIterator pos, const T& value);
 
-		/// Insert an element into the list, before the given position.
+		/// Inserts an element into the list, before the given position.
 		/// \param pos The position where to put \a value.
 		/// \param value The value to add.
 		/// \return An iterator to the inserted element.
 		iterator insert(constIterator pos, T&& value);
 
-		/// Erase an element of the list.
+		/// Erases an element of the list.
 		/// \param pos An iterator to the element to erase.
 		/// \return An iterator to the element following the erased element.
 		iterator erase(iterator pos);
 
-		/// Erase an element of the list.
+		/// Erases an element of the list.
 		/// \param pos An iterator to the element to erase.
 		/// \return An iterator to the element following the erased element.
 		iterator erase(constIterator pos);
 
-		/// Erase a sequence of elements from the list.
+		/// Erases a sequence of elements from the list.
 		/// \param first The first element to erase.
 		/// \param last The element following the last element to erase.
 		/// \return An iterator to the element following the last erased
 		/// element.
 		iterator erase(iterator first, iterator last);
 
-		/// Erase a sequence of elements from the list.
+		/// Erases a sequence of elements from the list.
 		/// \param first The first element to erase.
 		/// \param last The element following the last element to erase.
 		/// \return An iterator to the element following the last erased

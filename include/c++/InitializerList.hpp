@@ -54,15 +54,15 @@ class InitializerList
 		constexpr InitializerList() noexcept;
 
 
-		/// Get the number of elements.
+		/// Gets the number of elements.
 		/// \return The number of elements.
 		constexpr SizeType size() const noexcept;
 
-		/// Get the first element.
+		/// Gets the first element.
 		/// \return The first element.
 		constexpr ConstIterator begin() const noexcept;
 
-		/// Get the past the last element.
+		/// Gets the past the last element.
 		/// \return The past the last element.
 		constexpr ConstIterator end() const noexcept;
 

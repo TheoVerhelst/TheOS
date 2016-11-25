@@ -48,59 +48,59 @@ class Array
 		/// Destructor.
 		~Array();
 
-		/// Get an iterator to the first element of the array.
+		/// Gets an iterator to the first element of the array.
 		/// \return An iterator to the first element of the array.
 		Iterator begin();
 
-		/// Get an iterator to the past-the-end element of the array.
+		/// Gets an iterator to the past-the-end element of the array.
 		/// \return An iterator to the past-the-end element of the array.
 		Iterator end();
 
-		/// Get a constant iterator to the first element of the array.
+		/// Gets a constant iterator to the first element of the array.
 		/// \return A constant iterator to the first element of the array.
 		ConstIterator cbegin();
 
-		/// Get a constant iterator to the past-the-end element of the array.
+		/// Gets a constant iterator to the past-the-end element of the array.
 		/// \return A constant iterator to the past-the-end element of the
 		/// array.
 		ConstIterator cend();
 
-		/// Access the array at position \a pos.
+		/// Accesses the array at position \a pos.
 		/// \param pos The position of the element to access.
 		/// \return at(pos)
 		Reference operator[](SizeType pos);
 
-		/// Access the array at position \a pos.
+		/// Accesses the array at position \a pos.
 		/// \param pos The position of the element to access.
 		/// \return at(pos)
 		constexpr ConstReference operator[](SizeType pos) const;
 
-		/// Access the array at position \a pos.
+		/// Accesses the array at position \a pos.
 		/// \param pos The position of the element to access.
 		/// \return The element at position \a pos.
 		Reference at(SizeType pos);
 
-		/// Access the array at position \a pos.
+		/// Accesses the array at position \a pos.
 		/// \param pos The position of the element to access.
 		/// \return The element at position \a pos.
 		constexpr ConstReference at(SizeType pos) const;
 
-		/// Access the first element of the array.
+		/// Accesses the first element of the array.
 		/// \pre not empty()
 		/// \return at(0)
 		Reference front();
 
-		/// Access the first element of the array.
+		/// Accesses the first element of the array.
 		/// \pre not empty()
 		/// \return at(0)
 		constexpr ConstReference front() const;
 
-		/// Access the last element of the array.
+		/// Accesses the last element of the array.
 		/// \pre not empty()
 		/// \return at(size() - 1)
 		Reference back();
 
-		/// Access the last element of the array.
+		/// Accesses the last element of the array.
 		/// \pre not empty()
 		/// \return at(size() - 1)
 		constexpr ConstReference back() const;
@@ -110,7 +110,7 @@ class Array
 		/// \return size() > 0
 		constexpr bool empty() const;
 
-		/// Get the size of the array.
+		/// Gets the size of the array.
 		/// \return N
 		constexpr SizeType size() const;
 
