@@ -15,8 +15,13 @@ Byte* PhysicalMemoryManager::allocateFrame()
 	size_t index{_freeFrames.find(true)};
 	// The bitmap doesn't includes the lower memory limit, we have to take this
 	// into account
-	return index == _freeFrames._invalidIndex ? nullptr :
-			reinterpret_cast<Byte*>(paging::lowerMemoryLimit) + index * paging::pageSize;
+	if(index == _freeFrames._invalidIndex)
+		return nullptr;
+	else
+	{
+		_freeFrames.reset(index);
+		return reinterpret_cast<Byte*>(paging::lowerMemoryLimit) + index * paging::pageSize;
+	}
 }
 
 void PhysicalMemoryManager::freeFrame(Byte* address)
@@ -31,7 +36,7 @@ void PhysicalMemoryManager::freeFrame(Byte* address)
 	if(intAddress <= 0x1D5000 or intAddress > 0x250000)
 	{
 		size_t index{(intAddress - paging::lowerMemoryLimit) / paging::pageSize};
-		_freeFrames.reset(index);
+		_freeFrames.set(index);
 	}
 }
 
