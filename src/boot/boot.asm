@@ -28,9 +28,6 @@ extern kernelMain
 ; _init is entry point of routine used for initializing global objects
 extern _init
 
-extern test
-extern test2
-
 ; make a new section so data are ordered in a true header
 section .multiboot
 	align 4
@@ -68,8 +65,6 @@ section .bootInit
 
 		; set up a stack by putting TOS in ESP
 		mov esp, kernelStackTop
-
-		call test
 
 		; call objects constructors routines
 		call _init

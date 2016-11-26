@@ -1,28 +1,6 @@
 #include <kernel/memory/paging.hpp>
 #include <kernel/memory/PhysicalMemoryManager.hpp>
 
-extern "C" void test()
-{
-	unsigned char c{'\x0'};
-	unsigned int i{0u};
-	uint16_t* vgaBuffer{reinterpret_cast<uint16_t*>(0xB8000)};
-	while(i < 25*80)
-		vgaBuffer[i++] = static_cast<uint16_t>(c++) | UINT16_C(0x0200);
-}
-
-extern "C" void test2()
-{
-	unsigned char c{'\x0'};
-	unsigned int i{0u};
-	uint16_t* vgaBuffer{reinterpret_cast<uint16_t*>(0xB8000)};
-	while(true)
-	{
-		vgaBuffer[i++] = static_cast<uint16_t>(c++) | UINT16_C(0x0200);
-		if(i > 25*80)
-			i = 0;
-	}
-}
-
 namespace paging
 {
 
@@ -117,8 +95,6 @@ extern "C" [[gnu::section(".bootInit")]] void initKernelPaging()
 			uint32_t* pageTable{reinterpret_cast<uint32_t*>(kernelPageDirectory[pageDirectoryIndex] & 0xFFFFF000)};
 			BOOTSTRAP_FILL_ENTRY(pageTable[pageTableIndex], i * pageSize, kernelPagingFlags);
 		}
-		else
-			test2();
 	}
 }
 
