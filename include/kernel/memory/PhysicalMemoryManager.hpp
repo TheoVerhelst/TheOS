@@ -11,7 +11,7 @@
 /// \{
 
 /// Browses the memory map given by the boot loader and manages the physical
-/// memory frames with a special stack system.
+/// memory frames.
 /// It is final because there can be only one physical memory manager, so
 /// inheritance would make no sense.
 ///
@@ -41,7 +41,7 @@ class PhysicalMemoryManager final
 		/// \param region The region to free.
 		void freeMemoryRegion(const multiboot::MemoryRegion& region);
 
-		BitSet<-static_cast<size_t>(paging::lowerMemoryLimit)> _freeFrames;
+		BitSet<-static_cast<size_t>(paging::lowerMemoryLimit) / paging::pageSize> _freeFrames;
 };
 
 /// Symbols located at precise places in the kernel image, allowing to retrieve

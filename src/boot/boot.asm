@@ -72,10 +72,10 @@ section .bootInit
 		call test
 
 		; call objects constructors routines
-		;call _init
+		call _init
 
 		; let's go for some fun
-		;call kernelMain
+		call kernelMain
 
 		; reset the interrupt flag (IF) to not handle maskable interrupts
 		cli
