@@ -70,6 +70,10 @@ class BitSet
 		/// invalidIndex if no bits have the given value.
 		size_t find(bool value);
 
+		/// Gets the size of the bitset, its number of bits.
+		/// \return The number of bits in the bitset.
+		constexpr size_t size() const;
+
 	private:
 		/// The size of a word. A word is a number used internally that will be
 		/// modified and accessed bitwise.
@@ -193,6 +197,12 @@ size_t BitSet<N>::find(bool value)
 	} while(_lastIndex != firstTriedWord);
 
 	return _invalidIndex;
+}
+
+template <size_t N>
+constexpr size_t BitSet<N>::size() const
+{
+	return N;
 }
 
 #endif// BITSET_HPP
