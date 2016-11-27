@@ -22,30 +22,39 @@ Printer& Printer::operator<<(const char* arg)
 
 Printer& Printer::operator<<(short int arg)
 {
-	return *this << static_cast<long int>(arg);
+	return *this << static_cast<long long int>(arg);
 }
 
 Printer& Printer::operator<<(short unsigned int arg)
 {
-	return *this << static_cast<long unsigned int>(arg);
+	return *this << static_cast<long long unsigned int>(arg);
 }
 
 Printer& Printer::operator<<(int arg)
 {
-	return *this << static_cast<long int>(arg);
+	return *this << static_cast<long long int>(arg);
 }
 
 Printer& Printer::operator<<(unsigned int arg)
 {
-	return *this << static_cast<long unsigned int>(arg);
+	return *this << static_cast<long long unsigned int>(arg);
 }
 
 Printer& Printer::operator<<(long int arg)
 {
+	return *this << static_cast<long long int>(arg);
+}
+
+Printer& Printer::operator<<(long unsigned int arg)
+{
+	return *this << static_cast<long long unsigned int>(arg);
+}
+Printer& Printer::operator<<(long long int arg)
+{
 	const bool negative{arg < 0};
 	char buffer[_bufferLength];
 	int index{0};
-	long int base;
+	size_t base;
 	if(_flags & Flags::AutoBase)
 		base = 10;
 	else if(_flags & Flags::Hexadecimal)
@@ -77,8 +86,7 @@ Printer& Printer::operator<<(long int arg)
 
 	while(arg > 0)
 	{
-		const long int remainder{arg % base};
-		buffer[index++] = _alphabet[remainder];
+		buffer[index++] = _alphabet[arg % base];
 		arg /= base;
 	}
 	buffer[index--] = '\0';
@@ -96,7 +104,7 @@ Printer& Printer::operator<<(long int arg)
 	return *this;
 }
 
-Printer& Printer::operator<<(long unsigned int arg)
+Printer& Printer::operator<<(long long unsigned int arg)
 {
 	char buffer[_bufferLength];
 	int index{0};
@@ -127,7 +135,7 @@ Printer& Printer::operator<<(long unsigned int arg)
 
 	while(arg > 0)
 	{
-		const long unsigned int remainder{arg % base};
+		const auto remainder{arg % base};
 		if(_flags & Flags::Uppercase)
 			buffer[index++] = toUpper(_alphabet[remainder]);
 		else

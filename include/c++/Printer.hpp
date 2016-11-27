@@ -102,6 +102,16 @@ class Printer
 		/// \return *this.
 		Printer& operator<<(long unsigned int arg);
 
+		/// Prints a number to the terminal.
+		/// \param arg The number to print.
+		/// \return *this.
+		Printer& operator<<(long long int arg);
+
+		/// Prints a number to the terminal.
+		/// \param arg The number to print.
+		/// \return *this.
+		Printer& operator<<(long long unsigned int arg);
+
 		/// Prints a boolean to the terminal.
 		/// \param arg The boolean to print.
 		/// \return *this.
