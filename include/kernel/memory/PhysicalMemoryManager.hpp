@@ -2,7 +2,6 @@
 #define PHYSICALMEMORYMANAGER_HPP
 
 #include <cstddef>
-#include <kernel/memory/Byte.hpp>
 #include <kernel/memory/paging.hpp>
 #include <boot/MultibootInfo.hpp>
 #include <BitSet.hpp>
@@ -26,11 +25,11 @@ class PhysicalMemoryManager final
 
 		/// Allocate a frame and return its address.
 		/// \return the address of the allocated frame.
-		Byte* allocateFrame();
+		void* allocateFrame();
 
 		/// Free a previously allocated frame.
 		/// \param the address of the frame to free.
-		void freeFrame(Byte* address);
+		void freeFrame(void* address);
 
 	private:
 		/// Parses the memory map info structure and creates a bitmap of the
@@ -41,7 +40,13 @@ class PhysicalMemoryManager final
 		/// \param region The region to free.
 		void freeMemoryRegion(const multiboot::MemoryRegion& region);
 
-		BitSet<-static_cast<size_t>(paging::lowerMemoryLimit) / paging::pageSize> _freeFrames;
+		BitSet<(-paging::lowerMemoryLimit) / paging::pageSize> _freeFrames;
+
+		/// Kernel bounds in physical memory.
+		const uintptr_t _kernelStart;
+		const uintptr_t _kernelEnd;
+		const uintptr_t _lowKernelStart;
+		const uintptr_t _lowKernelEnd;
 };
 
 /// Symbols located at precise places in the kernel image, allowing to retrieve
@@ -50,6 +55,8 @@ extern "C" void* kernelVirtualStart;
 extern "C" void* kernelVirtualEnd;
 extern "C" void* kernelPhysicalStart;
 extern "C" void* kernelPhysicalEnd;
+extern "C" void* lowKernelStart;
+extern "C" void* lowKernelEnd;
 
 /// \}
 

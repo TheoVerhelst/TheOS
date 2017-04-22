@@ -4,12 +4,12 @@
 namespace paging
 {
 
-PageTableEntry::PageTableEntry(Byte* physicalAddress, uint16_t flags)
+PageTableEntry::PageTableEntry(void* physicalAddress, uint16_t flags)
 {
 	set(physicalAddress, flags);
 }
 
-void PageTableEntry::set(Byte* physicalAddress, uint16_t flags)
+void PageTableEntry::set(void* physicalAddress, uint16_t flags)
 {
 	_physicalAddress = reinterpret_cast<uint32_t>(physicalAddress) >> 12;
 	_flags = flags;
@@ -46,47 +46,47 @@ extern "C" [[gnu::section(".bootInit")]] void initKernelPaging()
 
 	for(size_t i{0}; i < 8; ++i)
 	{
-		kernelPageDirectory[i] = (reinterpret_cast<uintptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
+		kernelPageDirectory[i] = (reinterpret_cast<intptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
 		for(size_t j{0}; j < entriesNumber; ++j)
 			kernelPageTables[i][j] = ((i * entriesNumber + j) * pageSize) | kernelPagingFlags;
 	}
 
 	for(size_t i{8}; i < 16; ++i)
 	{
-		kernelPageDirectory[i-8 + (kernelVirtualOffset / pageTableCoverage)] = (reinterpret_cast<uintptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
+		kernelPageDirectory[i-8 + (kernelVirtualOffset / pageTableCoverage)] = (reinterpret_cast<intptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
 		for(size_t j{0}; j < entriesNumber; ++j)
 			kernelPageTables[i][j] = (((i-8) * entriesNumber + j) * pageSize) | kernelPagingFlags;
 	}
 
 	// map lower memory
-	//mapMemory(reinterpret_cast<Byte*>(0), reinterpret_cast<Byte*>(16*1024*4096), false);
+	//mapMemory(0UL, 16*1024*4096, false);
 
 	// map low kernel
-	//mapMemory(reinterpret_cast<Byte*>(&lowKernelStart), reinterpret_cast<Byte*>(&lowKernelEnd), false);
+	//mapMemory(reinterpret_cast<intptr_t>(&lowKernelStart), reinterpret_cast<intptr_t>(&lowKernelEnd), false);
 
 	// map higher half kernel
-	//mapMemory(reinterpret_cast<Byte*>(&kernelPhysicalStart), reinterpret_cast<Byte*>(&kernelPhysicalEnd), true);
+	//mapMemory(reinterpret_cast<intptr_t>(&kernelPhysicalStart), reinterpret_cast<intptr_t>(&kernelPhysicalEnd), true);
 }
 
-[[gnu::section(".bootInit")]] void mapMemory(Byte* start, Byte* end, bool higherHalf)
+[[gnu::section(".bootInit")]] void mapMemory(intptr_t start, intptr_t end, bool higherHalf)
 {
 	// Difference of indexes between a page table in the page tables array
 	// and the matching entry in the page directory
 	const size_t offset{higherHalf ? kernelVirtualOffset / pageTableCoverage : 0};
 
-	const uint32_t castedStart{reinterpret_cast<uintptr_t>(BOOTSTRAP_ALIGN_DOWN(start))};
-	const uint32_t castedEnd{reinterpret_cast<uintptr_t>(BOOTSTRAP_ALIGN_UP(end))};
+	start = BOOTSTRAP_ALIGN_DOWN(start);
+	end = BOOTSTRAP_ALIGN_UP(end);
 
 	// Loop over the page directory entries to initialize them
 	// i is the index of the current page directory entry
-	for(size_t i{castedStart / pageTableCoverage}; i < (castedEnd == 0 ? 0 : ((castedEnd - 1) / pageTableCoverage) + 1); ++i)
+	for(size_t i{start / pageTableCoverage}; i < (end == 0 ? 0 : ((end - 1) / pageTableCoverage) + 1); ++i)
 		if(not (kernelPageDirectory[i + offset] & Flags::Present))
 			BOOTSTRAP_FILL_ENTRY(kernelPageDirectory[i + offset], &(kernelPageTables[usedPageTables++]), kernelPagingFlags);
 
 	// Loop over the page table entries to initialize them
 	// i is the frame number in the whole memory (e.g. when i == 2, we are
 	// initializing the frame starting at 0x2000)
-	for(size_t i{castedStart / pageSize}; i < (castedEnd == 0 ? 0 : ((castedEnd - 1) / pageSize) + 1); ++i)
+	for(size_t i{start / pageSize}; i < (end == 0 ? 0 : ((end - 1) / pageSize) + 1); ++i)
 	{
 		size_t pageDirectoryIndex{(i / entriesNumber) + offset};
 		size_t pageTableIndex{i % entriesNumber};

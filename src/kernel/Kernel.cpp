@@ -12,7 +12,7 @@ Kernel::Kernel():
 	_heapAddress{_physicalMemoryManager.allocateFrame()},
 	// Give a needed kernel size of zero if info about memory is not available
 	// (that's better than nothing)
-	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize, HeapManagerPoolAllocator(_heapManagerPool)}
+	_heapManager{static_cast<Byte*>(_heapAddress), _heapAddress == nullptr ? 0UL : _heapSize, HeapManagerPoolAllocator(_heapManagerPool)}
 {
 	testHeap();
 	printPrettyAsciiArt();

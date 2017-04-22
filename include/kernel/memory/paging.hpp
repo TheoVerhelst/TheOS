@@ -2,7 +2,7 @@
 #define PAGING_HPP
 
 #include <cstdint>
-#include <kernel/memory/Byte.hpp>
+#include <cstddef>
 
 /// \addtogroup Kernel
 /// \{
@@ -22,7 +22,7 @@ constexpr size_t pageTableCoverage{entriesNumber * pageSize};
 /// The address of the end of the lower memory, i.e. the memory
 /// before the 1Mo limit. Lower memory shouldn't be used, since only
 /// a very short part is usable (about 640Ko).
-constexpr uintptr_t lowerMemoryLimit{0x100000};
+constexpr intptr_t lowerMemoryLimit{0x100000};
 
 /// The offset between the physical and te logical location of the kernel in the
 /// memory. This value is defined in the linker script, but we redefine it here
@@ -62,12 +62,12 @@ class PageTableEntry
 		/// Default constructor.
 		/// \param address The address of the physical page.
 		/// \param flags Various flags of the page.
-		PageTableEntry(Byte* physicalAddress = nullptr, uint16_t flags = 0);
+		PageTableEntry(void* physicalAddress = nullptr, uint16_t flags = 0);
 
 		/// Sets attributes values.
 		/// \param address The address of the physical page.
 		/// \param flags Various flags of the page.
-		void set(Byte* physicalAddress = nullptr, uint16_t flags = 0);
+		void set(void* physicalAddress = nullptr, uint16_t flags = 0);
 
 	private:
 		uint32_t _physicalAddress : 20;///< The address of the physical page.
@@ -100,14 +100,28 @@ static_assert(sizeof(PageDirectoryEntry) == 4, "PageDirectoryEntry must be 32-bi
 /// \param address The address to convert.
 /// \return The first 4k-aligned address that is greater or equal to
 /// \a address.
-constexpr Byte* alignUp(Byte* address);
+constexpr void* alignUp(void* address);
 
 /// Get the first 4k-aligned address that is less or equal to
 /// \a address.
 /// \param address The address to convert.
 /// \return The first 4k-aligned address that is less or equal to
 /// \a address.
-constexpr Byte* alignDown(Byte* address);
+constexpr void* alignDown(void* address);
+
+/// Get the first 4k-aligned number that is greater or equal to
+/// \a address.
+/// \param address The address to convert.
+/// \return The first 4k-aligned number that is greater or equal to
+/// \a address.
+constexpr intptr_t alignUp(intptr_t address);
+
+/// Get the first 4k-aligned address that is less or equal to
+/// \a address.
+/// \param address The address to convert.
+/// \return The first 4k-aligned address that is less or equal to
+/// \a address.
+constexpr intptr_t alignDown(intptr_t address);
 
 /// This is a namespace that includes all functions and structures used in the
 /// early initialization of the kernel (when paging is not yet enabled).
@@ -131,10 +145,10 @@ namespace bootstrap
 	entry = (reinterpret_cast<uint32_t>(address) & 0xFFFFF000) | (flags & 0xFFF)
 
 #define BOOTSTRAP_ALIGN_UP(address)                                            \
-	reinterpret_cast<Byte*>((reinterpret_cast<uintptr_t>(address) + pageSize - 1) & ~(pageSize - 1))
+	((reinterpret_cast<intptr_t>(address) + pageSize - 1UL) & ~(pageSize - 1UL))
 
 #define BOOTSTRAP_ALIGN_DOWN(address)                                          \
-	reinterpret_cast<Byte*>(reinterpret_cast<uintptr_t>(address) & ~(pageSize - 1))
+	(reinterpret_cast<intptr_t>(address) & ~(pageSize - 1UL))
 
 /// The page directory that is primarily used by the kernel, when the paging is
 /// enabled .
@@ -155,20 +169,38 @@ constexpr uint16_t kernelPagingFlags{Flags::Present | Flags::ReadWrite | Flags::
 /// done here, but rather in the assembly routine that is calling this function.
 extern "C" [[gnu::section(".bootInit")]] void initKernelPaging();
 
-[[gnu::section(".bootInit")]] void mapMemory(Byte* start, Byte* end, bool higherHalf);
+[[gnu::section(".bootInit")]] void mapMemory(void* start, void* end, bool higherHalf);
 
 }// namespace bootstrap
 
-constexpr Byte* alignUp(Byte* address)
+constexpr void* alignUp(void* address)
 {
-	const uintptr_t uintAddress{reinterpret_cast<uintptr_t>(address)};
-	return reinterpret_cast<Byte*>((uintAddress + paging::pageSize - 1) & ~(paging::pageSize - 1));
+	return reinterpret_cast<void*>(alignUp(reinterpret_cast<intptr_t>(address)));
 }
 
-constexpr Byte* alignDown(Byte* address)
+constexpr void* alignDown(void* address)
 {
-	const uintptr_t uintAddress{reinterpret_cast<uintptr_t>(address)};
-	return reinterpret_cast<Byte*>(uintAddress & ~(paging::pageSize - 1));
+	return reinterpret_cast<void*>(alignDown(reinterpret_cast<intptr_t>(address)));
+}
+
+constexpr intptr_t alignUp(intptr_t address)
+{
+	return (address + paging::pageSize - 1) & ~(paging::pageSize - 1);
+}
+
+constexpr intptr_t alignDown(intptr_t address)
+{
+	return address & ~(paging::pageSize - 1);
+}
+
+constexpr uintptr_t alignUp(uintptr_t address)
+{
+	return (address + paging::pageSize - 1) & ~(paging::pageSize - 1);
+}
+
+constexpr uintptr_t alignDown(uintptr_t address)
+{
+	return address & ~(paging::pageSize - 1);
 }
 
 }// namespace paging

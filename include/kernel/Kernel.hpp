@@ -6,7 +6,6 @@
 #include <kernel/memory/PoolAllocator.hpp>
 #include <kernel/memory/MemoryManager.hpp>
 #include <kernel/memory/PhysicalMemoryManager.hpp>
-#include <kernel/memory/Byte.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 
 /// \defgroup Kernel Kernel
@@ -65,7 +64,7 @@ class Kernel final
 
 		PhysicalMemoryManager _physicalMemoryManager;
 
-		Byte* _heapAddress;
+		void* _heapAddress;
 
 		HeapManagerPool _heapManagerPool;
 
