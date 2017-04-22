@@ -5,4 +5,4 @@ set(SOURCES
 	"string/strcpy.cpp"
 	"string/strrchr.cpp")
 
-add_library(libc OBJECT ${SOURCES})
+add_library(c OBJECT ${SOURCES})

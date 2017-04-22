@@ -4,4 +4,4 @@ set(SOURCES
 	"memory.cpp"
 	)
 
-add_library(libc++ OBJECT ${SOURCES})
+add_library(cpp OBJECT ${SOURCES})
