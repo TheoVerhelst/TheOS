@@ -1,7 +1,7 @@
 # TheOS
 
-TheOS is an operating system written in C++ for learning purposes,
-forked from BermudOS.
+TheOS is an operating system written in C++ for learning purposes, forked from
+BermudOS.
 
 # Why ?
 See https://github.com/RobinPetit/BermudOS for rationale.
@@ -11,9 +11,10 @@ See https://github.com/RobinPetit/BermudOS for rationale.
  * i686-elf-g++ 6.2
  * nasm
 
-# Installation
+# Installation & run
 
     mkdir build && cd build
 	cmake ..
 	make
+	./run.sh
 
