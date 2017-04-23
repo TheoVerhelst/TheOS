@@ -8,10 +8,10 @@ void memcpy(void* dest, const void* src, size_t count)
 	size_t dwordCount{count / sizeof(uint32_t)};
 	size_t byteCount{count % sizeof(uint32_t)};
 
-	const uint32_t* dwordSrc{(const uint32_t *)(src)};
-	uint32_t* dwordDest{(uint32_t *)(dest)};
-	const uint8_t* byteSrc{(const uint8_t *)(dwordSrc + dwordCount)};
-	uint8_t* byteDest{(uint8_t *)(dwordDest + dwordCount)};
+	const uint32_t* dwordSrc{(const uint32_t*)(src)};
+	uint32_t* dwordDest{(uint32_t*)(dest)};
+	const uint8_t* byteSrc{(const uint8_t*)(dwordSrc + dwordCount)};
+	uint8_t* byteDest{(uint8_t*)(dwordDest + dwordCount)};
 
 	for(size_t i{0}; i < dwordCount; ++i)
 		dwordDest[i] = dwordSrc[i];

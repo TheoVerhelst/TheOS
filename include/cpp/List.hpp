@@ -1,9 +1,9 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
-#include <utility>
 #include <cstddef>
 #include <type_traits>
+#include <utility.hpp>
 #include <memory.hpp>
 
 /// \addtogroup Cpp
@@ -361,9 +361,9 @@ template <class T, class AllocatorType>
 List<T, AllocatorType>::List(List<T, AllocatorType>&& other):
 	List()
 {
-	std::swap(_begin, other._begin);
-	std::swap(_end, other._end);
-	std::swap(_size, other._size);
+	swap(_begin, other._begin);
+	swap(_end, other._end);
+	swap(_size, other._size);
 }
 
 template <class T, class AllocatorType>
@@ -376,7 +376,7 @@ List<T, AllocatorType>::~List()
 template <class T, class AllocatorType>
 List<T, AllocatorType>& List<T, AllocatorType>::operator=(List<T, AllocatorType> other)
 {
-	std::swap(*this, other);
+	swap(*this, other);
 }
 
 template <class T, class AllocatorType>
@@ -436,7 +436,7 @@ void List<T, AllocatorType>::pushBack(const T& value)
 template <class T, class AllocatorType>
 void List<T, AllocatorType>::pushBack(T&& value)
 {
-	insert(end(), std::forward<T>(value));
+	insert(end(), forward<T>(value));
 }
 
 template <class T, class AllocatorType>
@@ -448,7 +448,7 @@ void List<T, AllocatorType>::pushFront(const T& value)
 template <class T, class AllocatorType>
 void List<T, AllocatorType>::pushFront(T&& value)
 {
-	insert(begin(), std::forward<T>(value));
+	insert(begin(), forward<T>(value));
 }
 
 template <class T, class AllocatorType>
@@ -508,7 +508,7 @@ template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(iterator pos, T&& value)
 {
 	details::ListNode<T>* node{_allocator.allocate()};
-	node->_value = std::forward<T>(value);
+	node->_value = forward<T>(value);
 	node->_previous = pos._node->_previous;
 	node->_next = pos._node;
 
@@ -530,7 +530,7 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(constIt
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(constIterator pos, T&& value)
 {
-	return insert(iterator(const_cast<details::ListNode<T>*>(pos._node)), std::forward<T>(value));
+	return insert(iterator(const_cast<details::ListNode<T>*>(pos._node)), forward<T>(value));
 }
 
 template <class T, class AllocatorType>
