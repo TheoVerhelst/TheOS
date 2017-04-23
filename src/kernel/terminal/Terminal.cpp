@@ -1,4 +1,4 @@
-#include <string.hpp>
+#include <memory.hpp>
 #include <io/out.hpp>
 #include <kernel/terminal/Terminal.hpp>
 
@@ -64,12 +64,12 @@ void Terminal::scrollUp()
 	--_row;
 	memcpy(vga::buffer, &vga::buffer[vga::coordToIndex(0, 1)],
 	       (vga::width * (vga::height - 1)) * sizeof(vga::Entry));
-	_memset(&vga::buffer[vga::coordToIndex(0, vga::height - 1)], static_cast<uint16_t>(_emptyCell), vga::width);
+	memset(&vga::buffer[vga::coordToIndex(0, vga::height - 1)], static_cast<uint16_t>(_emptyCell), vga::width);
 }
 
 void Terminal::clearScreen()
 {
-	_memset(vga::buffer, static_cast<uint16_t>(_emptyCell), vga::height*vga::width);
+	memset(vga::buffer, static_cast<uint16_t>(_emptyCell), vga::height*vga::width);
 }
 
 void Terminal::moveCursor(int x, int y)

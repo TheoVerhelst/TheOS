@@ -75,8 +75,8 @@ Printer& Printer::operator<<(long long int arg)
 
 	if(not (_flags & Flags::AutoShowBase) and  (_flags & Flags::ShowBase))
 	{
-		strcpy(&buffer[index], _prefixes[base - 1]);
-		index += strlen(_prefixes[base - 1]);
+		string::copy(&buffer[index], _prefixes[base - 1]);
+		index += string::length(_prefixes[base - 1]);
 	}
 
 	const int begin{index};
@@ -124,8 +124,8 @@ Printer& Printer::operator<<(long long unsigned int arg)
 
 	if(not (_flags & Flags::AutoShowBase) and  (_flags & Flags::ShowBase))
 	{
-		strcpy(&buffer[index], _prefixes[base - 1]);
-		index += strlen(_prefixes[base - 1]);
+		string::copy(&buffer[index], _prefixes[base - 1]);
+		index += string::length(_prefixes[base - 1]);
 	}
 
 	const int begin{index};

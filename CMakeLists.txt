@@ -24,13 +24,11 @@ set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 #Add include directory
 include_directories("${PROJECT_SOURCE_DIR}/include")
 include_directories("${PROJECT_SOURCE_DIR}/include/cpp")
-include_directories("${PROJECT_SOURCE_DIR}/include/c")
 
 #List the main executable source files
 add_subdirectory(src/boot)
 add_subdirectory(src/kernel)
 add_subdirectory(src/io)
-add_subdirectory(src/c)
 add_subdirectory(src/cpp)
 
 #Create the main executable
@@ -40,7 +38,6 @@ add_executable(${PROJECT_NAME}.bin
 	"$<TARGET_OBJECTS:boot>"
 	"$<TARGET_OBJECTS:kernel>"
 	"$<TARGET_OBJECTS:io>"
-	"$<TARGET_OBJECTS:c>"
 	"$<TARGET_OBJECTS:cpp>"
 	"${CRTEND_O}"
 	"$<TARGET_OBJECTS:crtn>"
