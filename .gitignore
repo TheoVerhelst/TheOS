@@ -1,13 +1,11 @@
 # Ignore project files
-*.cbp
-*.layout
 *.geany
 
 # Ignore vim temporary files
 *.swp
 
-# Ignore scripts used to generate code
-*.py
-
 build/
 doxygen/
+
+# Folder with scripts/alternative resources
+alt/
