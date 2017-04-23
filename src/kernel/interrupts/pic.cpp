@@ -1,6 +1,4 @@
-#include <io/in.hpp>
-#include <io/out.hpp>
-#include <io/ioWait.hpp>
+#include <kernel/io.hpp>
 #include <kernel/interrupts/pic.hpp>
 
 namespace pic

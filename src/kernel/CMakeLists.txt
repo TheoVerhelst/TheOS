@@ -2,6 +2,7 @@ set(SOURCES
 	# Main files
 	"Kernel.cpp"
 	"abort.cpp"
+	"io.cpp"
 	# Memory files
 	"memory/PhysicalMemoryManager.cpp"
 	"memory/paging.cpp"

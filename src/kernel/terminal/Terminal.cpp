@@ -1,5 +1,5 @@
 #include <memory.hpp>
-#include <io/out.hpp>
+#include <kernel/io.hpp>
 #include <kernel/terminal/Terminal.hpp>
 
 Terminal terminal;

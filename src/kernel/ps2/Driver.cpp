@@ -1,5 +1,4 @@
-#include <io/in.hpp>
-#include <io/out.hpp>
+#include <kernel/io.hpp>
 #include <kernel/ps2/Driver.hpp>
 
 namespace ps2
