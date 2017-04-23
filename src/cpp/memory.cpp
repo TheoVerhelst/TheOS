@@ -2,23 +2,21 @@
 #include <kernel/Kernel.hpp>
 #include <Printer.hpp>
 
-void* memcpy(void* dest, const void* src, size_t count)
+void memcpy(void* dest, const void* src, size_t count)
 {
 	// Decompose into 32-bit blocks and 8-bit blocks so transfer may be faster
-	size_t dword_blocks = count / sizeof(uint32_t),
-	       byte_blocks = count % sizeof(uint32_t),
-	       i;
+	size_t dwordCount{count / sizeof(uint32_t)};
+	size_t byteCount{count % sizeof(uint32_t)};
 
-	const uint32_t *dword_src = (const uint32_t *)(src);
-	uint32_t *dword_dest = (uint32_t *)(dest);
-	const uint8_t *byte_src = (const uint8_t *)(dword_src[dword_blocks]);
-	uint8_t *byte_dest = (uint8_t *)(dword_dest[dword_blocks]);
+	const uint32_t* dwordSrc{(const uint32_t *)(src)};
+	uint32_t* dwordDest{(uint32_t *)(dest)};
+	const uint8_t* byteSrc{(const uint8_t *)(dwordSrc + dwordCount)};
+	uint8_t* byteDest{(uint8_t *)(dwordDest + dwordCount)};
 
-	for(i = 0; i < dword_blocks; ++i)
-		dword_dest[i] = dword_src[i];
-	for(i = 0; i < byte_blocks; ++i)
-		byte_dest[i] = byte_src[i];
-	return dest;
+	for(size_t i{0}; i < dwordCount; ++i)
+		dwordDest[i] = dwordSrc[i];
+	for(size_t i{0}; i < byteCount; ++i)
+		byteDest[i] = byteSrc[i];
 }
 
 extern "C" void memset(void* dest, char value, size_t count)

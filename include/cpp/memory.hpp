@@ -15,8 +15,7 @@
 /// \param dest Pointer to the object to copy to.
 /// \param src Pointer to the object to copy from.
 /// \param count Number of bytes to copy.
-/// \return Returns a copy of dest.
-void* memcpy(void* dest, const void* src, size_t count);
+void memcpy(void* dest, const void* src, size_t count);
 
 /// Copies the value \a value into the memory place pointed to by \a dest.
 /// This function is needed as an extern "C" function by GCC since we are in
