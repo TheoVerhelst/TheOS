@@ -1,4 +1,3 @@
-#include <Printer.hpp>
 #include <kernel/ps2/Key.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 

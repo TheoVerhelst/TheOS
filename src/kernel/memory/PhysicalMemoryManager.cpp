@@ -70,7 +70,6 @@ void PhysicalMemoryManager::freeMemoryRegion(const multiboot::MemoryRegion& regi
 	// region.base_addr is 64-bits, get only the first 32 bits
 	uintptr_t address{static_cast<uintptr_t>(region._base_addr & UINT64_C(0xFFFFFFFF))};
 	const size_t size{static_cast<size_t>(region._length)};
-	out << "address " << region._base_addr << " size " << region._length << "\n";
 	// Get the upper bound aligned to 4k (rounded down to the first 4k multiple)
 	uintptr_t upperBound{paging::alignDown(address + size)};
 	address = paging::alignUp(address);

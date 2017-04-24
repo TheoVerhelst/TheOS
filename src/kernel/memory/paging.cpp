@@ -56,16 +56,17 @@ extern "C" [[gnu::section(".bootInit")]] void initKernelPaging()
 		kernelPageDirectory[i-8 + (kernelVirtualOffset / pageTableCoverage)] = (reinterpret_cast<intptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
 		for(size_t j{0}; j < entriesNumber; ++j)
 			kernelPageTables[i][j] = (((i-8) * entriesNumber + j) * pageSize) | kernelPagingFlags;
-	}
+	}/*
 
 	// map lower memory
-	//mapMemory(0UL, 16*1024*4096, false);
+	mapMemory(0UL, 16*1024*4096, false);
 
 	// map low kernel
-	//mapMemory(reinterpret_cast<intptr_t>(&lowKernelStart), reinterpret_cast<intptr_t>(&lowKernelEnd), false);
+	mapMemory(reinterpret_cast<intptr_t>(&lowKernelStart), reinterpret_cast<intptr_t>(&lowKernelEnd), false);
 
 	// map higher half kernel
-	//mapMemory(reinterpret_cast<intptr_t>(&kernelPhysicalStart), reinterpret_cast<intptr_t>(&kernelPhysicalEnd), true);
+	mapMemory(reinterpret_cast<intptr_t>(&kernelPhysicalStart), reinterpret_cast<intptr_t>(&kernelPhysicalEnd), true);
+	*/
 }
 
 [[gnu::section(".bootInit")]] void mapMemory(intptr_t start, intptr_t end, bool higherHalf)
