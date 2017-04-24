@@ -26,8 +26,6 @@ class ScancodeMapper
 
 		ScancodeMapper(Mapping mapping);
 		const KeyEvent& get(const Scancode& scancode);
-		Mapping getCurrentMapping() const;
-		void setCurrentMapping(Mapping newCurrentMapping);
 
 	private:
 		struct ScancodeMapping

@@ -29,8 +29,6 @@ class KeyEventMapper
 		void registerEvent(const KeyEvent& event);
 		bool pendingCharacter() const;
 		Character getCharacter();
-		Mapping getCurrentMapping() const;
-		void setCurrentMapping(Mapping newCurrentMapping);
 
 	private:
 		struct KeyEventMapping

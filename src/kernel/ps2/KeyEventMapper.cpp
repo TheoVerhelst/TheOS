@@ -70,16 +70,6 @@ KeyEventMapper::Character KeyEventMapper::getCharacter()
 	return res;
 }
 
-KeyEventMapper::Mapping KeyEventMapper::getCurrentMapping() const
-{
-	return _currentMapping;
-}
-
-void KeyEventMapper::setCurrentMapping(Mapping newCurrentMapping)
-{
-	_currentMapping = newCurrentMapping;
-}
-
 bool KeyEventMapper::isEventSatisfied(const KeyEventMapping& event) const
 {
 	return ((event._altNeeded and (_lAltPressed or _rAltPressed)) or (not event._altNeeded and not (_lAltPressed or _rAltPressed)))

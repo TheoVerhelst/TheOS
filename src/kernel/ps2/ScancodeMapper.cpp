@@ -28,16 +28,6 @@ const KeyEvent& ScancodeMapper::get(const Scancode& scancode)
 	return _unknowEvent;
 }
 
-ScancodeMapper::Mapping ScancodeMapper::getCurrentMapping() const
-{
-	return _currentMapping;
-}
-
-void ScancodeMapper::setCurrentMapping(Mapping newCurrentMapping)
-{
-	_currentMapping = newCurrentMapping;
-}
-
 constexpr KeyEvent ScancodeMapper::_unknowEvent;
 
 const ScancodeMapper::ScancodeMapping ScancodeMapper::_mappings[][ScancodeMapper::_scancodeMappingNumber] =
