@@ -169,7 +169,7 @@ constexpr uint16_t kernelPagingFlags{Flags::Present | Flags::ReadWrite | Flags::
 /// done here, but rather in the assembly routine that is calling this function.
 extern "C" [[gnu::section(".bootInit")]] void initKernelPaging();
 
-[[gnu::section(".bootInit")]] void mapMemory(void* start, void* end, bool higherHalf);
+[[gnu::section(".bootInit")]] void mapMemory(intptr_t start, intptr_t end, bool higherHalf);
 
 }// namespace bootstrap
 
