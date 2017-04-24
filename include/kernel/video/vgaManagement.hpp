@@ -59,7 +59,7 @@ const size_t width{80};
 const size_t height{25};
 
 /// defined location on the VGA buffer
-Entry* const buffer{reinterpret_cast<Entry*>(0xB8000)};
+Entry* const buffer{reinterpret_cast<Entry*>(0xC00B8000)};
 
 constexpr inline size_t coordToIndex(size_t x, size_t y)
 {
