@@ -118,28 +118,27 @@ Printer& Printer::operator<<(const Flags& arg)
 
 char* Printer::convertToString(unsigned long long int arg, bool showMinus)
 {
-	int index{0};
+	int i{_bufferLength - 2};
+	_buffer[_bufferLength - 1] = '\0';
 
-	if(showMinus)
-		_buffer[index++] = '-';
+	if(arg == 0)
+		_buffer[i--] = '0';
+
+	while(arg > 0 and i > 0)
+	{
+		_buffer[i--] = _alphabet[arg % _numericBase];
+		arg /= _numericBase;
+	}
 
 	if(_showBase)
 	{
-		string::copy(&_buffer[index], _prefixes[_numericBase - 1]);
-		index += string::length(_prefixes[_numericBase - 1]);
+		const char* baseString{_prefixes[_numericBase - 1]};
+		string::copy(&_buffer[i], baseString);
+		i -= string::length(baseString);
 	}
 
-	const int begin{index};
+	if(showMinus)
+		_buffer[i--] = '-';
 
-	if(arg == 0)
-		_buffer[index++] = '0';
-
-	while(arg > 0)
-	{
-		_buffer[index++] = _alphabet[arg % _numericBase];
-		arg /= _numericBase;
-	}
-	_buffer[index--] = '\0';
-
-	return _buffer;
+	return &_buffer[i + 1];
 }
