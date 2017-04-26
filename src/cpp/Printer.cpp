@@ -51,117 +51,19 @@ Printer& Printer::operator<<(long unsigned int arg)
 }
 Printer& Printer::operator<<(long long int arg)
 {
-	const bool negative{arg < 0};
-	char buffer[_bufferLength];
-	int index{0};
-	size_t base;
-	if(_flags & Flags::AutoBase)
-		base = 10;
-	else if(_flags & Flags::Hexadecimal)
-		base = 16;
-	else if(_flags & Flags::Binary)
-		base = 2;
-
-	if(negative)
-	{
-		buffer[index++] = '-';
-		arg = -arg;
-	}
-	else if(_flags & Flags::ShowPos)
-	{
-		buffer[index++] = '+';
-		arg = -arg;
-	}
-
-	if(not (_flags & Flags::AutoShowBase) and  (_flags & Flags::ShowBase))
-	{
-		string::copy(&buffer[index], _prefixes[base - 1]);
-		index += string::length(_prefixes[base - 1]);
-	}
-
-	const int begin{index};
-
-	if(arg == 0)
-		buffer[index++] = '0';
-
-	while(arg > 0)
-	{
-		buffer[index++] = _alphabet[arg % base];
-		arg /= base;
-	}
-	buffer[index--] = '\0';
-
-	//Reverse digits
-	int reverseIndex{begin};
-	char tmp;
-	while(reverseIndex < index)
-	{
-		tmp = buffer[reverseIndex];
-		buffer[reverseIndex++] = buffer[index];
-		buffer[index--] = tmp;
-	}
-	terminal.putString(buffer);
+	terminal.putString(convertToString(static_cast<long long unsigned int>(arg), arg < 0));
 	return *this;
 }
 
 Printer& Printer::operator<<(long long unsigned int arg)
 {
-	char buffer[_bufferLength];
-	int index{0};
-	size_t base;
-	if(_flags & Flags::AutoBase)
-		base = 10;
-	else if(_flags & Flags::Hexadecimal)
-		base = 16;
-	else if(_flags & Flags::Binary)
-		base = 2;
-
-	if(_flags & Flags::ShowPos)
-	{
-		buffer[index++] = '+';
-		arg = -arg;
-	}
-
-	if(not (_flags & Flags::AutoShowBase) and  (_flags & Flags::ShowBase))
-	{
-		string::copy(&buffer[index], _prefixes[base - 1]);
-		index += string::length(_prefixes[base - 1]);
-	}
-
-	const int begin{index};
-
-	if(arg == 0)
-		buffer[index++] = '0';
-
-	while(arg > 0)
-	{
-		const auto remainder{arg % base};
-		if(_flags & Flags::Uppercase)
-			buffer[index++] = toUpper(_alphabet[remainder]);
-		else
-			buffer[index++] = _alphabet[remainder];
-		arg /= base;
-	}
-	buffer[index--] = '\0';
-
-	//Reverse digits
-	int reverseIndex{begin};
-	char tmp;
-	while(reverseIndex < index)
-	{
-		tmp = buffer[reverseIndex];
-		buffer[reverseIndex] = buffer[index];
-		buffer[index] = tmp;
-		reverseIndex++;
-		index--;
-	}
-	terminal.putString(buffer);
+	terminal.putString(convertToString(arg, false));
 	return *this;
 }
 
 Printer& Printer::operator<<(bool arg)
 {
-	if(_flags & Flags::BoolAlpha)
+	if(_boolAlpha)
 		return *this << (arg ? "true" : "false");
 	else
 		return *this << (arg ? "1" : "0");
@@ -169,36 +71,84 @@ Printer& Printer::operator<<(bool arg)
 
 Printer& Printer::operator<<(void* arg)
 {
-	const unsigned int oldFlags{_flags};
-	if(_flags & Flags::AutoBase)
-	{
-		setFlags(Flags::Hexadecimal);
-		resetFlags(Flags::AutoBase);
-	}
-	if(_flags & Flags::AutoShowBase)
-	{
-		setFlags(Flags::ShowBase);
-		resetFlags(Flags::AutoShowBase);
-	}
-	*this << reinterpret_cast<uintptr_t>(arg);
-	_flags = oldFlags;
+	const size_t oldBase{_numericBase};
+	const bool oldBoolAlpha{_boolAlpha};
+	const bool oldShowBase{_showBase};
+	*this << Flags::Hexadecimal << Flags::ShowBase << reinterpret_cast<uintptr_t>(arg);
+	_numericBase = oldBase;
+	_boolAlpha = oldBoolAlpha;
+	_showBase = oldShowBase;
 	return *this;
 }
 
-void Printer::setFlags(unsigned int flags)
+Printer& Printer::operator<<(const Flags& arg)
 {
-	_flags |= flags;
+	switch(arg)
+	{
+		case Flags::Binary:
+			_numericBase = 2;
+			break;
+
+		case Flags::Decimal:
+			_numericBase = 10;
+			break;
+
+		case Flags::Hexadecimal:
+			_numericBase = 16;
+			break;
+
+		case Flags::BoolAlpha:
+			_boolAlpha = true;
+			break;
+
+		case Flags::NoBoolAlpha:
+			_boolAlpha = false;
+			break;
+
+		case Flags::ShowBase:
+			_showBase = true;
+			break;
+
+		case Flags::NoShowBase:
+			_showBase = false;
+			break;
+	}
+	return *this;
 }
 
-void Printer::resetFlags(unsigned int flags)
+char* Printer::convertToString(unsigned long long int arg, bool showMinus)
 {
-	_flags &= ~flags;
-}
+	int index{0};
 
-char Printer::toUpper(char ch)
-{
-	if(ch >= 'a' and ch <= 'z')
-		return ch + ('A' - 'a');
-	else
-		return ch;
+	if(showMinus)
+		_buffer[index++] = '-';
+
+	if(_showBase)
+	{
+		string::copy(&_buffer[index], _prefixes[_numericBase - 1]);
+		index += string::length(_prefixes[_numericBase - 1]);
+	}
+
+	const int begin{index};
+
+	if(arg == 0)
+		_buffer[index++] = '0';
+
+	while(arg > 0)
+	{
+		_buffer[index++] = _alphabet[arg % _numericBase];
+		arg /= _numericBase;
+	}
+	_buffer[index--] = '\0';
+
+	//Reverse digits
+	int reverseIndex{begin};
+	char tmp;
+	while(reverseIndex < index)
+	{
+		tmp = _buffer[reverseIndex];
+		_buffer[reverseIndex++] = _buffer[index];
+		_buffer[index--] = tmp;
+	}
+	return _buffer;
 }
