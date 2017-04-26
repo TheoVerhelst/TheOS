@@ -141,14 +141,5 @@ char* Printer::convertToString(unsigned long long int arg, bool showMinus)
 	}
 	_buffer[index--] = '\0';
 
-	//Reverse digits
-	int reverseIndex{begin};
-	char tmp;
-	while(reverseIndex < index)
-	{
-		tmp = _buffer[reverseIndex];
-		_buffer[reverseIndex++] = _buffer[index];
-		_buffer[index--] = tmp;
-	}
 	return _buffer;
 }
