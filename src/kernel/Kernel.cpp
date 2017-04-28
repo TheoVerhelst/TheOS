@@ -14,6 +14,7 @@ Kernel::Kernel():
 	// (that's better than nothing)
 	_heapManager{static_cast<Byte*>(_heapAddress), _heapAddress == nullptr ? 0UL : _heapSize, HeapManagerPoolAllocator(_heapManagerPool)}
 {
+out << "Loaded at " << _heapAddress << "\n";
 	testHeap();
 	printPrettyAsciiArt();
 	processMultibootInfo();
@@ -53,21 +54,21 @@ void Kernel::printDeviceInfo(uint32_t bootDevice)
 	switch(drive)
 	{
 		case 0x00:
-			out << "first floppy ";
+			out << "first floppy";
 			break;
 		case 0x01:
-			out << "second floppy ";
+			out << "second floppy";
 			break;
 		case 0x80:
-			out << "first hard ";
+			out << "first hard";
 			break;
 		case 0x81:
-			out << "second hard ";
+			out << "second hard";
 			break;
 		default:
-			out << "unrecognized ";
+			out << "unrecognized";
 	}
-	out << "disk (" << drive << ") on partition ";
+	out << " disk (" << drive << ") on partition ";
 	out << ((bootDevice & 0x0000FF00) >> 8) << ".";
 	out << ((bootDevice & 0x00FF0000) >> 16) << ".";
 	out << ((bootDevice & 0xFF000000) >> 24) << "\n";
