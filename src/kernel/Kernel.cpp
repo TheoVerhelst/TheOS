@@ -14,7 +14,7 @@ Kernel::Kernel():
 	// (that's better than nothing)
 	_heapManager{static_cast<Byte*>(_heapAddress), _heapAddress == nullptr ? 0UL : _heapSize, HeapManagerPoolAllocator(_heapManagerPool)}
 {
-out << "Loaded at " << _heapAddress << "\n";
+	out << "Heap at " << _heapAddress << "\n";
 	testHeap();
 	printPrettyAsciiArt();
 	processMultibootInfo();
