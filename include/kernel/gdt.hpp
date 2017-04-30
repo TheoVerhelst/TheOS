@@ -1,7 +1,7 @@
 #ifndef GDT_HPP
 #define GDT_HPP
 
-#include <cstdint>
+#include <std/cstdint>
 
 /// \addtogroup Kernel
 /// \{

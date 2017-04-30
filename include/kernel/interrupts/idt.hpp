@@ -1,8 +1,8 @@
 #ifndef IDT_HPP
 #define IDT_HPP
 
-#include <cstdint>
-#include <cstddef>
+#include <std/cstdint>
+#include <std/cstddef>
 #include <kernel/interrupts/pic.hpp>
 
 /// \addtogroup Kernel

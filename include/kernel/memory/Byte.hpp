@@ -1,7 +1,7 @@
 #ifndef BYTE_HPP
 #define BYTE_HPP
 
-#include <cstddef>
+#include <std/cstddef>
 
 /// \addtogroup Kernel
 /// \{

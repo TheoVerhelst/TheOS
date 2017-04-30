@@ -1,9 +1,9 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
-#include <cstddef>
-#include <cstdint>
-#include <limits>
+#include <std/cstddef>
+#include <std/cstdint>
+#include <std/limits>
 
 /// Copies count characters from the object pointed to by \a src to the object
 /// pointed to by \a dest. Both objects are interpreted as arrays of unsigned

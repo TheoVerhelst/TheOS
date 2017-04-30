@@ -1,8 +1,8 @@
 #ifndef VGA_MANAGEMENT_H
 #define VGA_MANAGEMENT_H
 
-#include <cstdint>
-#include <cstddef>
+#include <std/cstdint>
+#include <std/cstddef>
 
 /// \addtogroup Kernel
 /// \{

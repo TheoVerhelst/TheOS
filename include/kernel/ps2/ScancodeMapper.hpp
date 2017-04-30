@@ -1,9 +1,9 @@
 #ifndef SCANCODEMAPPER_HPP
 #define SCANCODEMAPPER_HPP
 
-#include <cstddef>
-#include <cstdint>
-#include <type_traits>
+#include <std/cstddef>
+#include <std/cstdint>
+#include <std/type_traits>
 #include <kernel/ps2/Key.hpp>
 #include <kernel/ps2/Scancode.hpp>
 

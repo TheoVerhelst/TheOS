@@ -1,7 +1,7 @@
 #ifndef ISRDISPATCHER_HPP
 #define ISRDISPATCHER_HPP
 
-#include <cstdint>
+#include <std/cstdint>
 #include <Printer.hpp>
 #include <kernel/interrupts/idt.hpp>
 

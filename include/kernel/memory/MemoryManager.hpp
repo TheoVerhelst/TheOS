@@ -1,8 +1,8 @@
 #ifndef MEMORYMANAGER_HPP
 #define MEMORYMANAGER_HPP
 
-#include <cstddef>
-#include <type_traits>
+#include <std/cstddef>
+#include <std/type_traits>
 #include <kernel/memory/Byte.hpp>
 #include <memory.hpp>
 #include <math.hpp>

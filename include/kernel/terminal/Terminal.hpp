@@ -1,7 +1,7 @@
 #ifndef TERMINAL_HPP
 #define TERMINAL_HPP
 
-#include <cstddef>
+#include <std/cstddef>
 #include <kernel/video/vgaManagement.hpp>
 
 /// \addtogroup Kernel

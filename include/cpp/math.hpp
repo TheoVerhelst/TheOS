@@ -1,7 +1,7 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
-#include <type_traits>
+#include <std/type_traits>
 
 /// \defgroup C C
 /// Pseudo-implementation of the standard C library.

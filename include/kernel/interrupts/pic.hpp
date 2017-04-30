@@ -1,7 +1,7 @@
 #ifndef PIC_HPP
 #define PIC_HPP
 
-#include <cstdint>
+#include <std/cstdint>
 
 /// \addtogroup Kernel
 /// \{

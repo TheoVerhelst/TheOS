@@ -1,8 +1,8 @@
 #ifndef KEYBOARD_HPP
 #define KEYBOARD_HPP
 
-#include <cstdint>
-#include <cstddef>
+#include <std/cstdint>
+#include <std/cstddef>
 #include <List.hpp>
 #include <kernel/ps2/Driver.hpp>
 #include <kernel/ps2/ScancodeMapper.hpp>

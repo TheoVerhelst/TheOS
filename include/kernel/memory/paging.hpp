@@ -1,8 +1,8 @@
 #ifndef PAGING_HPP
 #define PAGING_HPP
 
-#include <cstdint>
-#include <cstddef>
+#include <std/cstdint>
+#include <std/cstddef>
 
 /// \addtogroup Kernel
 /// \{

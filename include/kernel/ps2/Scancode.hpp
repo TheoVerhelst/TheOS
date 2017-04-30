@@ -1,8 +1,8 @@
 #ifndef SCANCODE_HPP
 #define SCANCODE_HPP
 
-#include <cstddef>
-#include <cstdint>
+#include <std/cstddef>
+#include <std/cstdint>
 
 /// \addtogroup Kernel
 /// \{

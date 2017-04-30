@@ -1,8 +1,8 @@
 #ifndef MULTIBOOTINFO_HPP
 #define MULTIBOOTINFO_HPP
 
-#include <cstdint>
-#include <cstddef>
+#include <std/cstdint>
+#include <std/cstddef>
 #include <kernel/memory/Byte.hpp>
 
 /// \defgroup Boot Boot

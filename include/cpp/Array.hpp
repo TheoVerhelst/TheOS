@@ -1,8 +1,8 @@
 #ifndef ARRAY_HPP
 #define ARRAY_HPP
 
-#include <cstddef>
-#include <memory.hpp>
+#include <std/cstddef>
+#include <cpp/memory.hpp>
 
 /// \defgroup Cpp C++
 /// Pseudo-implementation of the standard C++ library.

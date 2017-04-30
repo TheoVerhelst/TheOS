@@ -1,8 +1,8 @@
 #ifndef BITSET_HPP
 #define BITSET_HPP
 
-#include <cstddef>
-#include <cstdint>
+#include <std/cstddef>
+#include <std/cstdint>
 
 /// \addtogroup Cpp
 /// \{
