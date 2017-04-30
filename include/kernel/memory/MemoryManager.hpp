@@ -4,11 +4,11 @@
 #include <std/cstddef>
 #include <std/type_traits>
 #include <kernel/memory/Byte.hpp>
-#include <memory.hpp>
-#include <math.hpp>
-#include <List.hpp>
-#include <Printer.hpp>
-#include <Array.hpp>
+#include <cpp/memory.hpp>
+#include <cpp/math.hpp>
+#include <cpp/List.hpp>
+#include <cpp/Printer.hpp>
+#include <cpp/Array.hpp>
 
 /// \addtogroup Kernel
 /// \{

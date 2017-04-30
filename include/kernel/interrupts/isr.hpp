@@ -2,7 +2,7 @@
 #define ISRDISPATCHER_HPP
 
 #include <std/cstdint>
-#include <Printer.hpp>
+#include <cpp/Printer.hpp>
 #include <kernel/interrupts/idt.hpp>
 
 /// \addtogroup Kernel

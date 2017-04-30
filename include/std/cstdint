@@ -29,7 +29,7 @@
 #ifndef _GLIBCXX_CSTDINT
 #define _GLIBCXX_CSTDINT 1
 
-#include <bits/c++config.h>
+#include "bits/c++config.h"
 
 #if _GLIBCXX_HAVE_STDINT_H
 # include <stdint.h>
@@ -56,7 +56,7 @@ namespace std
 
   using ::intmax_t;
   using ::intptr_t;
-  
+
   using ::uint8_t;
   using ::uint16_t;
   using ::uint32_t;

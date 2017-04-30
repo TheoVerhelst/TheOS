@@ -1,20 +1,22 @@
 #include <catch/catch.hpp>
-#include <Array.hpp>
+#include <cpp/Array.hpp>
 
 class ConstructionTracer
 {
     public:
-        static bool _hasBeenDefaultConstructed = false;
-        static bool _hasBeenIntConstructed = false;
+        bool _hasBeenDefaultConstructed;
+        bool _hasBeenIntConstructed;
 
         ConstructionTracer()
         {
-            _defaultConstructed = true;
+            _hasBeenDefaultConstructed = true;
+            _hasBeenIntConstructed = false;
         }
 
         ConstructionTracer(int)
         {
-            _intConstructed = true;
+            _hasBeenIntConstructed = true;
+            _hasBeenDefaultConstructed = false;
         }
 };
 
@@ -26,7 +28,7 @@ SCENARIO("Array contains values")
         THEN("all elements are equals to 12")
         {
             for(int e : array)
-                REQUIRE(e = 12);
+                REQUIRE(e == 12);
         }
     }
 
@@ -35,7 +37,8 @@ SCENARIO("Array contains values")
         Array<ConstructionTracer, 1> array;
         THEN("the object has been default-constructed")
         {
-            REQUIRE(ConstructionTracer::_hasBeenDefaultConstructed);
+            REQUIRE(array[0]._hasBeenDefaultConstructed);
+            REQUIRE_FALSE(array[0]._hasBeenIntConstructed);
         }
     }
 
@@ -44,7 +47,8 @@ SCENARIO("Array contains values")
         Array<ConstructionTracer, 1> array{23};
         THEN("the object has been int-constructed")
         {
-            REQUIRE(ConstructionTracer::_hasBeenIntConstructed);
+            REQUIRE(array[0]._hasBeenIntConstructed);
+            REQUIRE_FALSE(array[0]._hasBeenDefaultConstructed);
         }
     }
 }

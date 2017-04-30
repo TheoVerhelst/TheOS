@@ -1,4 +1,5 @@
-#include <Printer.hpp>
+#include <cpp/Printer.hpp>
+#include <cpp/new.hpp>
 #include <kernel/terminal/Terminal.hpp>
 #include <kernel/gdt.hpp>
 #include <kernel/interrupts/idt.hpp>

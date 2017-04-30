@@ -2,7 +2,7 @@
 #define POOLALLOCATOR_HPP
 
 #include <std/cstddef>
-#include <BitSet.hpp>
+#include <cpp/BitSet.hpp>
 #include <kernel/memory/Byte.hpp>
 
 /// \addtogroup Kernel

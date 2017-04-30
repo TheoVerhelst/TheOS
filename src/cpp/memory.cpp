@@ -1,6 +1,4 @@
-#include <memory.hpp>
-#include <kernel/Kernel.hpp>
-#include <Printer.hpp>
+#include <cpp/memory.hpp>
 
 void memcpy(void* dest, const void* src, size_t count)
 {
@@ -31,34 +29,4 @@ void memset(void* dest, uint16_t value, size_t count)
 	uint16_t* castedDest{static_cast<uint16_t*>(dest)};
 	for(size_t i{0}; i < count; ++i)
 		castedDest[i] = value;
-}
-
-void* operator new(size_t size) throw()
-{
-	return static_cast<void*>(kernel.getHeapManager().allocate(size));
-}
-
-void operator delete(void* address) throw()
-{
-	kernel.getHeapManager().deallocate(static_cast<Byte*>(address));
-}
-
-void operator delete(void* address, size_t size) throw()
-{
-	kernel.getHeapManager().deallocate(static_cast<Byte*>(address), size);
-}
-
-void* operator new[](size_t size) throw()
-{
-	return ::operator new(size);
-}
-
-void operator delete[](void* address) throw()
-{
-	::operator delete(address);
-}
-
-void operator delete[](void* address, size_t size) throw()
-{
-	::operator delete(address, size);
 }

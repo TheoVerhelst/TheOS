@@ -39,7 +39,7 @@
 #ifndef _GLIBCXX_CSTDDEF
 #define _GLIBCXX_CSTDDEF 1
 
-#include <bits/c++config.h>
+#include "bits/c++config.h"
 #include <stddef.h>
 
 namespace std

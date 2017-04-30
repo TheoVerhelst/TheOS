@@ -2,6 +2,7 @@ set(SOURCES
 	"Printer.cpp"
 	"math.cpp"
 	"memory.cpp"
+	"new.cpp"
 	"string.cpp"
 	)
 

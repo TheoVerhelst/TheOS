@@ -4,7 +4,7 @@
 #include <std/cstddef>
 #include <kernel/memory/paging.hpp>
 #include <boot/MultibootInfo.hpp>
-#include <BitSet.hpp>
+#include <cpp/BitSet.hpp>
 
 /// \addtogroup Kernel
 /// \{

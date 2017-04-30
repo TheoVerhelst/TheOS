@@ -32,36 +32,6 @@ extern "C" void memset(void* dest, char value, size_t count);
 /// \param count Number of times to fill.
 void memset(void* dest, uint16_t value, size_t count);
 
-[[gnu::__externally_visible__]] void* operator new(size_t size) throw();
-
-[[gnu::__externally_visible__]] void operator delete(void* address) throw();
-
-[[gnu::__externally_visible__]] void operator delete(void* address, size_t size) throw();
-
-[[gnu::__externally_visible__]] void* operator new[](size_t size) throw();
-
-[[gnu::__externally_visible__]] void operator delete[](void* address) throw();
-
-[[gnu::__externally_visible__]] void operator delete[](void* address, size_t size) throw();
-
-inline void* operator new(size_t, void* address) noexcept
-{
-	return address;
-}
-
-inline void* operator new[](size_t, void* address)  noexcept
-{
-	return address;
-}
-
-inline void operator delete(void*, void*) noexcept
-{
-}
-
-inline void operator delete[](void*, void*) noexcept
-{
-}
-
 template <class T>
 class Allocator {
 	public:

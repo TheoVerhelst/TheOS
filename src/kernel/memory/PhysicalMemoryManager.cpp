@@ -1,7 +1,7 @@
-#include <cstdint>
+#include <std/cstdint>
 #include <kernel/memory/PhysicalMemoryManager.hpp>
 #include <kernel/memory/Byte.hpp>
-#include <Printer.hpp>
+#include <cpp/Printer.hpp>
 
 PhysicalMemoryManager::PhysicalMemoryManager():
 	_kernelStart{reinterpret_cast<uintptr_t>(&kernelPhysicalStart)},
