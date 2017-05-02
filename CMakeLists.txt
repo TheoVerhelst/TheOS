@@ -10,7 +10,7 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 # Add flags to the C++ compiler
 set(CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
-set(CMAKE_CXX_FLAGS_DEBUG "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 if(BUILD_TEST)
 	add_subdirectory(test)

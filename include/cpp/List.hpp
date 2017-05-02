@@ -18,9 +18,9 @@ namespace details
 template <class T>
 struct ListNode
 {
-	T _value;                     ///< The value of the node.
-	ListNode* _next = nullptr;    ///< The next node.
-	ListNode* _previous = nullptr;///< The previous node.
+	T _value;                    ///< The value of the node.
+	ListNode* _next{nullptr};    ///< The next node.
+	ListNode* _previous{nullptr};///< The previous node.
 };
 
 }// namespace details
@@ -337,7 +337,7 @@ List<T, AllocatorType>::List(const AllocatorType& allocator):
 	_size{0UL},
 	_allocator{allocator}
 {
-	_begin = _end = _allocator.allocate();
+	_begin = _end = _allocator.construct();
 }
 
 template <class T, class AllocatorType>
@@ -349,7 +349,7 @@ List<T, AllocatorType>::List(const List<T, AllocatorType>& other):
 	for(const details::ListNode<T>* node{other._begin}; node != other._end; node = node->_next)
 	{
 		previousNode->_value = node->_value;
-		nextNode = _allocator.allocate();
+		nextNode = _allocator.construct();
 		nextNode->_previous = previousNode;
 		previousNode->_next = nextNode;
 		++_size;
@@ -433,6 +433,8 @@ void List<T, AllocatorType>::pushBack(const T& value)
 	insert(end(), value);
 }
 
+#include <iostream>
+
 template <class T, class AllocatorType>
 void List<T, AllocatorType>::pushBack(T&& value)
 {
@@ -491,7 +493,7 @@ typename List<T, AllocatorType>::constIterator List<T, AllocatorType>::cend() co
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(iterator pos, const T& value)
 {
-	details::ListNode<T>* node{_allocator.allocate()};
+	details::ListNode<T>* node{_allocator.construct()};
 	node->_value = value;
 	node->_previous = pos._node->_previous;
 	node->_next = pos._node;
@@ -507,11 +509,10 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(iterato
 template <class T, class AllocatorType>
 typename List<T, AllocatorType>::iterator List<T, AllocatorType>::insert(iterator pos, T&& value)
 {
-	details::ListNode<T>* node{_allocator.allocate()};
+	details::ListNode<T>* node{_allocator.construct()};
 	node->_value = forward<T>(value);
 	node->_previous = pos._node->_previous;
 	node->_next = pos._node;
-
 	pos._node->_previous = node;
 	if(node->_previous == nullptr)
 		_begin = node;
@@ -560,7 +561,7 @@ typename List<T, AllocatorType>::iterator List<T, AllocatorType>::erase(iterator
 		last._node->_previous = first._node->_previous;
 	while(first != last)
 	{
-		_allocator.deallocate(first._node);
+		_allocator.destroy(first._node);
 		++first;
 		--_size;
 	}

@@ -1,6 +1,7 @@
 set(TEST_SOURCE_FILES
     "main.cpp"
     "cpp/ArrayTest.cpp"
+    "cpp/ListTest.cpp"
 )
 
 # Place the executable files in the root directory instead of in test

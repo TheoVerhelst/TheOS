@@ -4,6 +4,7 @@
 #include <std/cstddef>
 #include <std/cstdint>
 #include <std/limits>
+#include <cpp/utility.hpp>
 
 /// Copies count characters from the object pointed to by \a src to the object
 /// pointed to by \a dest. Both objects are interpreted as arrays of unsigned
@@ -44,62 +45,27 @@ class Allocator {
 		typedef size_t SizeType;
 		typedef ptrdiff_t DifferenceType;
 
-		template <class U>
-		struct Rebind
-		{
-			typedef Allocator<U> Other;
-		};
-
-		Pointer address(Reference value) const
-		{
-			return &value;
-		}
-
-		ConstPointer address(ConstReference value) const
-		{
-			return &value;
-		}
-
-		Allocator()
-		{
-		}
-
-		Allocator(const Allocator&)
-		{
-		}
-
-		template <class U>
-		Allocator(const Allocator<U>&)
-		{
-		}
-
-		~Allocator() throw()
-		{
-		}
-
-		SizeType maxSize() const
-		{
-			return std::numeric_limits<SizeType>::max() / sizeof(T);
-		}
-
-		Pointer allocate(const void* = 0)
+		Pointer allocate()
 		{
 			return static_cast<Pointer>(::operator new(sizeof(T)));
 		}
 
-		void construct(Pointer pointer, const T& value)
+		template <typename... Args>
+		Pointer construct(Args&&... args)
 		{
-			new(static_cast<void*>(pointer)) T(value);
-		}
-
-		void destroy(Pointer pointer)
-		{
-			pointer->~T();
+			return ::new (static_cast<void*>(allocate())) T(forward<Args>(args)...);
 		}
 
 		void deallocate(Pointer pointer)
 		{
 			::operator delete(static_cast<void*>(pointer));
+		}
+
+		template <typename... Args>
+		void destroy(Pointer p)
+		{
+			p->~T();
+			deallocate(p);
 		}
 };
 
