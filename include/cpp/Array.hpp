@@ -3,6 +3,7 @@
 
 #include <std/cstddef>
 #include <cpp/memory.hpp>
+#include <cpp/new.hpp>
 
 /// \defgroup Cpp C++
 /// Pseudo-implementation of the standard C++ library.
@@ -43,7 +44,7 @@ class Array
 		/// element in the array.
 		/// \param args The arguments to copy to the constructors.
 		template <typename... Args>
-		Array(const Args&... args);
+		Array(Args&... args);
 
 		/// Destructor.
 		~Array();
@@ -136,7 +137,7 @@ Array<T, N>::Array(const T& value)
 
 template <typename T, size_t N>
 template <typename... Args>
-Array<T, N>::Array(const Args&... args)
+Array<T, N>::Array(Args&... args)
 {
 	T* pointer{_pointer};
 	for(size_t i{0}; i < N; ++i)

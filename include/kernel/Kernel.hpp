@@ -30,14 +30,7 @@ class Kernel final
 		/// the elements of its internal lists. In order to manage a big heap
 		/// area, a little pool area is needed. This is a pool allocator that
 		/// uses a pool instance stored as an attribute of the kernel.
-		typedef PoolAllocator<MemoryManager<>::AllocatorValueType, _maxBlocksNumber> HeapManagerPoolAllocator;
-
-		/// The kernel heap allocator type.
-		typedef MemoryManager<HeapManagerPoolAllocator> HeapManager;
-
-		/// The type of the pool used by the internal allocator of the heap
-		/// manager.
-		typedef typename HeapManagerPoolAllocator::PoolType HeapManagerPool;
+		typedef PoolAllocator<MemoryManager::BlockList::NodeType, _maxBlocksNumber> HeapManagerPoolAllocator;
 
 		/// Constructor.
 		Kernel();
@@ -45,7 +38,7 @@ class Kernel final
 		/// Main function.
 		[[noreturn]] void run();
 
-		HeapManager& getHeapManager();
+		MemoryManager& getHeapManager();
 
 	private:
 		/// The static class isr::Table have access to member of the kernel
@@ -66,10 +59,15 @@ class Kernel final
 
 		void* _heapAddress;
 
-		HeapManagerPool _heapManagerPool;
+		/// The the pool used by the internal allocator of the heap manager.
+		HeapManagerPoolAllocator::PoolType _heapManagerPool;
 
-		/// The kernel memory allocator.
-		HeapManager _heapManager;
+		/// The memory allocator that the heap manager uses for its internal
+		/// lists.
+		HeapManagerPoolAllocator _heapManagerPoolAllocator;
+
+		/// The kernel memory allocator (the kernel heap manager).
+		MemoryManager _heapManager;
 
 		/// The keyboard driver. It needs to be notified when a keyboard
 		/// interrupt occur (with the ISR 33), and it gives a queue of

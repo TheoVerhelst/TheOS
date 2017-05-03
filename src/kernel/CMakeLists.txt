@@ -5,6 +5,7 @@ set(SOURCES
 	"io.cpp"
 	# Memory files
 	"memory/PhysicalMemoryManager.cpp"
+	"memory/MemoryManager.cpp"
 	"memory/paging.cpp"
 	# Terminal files
 	"terminal/Terminal.cpp"

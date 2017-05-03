@@ -11,9 +11,11 @@ Kernel kernel;
 
 Kernel::Kernel():
 	_heapAddress{_physicalMemoryManager.allocateFrame()},
+	_heapManagerPoolAllocator{_heapManagerPool},
 	// Give a needed kernel size of zero if info about memory is not available
 	// (that's better than nothing)
-	_heapManager{static_cast<Byte*>(_heapAddress), _heapAddress == nullptr ? 0UL : _heapSize, HeapManagerPoolAllocator(_heapManagerPool)}
+	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize,
+	             _heapManagerPoolAllocator}
 {
 	out << "Heap at " << _heapAddress << "\n";
 	testHeap();
@@ -32,7 +34,7 @@ void Kernel::run()
 	abort();
 }
 
-Kernel::HeapManager& Kernel::getHeapManager()
+MemoryManager& Kernel::getHeapManager()
 {
 	return _heapManager;
 }

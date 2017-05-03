@@ -3,32 +3,32 @@
 
 #if not __STDC_HOSTED__
 
-void* operator new(size_t size) throw()
+[[gnu::__externally_visible__]] void* operator new(size_t size)
 {
 	return kernel.getHeapManager().allocate(size);
 }
 
-void operator delete(void* address) throw()
+[[gnu::__externally_visible__]] void operator delete(void* address)
 {
-	kernel.getHeapManager().deallocate(static_cast<void*>(address));
+	kernel.getHeapManager().deallocate(address);
 }
 
-void operator delete(void* address, size_t size) throw()
+[[gnu::__externally_visible__]] void operator delete(void* address, size_t size)
 {
-	kernel.getHeapManager().deallocate(static_cast<void*>(address), size);
+	kernel.getHeapManager().deallocate(address, size);
 }
 
-void* operator new[](size_t size) throw()
+[[gnu::__externally_visible__]] void* operator new[](size_t size)
 {
 	return ::operator new(size);
 }
 
-void operator delete[](void* address) throw()
+[[gnu::__externally_visible__]] void operator delete[](void* address)
 {
 	::operator delete(address);
 }
 
-void operator delete[](void* address, size_t size) throw()
+[[gnu::__externally_visible__]] void operator delete[](void* address, size_t size)
 {
 	::operator delete(address, size);
 }

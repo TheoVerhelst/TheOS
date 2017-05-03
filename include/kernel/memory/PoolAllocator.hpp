@@ -3,6 +3,7 @@
 
 #include <std/cstddef>
 #include <cpp/BitSet.hpp>
+#include <cpp/memory.hpp>
 #include <kernel/memory/Byte.hpp>
 
 /// \addtogroup Kernel
@@ -13,17 +14,15 @@ template <typename T, size_t Size>
 class Pool
 {
 	public:
-		typedef T* Pointer;
-
 		Pool() = default;
 
 		Pool(const Pool&) = delete;
 
 		Pool& operator=(const Pool&) = delete;
 
-		Pointer allocate();
+		T* allocate();
 
-		void deallocate(Pointer pointer);
+		void deallocate(T* pointer);
 
 	private:
 		static constexpr size_t _blockSize{sizeof(T)};
@@ -40,66 +39,53 @@ class Pool
 /// and an object of type PoolAllocator have to be bound to an instance of
 /// Pool, by the reference argument of the constructor.
 template <typename T, size_t Size>
-class PoolAllocator
+class PoolAllocator : public Allocator<T>
 {
 	public:
-		typedef T ValueType;
-		typedef T* Pointer;
-		typedef const T* ConstPointer;
-		typedef T& Reference;
-		typedef const T& ConstReference;
-		typedef size_t SizeType;
-		typedef ptrdiff_t DifferenceType;
 		typedef Pool<T, Size> PoolType;
 
-		template <class U, size_t OtherSize>
-		struct Rebind
-		{
-			typedef PoolAllocator<U, OtherSize> Other;
-		};
+		PoolAllocator(PoolType& pool);
 
-		PoolAllocator(Pool<T, Size>& pool);
+		virtual T* allocate() override;
 
-		Pointer allocate();
-
-		void deallocate(Pointer pointer);
+		virtual void deallocate(T* pointer) override;
 
 	private:
-		Pool<T, Size>& _pool;
+		PoolType& _pool;
 };
 
 template <typename T, size_t Size>
-typename Pool<T, Size>::Pointer Pool<T, Size>::allocate()
+T* Pool<T, Size>::allocate()
 {
 	const size_t blockIndex{_usedBlocks.find(false)};
 	if(blockIndex == _usedBlocks._invalidIndex)
 		return nullptr;
 	_usedBlocks.set(blockIndex);
-	return reinterpret_cast<Pointer>(&_array[blockIndex * _blockSize]);
+	return reinterpret_cast<T*>(&_array[blockIndex * _blockSize]);
 }
 
 template <typename T, size_t Size>
-void Pool<T, Size>::deallocate(Pointer pointer)
+void Pool<T, Size>::deallocate(T* pointer)
 {
-	const size_t blockIndex{static_cast<size_t>(pointer - reinterpret_cast<Pointer>(_array))};
+	const size_t blockIndex{static_cast<size_t>(pointer - reinterpret_cast<T*>(_array))};
 	if(blockIndex < Size)
 		_usedBlocks.reset(blockIndex);
 }
 
 template <typename T, size_t Size>
-PoolAllocator<T, Size>::PoolAllocator(Pool<T, Size>& pool):
+PoolAllocator<T, Size>::PoolAllocator(PoolType& pool):
 	_pool{pool}
 {
 }
 
 template <typename T, size_t Size>
-typename PoolAllocator<T, Size>::Pointer PoolAllocator<T, Size>::allocate()
+T* PoolAllocator<T, Size>::allocate()
 {
 	return _pool.allocate();
 }
 
 template <typename T, size_t Size>
-void PoolAllocator<T, Size>::deallocate(Pointer pointer)
+void PoolAllocator<T, Size>::deallocate(T* pointer)
 {
 	_pool.deallocate(pointer);
 }

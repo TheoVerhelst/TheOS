@@ -5,6 +5,9 @@
 #include <std/cstdint>
 #include <std/limits>
 #include <cpp/utility.hpp>
+#include <cpp/new.hpp>
+
+// TODO namespace mem (containing copy and set)
 
 /// Copies count characters from the object pointed to by \a src to the object
 /// pointed to by \a dest. Both objects are interpreted as arrays of unsigned
@@ -33,52 +36,63 @@ extern "C" void memset(void* dest, char value, size_t count);
 /// \param count Number of times to fill.
 void memset(void* dest, uint16_t value, size_t count);
 
-template <class T>
-class Allocator {
+template <typename T>
+class Allocator
+{
 	public:
-		// type definitions
-		typedef T ValueType;
-		typedef T* Pointer;
-		typedef const T* ConstPointer;
-		typedef T& Reference;
-		typedef const T& ConstReference;
-		typedef size_t SizeType;
-		typedef ptrdiff_t DifferenceType;
-
-		Pointer allocate()
-		{
-			return static_cast<Pointer>(::operator new(sizeof(T)));
-		}
+		template <typename... Args>
+		T* construct(Args&&... args);
 
 		template <typename... Args>
-		Pointer construct(Args&&... args)
-		{
-			return ::new (static_cast<void*>(allocate())) T(forward<Args>(args)...);
-		}
+		void destroy(T* pointer);
 
-		void deallocate(Pointer pointer)
-		{
-			::operator delete(static_cast<void*>(pointer));
-		}
+		virtual T* allocate();
 
-		template <typename... Args>
-		void destroy(Pointer p)
-		{
-			p->~T();
-			deallocate(p);
-		}
+		virtual void deallocate(T* pointer);
+
+		/// Returns a default instance of Allocator<T>. This may be useful for
+		/// classes that takes an allocator but still want to fall back to the
+		/// default one in their default constructor.
+		static Allocator& getDefault();
+
+	private:
+		static Allocator _defaultInstance;
 };
 
-template <class T1, class T2>
-bool operator==(const Allocator<T1>&, const Allocator<T2>&) throw()
+template <typename T>
+Allocator<T> Allocator<T>::_defaultInstance;
+
+template <typename T>
+template <typename... Args>
+T* Allocator<T>::construct(Args&&... args)
 {
-	return true;
+	return ::new (allocate()) T(forward<Args>(args)...);
 }
 
-template <class T1, class T2>
-bool operator!=(const Allocator<T1>&, const Allocator<T2>&) throw()
+template <typename T>
+template <typename... Args>
+void Allocator<T>::destroy(T* pointer)
 {
-	return false;
+	pointer->~T();
+	deallocate(pointer);
+}
+
+template <typename T>
+T* Allocator<T>::allocate()
+{
+	return static_cast<T*>(::operator new(sizeof(T)));
+}
+
+template <typename T>
+void Allocator<T>::deallocate(T* pointer)
+{
+	::operator delete(static_cast<void*>(pointer));
+}
+
+template <typename T>
+Allocator<T>& Allocator<T>::getDefault()
+{
+	return _defaultInstance;
 }
 
 #endif// MEMORY_HPP

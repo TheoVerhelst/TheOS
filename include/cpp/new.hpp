@@ -3,33 +3,33 @@
 
 #if not __STDC_HOSTED__
 
-[[gnu::__externally_visible__]] void* operator new(size_t size) throw();
+[[gnu::__externally_visible__]] void* operator new(size_t size);
 
-[[gnu::__externally_visible__]] void operator delete(void* address) throw();
+[[gnu::__externally_visible__]] void operator delete(void* address);
 
-[[gnu::__externally_visible__]] void operator delete(void* address, size_t size) throw();
+[[gnu::__externally_visible__]] void operator delete(void* address, size_t size);
 
-[[gnu::__externally_visible__]] void* operator new[](size_t size) throw();
+[[gnu::__externally_visible__]] void* operator new[](size_t size);
 
-[[gnu::__externally_visible__]] void operator delete[](void* address) throw();
+[[gnu::__externally_visible__]] void operator delete[](void* address);
 
-[[gnu::__externally_visible__]] void operator delete[](void* address, size_t size) throw();
+[[gnu::__externally_visible__]] void operator delete[](void* address, size_t size);
 
-inline void* operator new(size_t, void* address) noexcept
+[[gnu::__externally_visible__]] inline void* operator new(size_t, void* address)
 {
 	return address;
 }
 
-inline void* operator new[](size_t, void* address)  noexcept
+[[gnu::__externally_visible__]] inline void* operator new[](size_t, void* address)
 {
 	return address;
 }
 
-inline void operator delete(void*, void*) noexcept
+[[gnu::__externally_visible__]] inline void operator delete(void*, void*)
 {
 }
 
-inline void operator delete[](void*, void*) noexcept
+[[gnu::__externally_visible__]] inline void operator delete[](void*, void*)
 {
 }
 
