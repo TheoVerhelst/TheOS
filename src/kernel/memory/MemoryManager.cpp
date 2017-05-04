@@ -1,4 +1,5 @@
 #include <cpp/math.hpp>
+#include <cpp/algo.hpp>
 #include <cpp/Printer.hpp>
 #include <kernel/memory/MemoryManager.hpp>
 
@@ -177,12 +178,10 @@ constexpr size_t MemoryManager::getIndexFromSize(size_t size)
 
 typename MemoryManager::BlockList::iterator MemoryManager::findBlock(BlockList& blockList, intptr_t address, size_t index)
 {
-	typename BlockList::iterator it{blockList.begin()};
-	const size_t blockSize{1UL << index};
-	// Loop while the address is not in the block pointed by it
-	while((address < *it or address >= static_cast<intptr_t>(*it + blockSize)) and it != blockList.end())
-		++it;
-	return it;
+	return algo::find(blockList.begin(), blockList.end(), [index, address](intptr_t block)
+	{
+		return address >= block and address < static_cast<intptr_t>(block + (1UL << index));
+	});
 }
 
 inline intptr_t MemoryManager::getAlignedAddress(typename BlockList::iterator blockIt, size_t alignment)
