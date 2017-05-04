@@ -2,7 +2,7 @@
 #define MEMORYMANAGER_HPP
 
 #include <std/cstddef>
-#include <cpp/memory.hpp>
+#include <cpp/Allocator.hpp>
 #include <cpp/List.hpp>
 #include <cpp/Array.hpp>
 

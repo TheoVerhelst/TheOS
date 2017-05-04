@@ -1,6 +1,9 @@
-#include <cpp/memory.hpp>
+#include <cpp/mem.hpp>
 
-void memcpy(void* dest, const void* src, size_t count)
+namespace mem
+{
+
+void copy(void* dest, const void* src, size_t count)
 {
 	// Decompose into 32-bit blocks and 8-bit blocks so transfer may be faster
 	size_t dwordCount{count / sizeof(uint32_t)};
@@ -17,16 +20,18 @@ void memcpy(void* dest, const void* src, size_t count)
 		byteDest[i] = byteSrc[i];
 }
 
-extern "C" void memset(void* dest, char value, size_t count)
+void set(void* dest, uint16_t value, size_t count)
 {
-	char* castedDest{static_cast<char*>(dest)};
+	uint16_t* castedDest{static_cast<uint16_t*>(dest)};
 	for(size_t i{0}; i < count; ++i)
 		castedDest[i] = value;
 }
 
-void memset(void* dest, uint16_t value, size_t count)
+} // namespace mem
+
+extern "C" void memset(void* dest, char value, size_t count)
 {
-	uint16_t* castedDest{static_cast<uint16_t*>(dest)};
+	char* castedDest{static_cast<char*>(dest)};
 	for(size_t i{0}; i < count; ++i)
 		castedDest[i] = value;
 }

@@ -2,7 +2,6 @@
 #define ARRAY_HPP
 
 #include <std/cstddef>
-#include <cpp/memory.hpp>
 #include <cpp/new.hpp>
 
 /// \defgroup Cpp C++

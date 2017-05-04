@@ -17,7 +17,6 @@ Kernel::Kernel():
 	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize,
 	             _heapManagerPoolAllocator}
 {
-	out << "Heap at " << _heapAddress << "\n";
 	testHeap();
 	printPrettyAsciiArt();
 	processMultibootInfo();

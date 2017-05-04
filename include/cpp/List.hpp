@@ -4,7 +4,7 @@
 #include <std/cstddef>
 #include <std/type_traits>
 #include <cpp/utility.hpp>
-#include <cpp/memory.hpp>
+#include <cpp/Allocator.hpp>
 
 /// \addtogroup Cpp
 /// \{

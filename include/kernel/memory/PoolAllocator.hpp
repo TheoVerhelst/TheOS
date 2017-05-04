@@ -3,7 +3,7 @@
 
 #include <std/cstddef>
 #include <cpp/BitSet.hpp>
-#include <cpp/memory.hpp>
+#include <cpp/Allocator.hpp>
 #include <kernel/memory/Byte.hpp>
 
 /// \addtogroup Kernel
