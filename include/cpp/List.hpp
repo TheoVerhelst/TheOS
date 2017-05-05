@@ -441,28 +441,28 @@ typename List<T>::iterator List<T>::insertImpl(iterator pos)
 
 template <class T>
 template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType>::NodeIterator(NodeType* node) noexcept:
+List<T>::NodeIterator<U, NodeType>::NodeIterator(NodeType* node):
 	_node{node}
 {
 }
 
 template <class T>
 template <typename U, typename NodeType>
-U&  List<T>::NodeIterator<U, NodeType>::operator*() const noexcept
+U&  List<T>::NodeIterator<U, NodeType>::operator*() const
 {
 	return _node->_value;
 }
 
 template <class T>
 template <typename U, typename NodeType>
-U*  List<T>::NodeIterator<U, NodeType>::operator->() const noexcept
+U*  List<T>::NodeIterator<U, NodeType>::operator->() const
 {
 	return &_node->_value;
 }
 
 template <class T>
 template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator++() noexcept
+List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator++()
 {
 	_node = _node->_next;
 	return static_cast<NodeIterator&>(*this);
@@ -470,7 +470,7 @@ List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator
 
 template <class T>
 template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator++(int) noexcept
+List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator++(int)
 {
 	NodeIterator tmp{*this};
 	_node = _node->_next;
@@ -479,7 +479,7 @@ List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator+
 
 template <class T>
 template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator--() noexcept
+List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator--()
 {
 	_node = _node->_previous;
 	return static_cast<NodeIterator&>(*this);
@@ -487,7 +487,7 @@ List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator
 
 template <class T>
 template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator--(int) noexcept
+List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator--(int)
 {
 	NodeIterator tmp{*this};
 	_node = _node->_previous;
@@ -496,14 +496,14 @@ List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator-
 
 template <class T>
 template <typename U, typename NodeType>
-bool List<T>::NodeIterator<U, NodeType>::operator==(const NodeIterator<U, NodeType>& other) const noexcept
+bool List<T>::NodeIterator<U, NodeType>::operator==(const NodeIterator<U, NodeType>& other) const
 {
 	return _node == other._node;
 }
 
 template <class T>
 template <typename U, typename NodeType>
-bool List<T>::NodeIterator<U, NodeType>::operator!=(const NodeIterator<U, NodeType>& other) const noexcept
+bool List<T>::NodeIterator<U, NodeType>::operator!=(const NodeIterator<U, NodeType>& other) const
 {
 	return _node != other._node;
 }

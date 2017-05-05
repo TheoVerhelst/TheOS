@@ -11,6 +11,7 @@
 
 /// Holds some things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.
+/// TODO make this class an Allocator, and make Allocator non-template ?
 class MemoryManager
 {
 	public:

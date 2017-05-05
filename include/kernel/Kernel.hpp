@@ -59,7 +59,7 @@ class Kernel final
 
 		void* _heapAddress;
 
-		/// The the pool used by the internal allocator of the heap manager.
+		/// The pool used by the internal allocator of the heap manager.
 		HeapManagerPoolAllocator::PoolType _heapManagerPool;
 
 		/// The memory allocator that the heap manager uses for its internal
