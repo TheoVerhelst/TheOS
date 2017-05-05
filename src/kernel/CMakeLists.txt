@@ -155,6 +155,6 @@ set(SOURCES
 	"interrupts/isr/cpp/isr61.cpp"
 	"interrupts/isr/cpp/isr62.cpp"
 	"interrupts/isr/cpp/isr63.cpp"
-	)
+)
 
 add_library(kernel OBJECT ${SOURCES})

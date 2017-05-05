@@ -1,8 +1,8 @@
 set(SOURCES
-	"kernelMain.cpp"
 	"boot.asm"
 	"Icxxabi.cpp"
-	)
+	"kernelMain.cpp"
+)
 
 add_library(boot OBJECT ${SOURCES})
 

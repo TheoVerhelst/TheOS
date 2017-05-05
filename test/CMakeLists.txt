@@ -5,10 +5,13 @@ set(TEST_SOURCE_FILES
     "cpp/ListTest.cpp"
 )
 
-# Place the executable files in the root directory instead of in test
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
 # Add another include directory
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
-add_executable("${PROJECT_NAME}Test" ${TEST_SOURCE_FILES})
+set(TEST_EXECUTABLE_NAME "${PROJECT_NAME}Test")
+add_executable(${TEST_EXECUTABLE_NAME} ${TEST_SOURCE_FILES})
+
+# Execute tests after the build
+add_custom_command(TARGET ${TEST_EXECUTABLE_NAME} POST_BUILD
+    COMMAND "${CMAKE_BINARY_DIR}/${TEST_EXECUTABLE_NAME}"
+)
