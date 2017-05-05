@@ -1,6 +1,7 @@
 set(TEST_SOURCE_FILES
     "main.cpp"
     "cpp/ArrayTest.cpp"
+    "cpp/BitSetTest.cpp"
     "cpp/ListTest.cpp"
 )
 

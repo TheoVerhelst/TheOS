@@ -157,7 +157,7 @@ static_assert(sizeof(kernelPageDirectory) == pageSize, "The page directory must 
 
 /// The page tables used to map the kernel.
 alignas(pageSize) [[gnu::section(".pagingTables")]] extern uint32_t kernelPageTables[kernelPageTablesNumber][entriesNumber];
-static_assert(sizeof(kernelPageTables[0]) == pageSize, "The page table must fit in one frame.");
+static_assert(sizeof(kernelPageTables[0]) == pageSize, "The page tables must fit in one frame.");
 
 extern "C" void* lowKernelStart;
 extern "C" void* lowKernelEnd;
@@ -166,7 +166,7 @@ constexpr uint16_t kernelPagingFlags{Flags::Present | Flags::ReadWrite | Flags::
 
 /// Initializes the kernel paging by just setting up the page directory and the
 /// page tables. The assembly operations (modifying CR3 or whatever) are not
-/// done here, but rather in the assembly routine that is calling this function.
+/// done here, but rather in the assembly routine that calls this function.
 extern "C" [[gnu::section(".bootInit")]] void initKernelPaging();
 
 [[gnu::section(".bootInit")]] void mapMemory(intptr_t start, intptr_t end, bool higherHalf);

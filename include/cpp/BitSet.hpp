@@ -68,7 +68,7 @@ class BitSet
 		/// \param value The value that must have the bit to find.
 		/// \return The index of the first bit with the value \a value, or
 		/// invalidIndex if no bits have the given value.
-		size_t find(bool value);
+		size_t find(bool value) const;
 
 		/// Gets the size of the bitset, its number of bits.
 		/// \return The number of bits in the bitset.
@@ -180,7 +180,7 @@ bool BitSet<N>::test(size_t index) const
 }
 
 template <size_t N>
-size_t BitSet<N>::find(bool value)
+size_t BitSet<N>::find(bool value) const
 {
 	size_t firstTriedWord{_lastIndex};
 	do
@@ -190,7 +190,10 @@ size_t BitSet<N>::find(bool value)
 		int result{__builtin_ffsll(value ? _words[_lastIndex] : ~_words[_lastIndex])};
 		if(result == 0)
 			// No bit was found, go to the next word
-			_lastIndex = (_lastIndex + 1) % _wordsNumber;
+			// This function is const, but we need to update the _lastIndex
+			// So rather than making BitSet::find non-const (breaking some use cases),
+			// we const-cast the pointer `this`.
+			const_cast<BitSet*>(this)->_lastIndex = (_lastIndex + 1) % _wordsNumber;
 		else
 			return _lastIndex * _wordsSize + result - 1;
 	// Loop until we tested each word
