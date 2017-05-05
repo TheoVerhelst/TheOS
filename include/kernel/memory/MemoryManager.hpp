@@ -11,7 +11,6 @@
 
 /// Holds some things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.
-/// TODO make this class an Allocator, and make Allocator non-template ?
 class MemoryManager
 {
 	public:
@@ -58,21 +57,21 @@ class MemoryManager
 
 		static constexpr intptr_t _nullPointer{reinterpret_cast<intptr_t>(nullptr)};
 
-		void tryMerge(typename BlockList::iterator blockToMergeIt, size_t index);
+		void tryMerge(typename BlockList::Iterator blockToMergeIt, size_t index);
 
 		/// \return A valid iterator in _allocatedBlocks[index] in case of success,
 		/// _allocatedBlocks[index].end() otherwise.
-		typename BlockList::iterator allocateBlock(size_t index);
+		typename BlockList::Iterator allocateBlock(size_t index);
 
-		static inline intptr_t getAlignedAddress(typename BlockList::iterator blockIt, size_t alignment);
+		static inline intptr_t getAlignedAddress(typename BlockList::Iterator blockIt, size_t alignment);
 
 		void memoryDump() const;
 
 		static constexpr size_t getIndexFromSize(size_t size);
-		
-		static typename BlockList::iterator findBlock(BlockList& blockList, intptr_t address, size_t index);
+
+		static typename BlockList::Iterator findBlock(BlockList& blockList, intptr_t address, size_t index);
 };
 
 /// \}
 
-#endif// MEMORYMANAGER_HPP
+#endif // MEMORYMANAGER_HPP

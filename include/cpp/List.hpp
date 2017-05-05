@@ -95,8 +95,8 @@ class List
 
 	public:
 		typedef details::ListNode<T> NodeType;
-		typedef NodeIterator<T, NodeType> iterator;                 ///< Non constant iterator.
-		typedef NodeIterator<const T, const NodeType> constIterator;///< Constant iterator.
+		typedef NodeIterator<T, NodeType> Iterator;                 ///< Non constant iterator.
+		typedef NodeIterator<const T, const NodeType> ConstIterator;///< Constant iterator.
 
 		/// Constructor.
 		/// \param allocator The allocator to use.
@@ -181,47 +181,47 @@ class List
 
 		/// Gets an iterator to the first element of the list.
 		/// \return An iterator to the first element of the list.
-		iterator begin();
+		Iterator begin();
 
 		/// Gets a constant iterator to the first element of the list.
 		/// \return A constant iterator to the first element of the list.
-		constIterator begin() const;
+		ConstIterator begin() const;
 
 		/// Gets an iterator to the past the last element of the list.
 		/// \return An iterator to the past the last element of the list.
-		iterator end();
+		Iterator end();
 
 		/// Gets a constant iterator to the past the last element of the list.
 		/// \return A constant iterator to the past the last element of the
 		/// list.
-		constIterator end() const;
+		ConstIterator end() const;
 
 		/// Inserts an element into the list, before the given position.
 		/// \param pos The position where to put \a value.
 		/// \param value The value to add.
 		/// \return An iterator to the inserted element.
-		iterator insert(iterator pos, const T& value);
+		Iterator insert(Iterator pos, const T& value);
 
 		/// Inserts an element into the list, before the given position.
 		/// \param pos The position where to put \a value.
 		/// \param value The value to add.
 		/// \return An iterator to the inserted element.
-		iterator insert(iterator pos, T&& value);
+		Iterator insert(Iterator pos, T&& value);
 
 		/// Erases an element of the list.
 		/// \param pos An iterator to the element to erase.
 		/// \return An iterator to the element following the erased element.
-		iterator erase(iterator pos);
+		Iterator erase(Iterator pos);
 
 		/// Erases a sequence of elements from the list.
 		/// \param first The first element to erase.
 		/// \param last The element following the last element to erase.
 		/// \return An iterator to the element following the last erased
 		/// element.
-		iterator erase(iterator first, iterator last);
+		Iterator erase(Iterator first, Iterator last);
 
 	private:
-		iterator insertImpl(iterator pos);
+		Iterator insertImpl(Iterator pos);
 
 		/// The first node of the list.
 		NodeType* _begin;
@@ -355,31 +355,31 @@ void List<T>::popFront()
 }
 
 template <class T>
-typename List<T>::iterator List<T>::begin()
+typename List<T>::Iterator List<T>::begin()
 {
-	return iterator(_begin);
+	return Iterator(_begin);
 }
 
 template <class T>
-typename List<T>::constIterator List<T>::begin() const
+typename List<T>::ConstIterator List<T>::begin() const
 {
-	return constIterator(_begin);
+	return ConstIterator(_begin);
 }
 
 template <class T>
-typename List<T>::iterator List<T>::end()
+typename List<T>::Iterator List<T>::end()
 {
-	return iterator(_end);
+	return Iterator(_end);
 }
 
 template <class T>
-typename List<T>::constIterator List<T>::end() const
+typename List<T>::ConstIterator List<T>::end() const
 {
-	return constIterator(_end);
+	return ConstIterator(_end);
 }
 
 template <class T>
-typename List<T>::iterator List<T>::insert(iterator pos, const T& value)
+typename List<T>::Iterator List<T>::insert(Iterator pos, const T& value)
 {
 	auto it(insertImpl(pos));
 	*it = value;
@@ -387,7 +387,7 @@ typename List<T>::iterator List<T>::insert(iterator pos, const T& value)
 }
 
 template <class T>
-typename List<T>::iterator List<T>::insert(iterator pos, T&& value)
+typename List<T>::Iterator List<T>::insert(Iterator pos, T&& value)
 {
 	auto it(insertImpl(pos));
 	*it = forward<T>(value);
@@ -395,15 +395,15 @@ typename List<T>::iterator List<T>::insert(iterator pos, T&& value)
 }
 
 template <class T>
-typename List<T>::iterator List<T>::erase(iterator pos)
+typename List<T>::Iterator List<T>::erase(Iterator pos)
 {
-	iterator tmp{pos};
+	Iterator tmp{pos};
 	++tmp;
 	return erase(pos, tmp);
 }
 
 template <class T>
-typename List<T>::iterator List<T>::erase(iterator first, iterator last)
+typename List<T>::Iterator List<T>::erase(Iterator first, Iterator last)
 {
 	if(first._node == _begin)
 		_begin = last._node;
@@ -423,7 +423,7 @@ typename List<T>::iterator List<T>::erase(iterator first, iterator last)
 }
 
 template <class T>
-typename List<T>::iterator List<T>::insertImpl(iterator pos)
+typename List<T>::Iterator List<T>::insertImpl(Iterator pos)
 {
 	NodeType* node{_allocator.construct()};
 	node->_previous = pos._node->_previous;
@@ -434,7 +434,7 @@ typename List<T>::iterator List<T>::insertImpl(iterator pos)
 	else
 		node->_previous->_next = node;
 	++_size;
-	return iterator(node);
+	return Iterator(node);
 }
 
 // NodeIterator

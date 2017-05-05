@@ -33,7 +33,7 @@ void* MemoryManager::allocate(size_t size, size_t alignment)
 {
 	const size_t index{getIndexFromSize(size + alignment)};
 	intptr_t result{_nullPointer};
-	typename BlockList::iterator it{allocateBlock(index)};
+	typename BlockList::Iterator it{allocateBlock(index)};
 
 	if(_activateMemoryDump)
 		memoryDump();
@@ -54,7 +54,7 @@ void MemoryManager::deallocate(void* address)
 
 	// Find the block corresponding to the address
 	size_t index{0};
-	typename BlockList::iterator it;
+	typename BlockList::Iterator it;
 	while(index < _addressSize)
 	{
 		it = findBlock(_allocatedBlocks[index], addressInt, index);
@@ -85,7 +85,7 @@ void MemoryManager::deallocate(void* address, size_t size)
 
 	// Find the block corresponding to the address
 	const size_t index{getIndexFromSize(size)};
-	typename BlockList::iterator it{findBlock(_allocatedBlocks[index], addressInt, index)};
+	typename BlockList::Iterator it{findBlock(_allocatedBlocks[index], addressInt, index)};
 
 	if(it != _allocatedBlocks[index].end())
 	{
@@ -100,7 +100,7 @@ void MemoryManager::deallocate(void* address, size_t size)
 		memoryDump();
 }
 
-void MemoryManager::tryMerge(typename BlockList::iterator blockToMergeIt, size_t index)
+void MemoryManager::tryMerge(typename BlockList::Iterator blockToMergeIt, size_t index)
 {
 	const size_t blockSize{1UL << index};
 	for(auto it(_freeBlocks[index].begin()); it != _freeBlocks[index].end(); ++it)
@@ -113,8 +113,8 @@ void MemoryManager::tryMerge(typename BlockList::iterator blockToMergeIt, size_t
 			and findBlock(_freeBlocks[index], *it, index) != _freeBlocks[index].end())
 
 		{
-			typename BlockList::iterator lowerBlockIt{*it < *blockToMergeIt ? it : blockToMergeIt};
-			typename BlockList::iterator upperBlockIt{lowerBlockIt == blockToMergeIt ? it : blockToMergeIt};
+			typename BlockList::Iterator lowerBlockIt{*it < *blockToMergeIt ? it : blockToMergeIt};
+			typename BlockList::Iterator upperBlockIt{lowerBlockIt == blockToMergeIt ? it : blockToMergeIt};
 			intptr_t baseAddress{*lowerBlockIt};
 			_freeBlocks[index].erase(lowerBlockIt);
 			_freeBlocks[index].erase(upperBlockIt);
@@ -126,7 +126,7 @@ void MemoryManager::tryMerge(typename BlockList::iterator blockToMergeIt, size_t
 	}
 }
 
-typename MemoryManager::BlockList::iterator MemoryManager::allocateBlock(size_t index)
+typename MemoryManager::BlockList::Iterator MemoryManager::allocateBlock(size_t index)
 {
 	// This should never happens (TODO: write an assert instead)
 	if(index >= _addressSize)
@@ -176,7 +176,7 @@ constexpr size_t MemoryManager::getIndexFromSize(size_t size)
 	return i;
 }
 
-typename MemoryManager::BlockList::iterator MemoryManager::findBlock(BlockList& blockList, intptr_t address, size_t index)
+typename MemoryManager::BlockList::Iterator MemoryManager::findBlock(BlockList& blockList, intptr_t address, size_t index)
 {
 	return algo::find(blockList.begin(), blockList.end(), [index, address](intptr_t block)
 	{
@@ -184,7 +184,7 @@ typename MemoryManager::BlockList::iterator MemoryManager::findBlock(BlockList& 
 	});
 }
 
-inline intptr_t MemoryManager::getAlignedAddress(typename BlockList::iterator blockIt, size_t alignment)
+inline intptr_t MemoryManager::getAlignedAddress(typename BlockList::Iterator blockIt, size_t alignment)
 {
 	if(alignment > 0)
 	{
