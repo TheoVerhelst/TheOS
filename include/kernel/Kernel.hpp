@@ -30,7 +30,7 @@ class Kernel final
 		/// the elements of its internal lists. In order to manage a big heap
 		/// area, a little pool area is needed. This is a pool allocator that
 		/// uses a pool instance stored as an attribute of the kernel.
-		typedef PoolAllocator<MemoryManager::BlockList::NodeType, _maxBlocksNumber> HeapManagerPoolAllocator;
+		typedef PoolAllocator<MemoryManager::ToAllocate, _maxBlocksNumber> HeapManagerPoolAllocator;
 
 		/// Constructor.
 		Kernel();

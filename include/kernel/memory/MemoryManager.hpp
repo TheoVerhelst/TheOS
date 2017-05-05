@@ -15,6 +15,7 @@ class MemoryManager
 {
 	public:
 		typedef List<intptr_t> BlockList;
+		typedef BlockList::NodeType ToAllocate;
 
 		/// Constructs the manager.
 		/// \param allocator The allocator to use.
