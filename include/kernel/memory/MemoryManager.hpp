@@ -69,8 +69,7 @@ class MemoryManager
 		void memoryDump() const;
 
 		static constexpr size_t getIndexFromSize(size_t size);
-
-		// TODO replace by std::find
+		
 		static typename BlockList::iterator findBlock(BlockList& blockList, intptr_t address, size_t index);
 };
 

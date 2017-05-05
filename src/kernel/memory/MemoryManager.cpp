@@ -108,7 +108,7 @@ void MemoryManager::tryMerge(typename BlockList::iterator blockToMergeIt, size_t
 		// If we found a block...
 		if(it != blockToMergeIt
 			// that is adjacent to the block to merge...
-			and abs(*it - *blockToMergeIt) == static_cast<intptr_t>(blockSize)
+			and math::abs(*it - *blockToMergeIt) == static_cast<intptr_t>(blockSize)
 			// and that has a size corresponding to index
 			and findBlock(_freeBlocks[index], *it, index) != _freeBlocks[index].end())
 

@@ -1,33 +1,33 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
-#include <std/type_traits>
+namespace math
+{
 
-/// \defgroup C C
-/// Pseudo-implementation of the standard C library.
-/// \{
-
-/// Get the absolute value of the given number.
-/// \param n A number.
+/// Gets the absolute value of the given number.
+/// \param value A number.
+/// \tparam T Any signed numerical type
 /// \return n > 0 ? n : -n;
-int abs(int n);
+template <typename T>
+constexpr T abs(T value);
 
-/// Get the absolute value of the given number.
-/// \param n A number.
-/// \return n > 0L ? n : -n;
-long int abs(long int n);
-
-/// Get the absolute value of the given number.
-/// \param n A number.
-/// \return n > 0LL ? n : -n;
-long long int abs(long long int n);
-
+/// Gets the integer logarithm in base two of the given number.
+/// \param value The input value.
+/// \tparam T Any unsigned integer type
+/// \tparam The logarithm in base two.
 template <typename T>
 constexpr T log2(T value);
 
-/// \}
+} // namespace math
 
+namespace math
+{
 
+template <typename T>
+constexpr T abs(T value)
+{
+	return value >= static_cast<T>(0) ? value : -value;
+}
 
 template <typename T>
 constexpr T log2(T value)
@@ -40,4 +40,6 @@ constexpr T log2(T value)
 	return res;
 }
 
-#endif// MATH_HPP
+} // namespace math
+
+#endif // MATH_HPP
