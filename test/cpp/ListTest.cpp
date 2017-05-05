@@ -44,7 +44,6 @@ SCENARIO("Empty list")
             list.pushBack(3);
             list.pushBack(5);
             list.pushBack(8);
-
             THEN("The size is four")
                 REQUIRE(list.size() == 4);
 

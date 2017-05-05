@@ -3,6 +3,7 @@ set(TEST_SOURCE_FILES
     "cpp/ArrayTest.cpp"
     "cpp/BitSetTest.cpp"
     "cpp/ListTest.cpp"
+    "kernel/memory/MemoryManagerTest.cpp"
 )
 
 # Add another include directory
