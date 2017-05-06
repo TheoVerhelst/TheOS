@@ -1,3 +1,4 @@
+#include <kernel/abort.hpp>
 #include <boot/Icxxabi.hpp>
 
 extern "C"
@@ -98,7 +99,7 @@ void __cxa_finalize(void *f)
 
 void __cxa_pure_virtual()
 {
-    // Do nothing or print an error message.
+	abort("Pure virtual function called");
 }
 
 }// extern "C"

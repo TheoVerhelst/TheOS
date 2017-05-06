@@ -24,6 +24,10 @@ int __cxa_atexit(void (*f)(void *), void *objptr, void *dso);
 
 void __cxa_finalize(void *f);
 
+/// Function called when a pure virtual function is called. It aborts with an
+/// error message.
+void __cxa_pure_virtual();
+
 }// extern "C"
 
 /// \}
