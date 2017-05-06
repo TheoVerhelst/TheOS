@@ -9,3 +9,5 @@ doxygen/
 
 # Folder with scripts/alternative resources
 alt/
+
+test/catch/
