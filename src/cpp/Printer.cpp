@@ -1,22 +1,25 @@
 #include <cpp/Printer.hpp>
 #include <cpp/string.hpp>
-#include <kernel/terminal/Terminal.hpp>
-
-Printer out;
+#include <kernel/terminal/KernelTerminal.hpp>
 
 constexpr size_t Printer::_bufferLength;
 constexpr const char* Printer::_alphabet;
 constexpr const char* Printer::_prefixes[];
 
+Printer::Printer(AbstractTerminal& terminal):
+	_terminal{terminal}
+{
+}
+
 Printer& Printer::operator<<(char arg)
 {
-	terminal.putChar(arg);
+	_terminal.putChar(arg);
 	return *this;
 }
 
 Printer& Printer::operator<<(const char* arg)
 {
-	terminal.putString(arg);
+	_terminal.putString(arg);
 	return *this;
 }
 
@@ -51,13 +54,13 @@ Printer& Printer::operator<<(long unsigned int arg)
 }
 Printer& Printer::operator<<(long long int arg)
 {
-	terminal.putString(convertToString(static_cast<long long unsigned int>(arg), arg < 0));
+	_terminal.putString(convertToString(static_cast<long long unsigned int>(arg), arg < 0));
 	return *this;
 }
 
 Printer& Printer::operator<<(long long unsigned int arg)
 {
-	terminal.putString(convertToString(arg, false));
+	_terminal.putString(convertToString(arg, false));
 	return *this;
 }
 

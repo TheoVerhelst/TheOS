@@ -8,8 +8,12 @@ set(TEST_SOURCE_FILES
 # Add another include directory
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
+set(BUILD_TEST TRUE)
+
+add_subdirectory(../src/cpp buildCppTest)
+
 set(TEST_EXECUTABLE_NAME "${PROJECT_NAME}Test")
-add_executable(${TEST_EXECUTABLE_NAME} ${TEST_SOURCE_FILES})
+add_executable(${TEST_EXECUTABLE_NAME} ${TEST_SOURCE_FILES} $<TARGET_OBJECTS:cppTest>)
 
 # Execute tests after the build
 add_custom_command(TARGET ${TEST_EXECUTABLE_NAME} POST_BUILD

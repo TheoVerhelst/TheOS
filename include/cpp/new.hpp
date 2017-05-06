@@ -1,7 +1,7 @@
+#if not __STDC_HOSTED__
+
 #ifndef NEW_HPP
 #define NEW_HPP
-
-#if not __STDC_HOSTED__
 
 [[gnu::__externally_visible__]] void* operator new(size_t size);
 
@@ -33,6 +33,6 @@
 {
 }
 
-#endif // not __STDC_HOSTED__
-
 #endif // NEW_HPP
+
+#endif // not __STDC_HOSTED__

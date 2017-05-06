@@ -1,7 +1,7 @@
+#if not __STDC_HOSTED__
+
 #include <kernel/Kernel.hpp>
 #include <cpp/new.hpp>
-
-#if not __STDC_HOSTED__
 
 [[gnu::__externally_visible__]] void* operator new(size_t size)
 {

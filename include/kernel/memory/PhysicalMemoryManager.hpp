@@ -60,4 +60,4 @@ extern "C" void* lowKernelEnd;
 
 /// \}
 
-#endif// PHYSICALMEMORYMANAGER_HPP
+#endif // PHYSICALMEMORYMANAGER_HPP

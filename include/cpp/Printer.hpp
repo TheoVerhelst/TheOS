@@ -3,6 +3,7 @@
 
 #include <std/cstddef>
 #include <std/cstdint>
+#include <cpp/AbstractTerminal.hpp>
 
 /// \addtogroup Cpp
 /// \{
@@ -45,6 +46,10 @@ class Printer
 			/// If set, the base prefix is hidden.
 			NoShowBase,
 		};
+
+		/// Constructor.
+		/// \param terminal The terminal that will be used for output.
+		Printer(AbstractTerminal& terminal);
 
 		/// Prints a character to the terminal.
 		/// \param arg The character to print.
@@ -117,6 +122,7 @@ class Printer
 	private:
 		char* convertToString(unsigned long long int arg, bool showMinus);
 
+		AbstractTerminal& _terminal;
 		size_t _numericBase{10};
 		bool _boolAlpha{true};
 		bool _showBase{false};
@@ -137,7 +143,8 @@ class Printer
 			"", "0", "", "", "", "", "", "", "", "0x"};
 };
 
-/// The main printer instance.
+/// The main printer instance. Must be instanciated by the environnement, by
+/// giving the terminal to use.
 extern Printer out;
 
 /// \}

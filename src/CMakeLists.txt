@@ -14,6 +14,8 @@ set(CMAKE_CXX_LINK_FLAGS "-nostdlib -T ${CONFIG_DIRECTORY}/linker.ld")
 # Some flags are set by default; disable them
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 
+set(BUILD_TEST FALSE)
+
 # List the main executable source files
 add_subdirectory(boot)
 add_subdirectory(kernel)

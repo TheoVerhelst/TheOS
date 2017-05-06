@@ -2,19 +2,29 @@
 #define TERMINAL_HPP
 
 #include <std/cstddef>
+#include <cpp/AbstractTerminal.hpp>
 #include <kernel/video/vgaManagement.hpp>
 
 /// \addtogroup Kernel
 /// \{
 
-/// Class managing the main terminal.
-class Terminal
+/// Class managing the kernel terminal.
+class KernelTerminal : public AbstractTerminal
 {
 	public:
-		Terminal();
+		/// Constructor.
+		KernelTerminal();
+
+		/// Changes the colours of the terminal.
 		void setColourProfile(vga::ColourProfile profile);
-		void putChar(char c);
-		void putString(const char * str);
+
+        /// Puts a character to the terminal.
+        /// \param c The character to put.
+		virtual void putChar(char c) override;
+
+        /// Puts a string to the terminal.
+        /// \param str The string to put.
+		virtual void putString(const char* str) override;
 
 		static const vga::ColourProfile _defaultColourProfile;
 
@@ -30,10 +40,7 @@ class Terminal
 		vga::ColourProfile _profile;/// Colour of the cell
 		vga::Entry _emptyCell;
 		bool _writing;
-
 };
-
-extern Terminal terminal;
 
 /// \}
 

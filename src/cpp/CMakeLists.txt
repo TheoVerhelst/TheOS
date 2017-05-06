@@ -5,4 +5,8 @@ set(SOURCES
 	"string.cpp"
 )
 
-add_library(cpp OBJECT ${SOURCES})
+if(BUILD_TEST)
+	add_library(cppTest OBJECT ${SOURCES})
+else(BUILD_TEST)
+	add_library(cpp OBJECT ${SOURCES})
+endif(BUILD_TEST)

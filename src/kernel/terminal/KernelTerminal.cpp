@@ -1,12 +1,10 @@
 #include <cpp/mem.hpp>
 #include <kernel/io.hpp>
-#include <kernel/terminal/Terminal.hpp>
+#include <kernel/terminal/KernelTerminal.hpp>
 
-Terminal terminal;
+const vga::ColourProfile KernelTerminal::_defaultColourProfile{vga::Colour::LightGrey, vga::Colour::Black};
 
-const vga::ColourProfile Terminal::_defaultColourProfile{vga::Colour::LightGrey, vga::Colour::Black};
-
-Terminal::Terminal():
+KernelTerminal::KernelTerminal():
 	_row{0},
 	_column{0},
 	_profile{vga::Colour::LightGrey, vga::Colour::Black},
@@ -16,18 +14,18 @@ Terminal::Terminal():
 	clearScreen();
 }
 
-void Terminal::setColourProfile(vga::ColourProfile profile)
+void KernelTerminal::setColourProfile(vga::ColourProfile profile)
 {
 	_profile = profile;
 	_emptyCell = vga::Entry(' ', _profile);
 }
 
-void Terminal::putEntryAt(char c, vga::ColourProfile profile, size_t x, size_t y)
+void KernelTerminal::putEntryAt(char c, vga::ColourProfile profile, size_t x, size_t y)
 {
 	vga::buffer[vga::coordToIndex(x, y)] = vga::Entry(c, profile);
 }
 
-void Terminal::newLine(void)
+void KernelTerminal::newLine(void)
 {
 	_column = 0;
 	++_row;
@@ -35,7 +33,7 @@ void Terminal::newLine(void)
 		scrollUp();
 }
 
-void Terminal::putChar(char c)
+void KernelTerminal::putChar(char c)
 {
 	if(c == '\n')
 		newLine();
@@ -53,13 +51,13 @@ void Terminal::putChar(char c)
 		moveCursor(_column, _row);
 }
 
-void Terminal::putString(const char *str)
+void KernelTerminal::putString(const char* str)
 {
 	while(*str != '\0')
 		putChar(*(str++));
 }
 
-void Terminal::scrollUp()
+void KernelTerminal::scrollUp()
 {
 	--_row;
 	mem::copy(vga::buffer, &vga::buffer[vga::coordToIndex(0, 1)],
@@ -67,12 +65,12 @@ void Terminal::scrollUp()
 	mem::set(&vga::buffer[vga::coordToIndex(0, vga::height - 1)], static_cast<uint16_t>(_emptyCell), vga::width);
 }
 
-void Terminal::clearScreen()
+void KernelTerminal::clearScreen()
 {
 	mem::set(vga::buffer, static_cast<uint16_t>(_emptyCell), vga::height*vga::width);
 }
 
-void Terminal::moveCursor(int x, int y)
+void KernelTerminal::moveCursor(int x, int y)
 {
 	uint16_t location = (y * vga::width) + x;
 

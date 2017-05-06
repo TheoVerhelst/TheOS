@@ -75,6 +75,7 @@ struct MultibootInfo
 {
 	static_assert(sizeof(void*) == sizeof(uint32_t), "Addresses must be 32-bit");
 	static_assert(sizeof(size_t) == sizeof(uint32_t), "Sizes must be 32-bit");
+
 	/// Indicates the presence and the validity of the following fields.
 	uint32_t _flags;
 

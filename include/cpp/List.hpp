@@ -95,7 +95,7 @@ class List
 
 	public:
 		typedef details::ListNode<T> NodeType;
-		typedef NodeType ToAllocate; ///< The type that should be allocated.
+		typedef NodeType ToAllocate; ///< The type that should be managed by the allocator.
 		typedef NodeIterator<T, NodeType> Iterator; ///< Non constant iterator.
 		typedef NodeIterator<const T, const NodeType> ConstIterator;///< Constant iterator.
 
