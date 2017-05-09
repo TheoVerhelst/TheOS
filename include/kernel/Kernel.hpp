@@ -38,6 +38,8 @@ class Kernel final
 		/// Main function.
 		[[noreturn]] void run();
 
+		static Kernel& getInstance();
+
 		MemoryManager& getHeapManager();
 
 	private:
@@ -54,6 +56,8 @@ class Kernel final
 		void testHeap();
 
 		void printPrettyAsciiArt();
+
+		static Kernel* _instance;
 
 		PhysicalMemoryManager _physicalMemoryManager;
 
@@ -74,9 +78,6 @@ class Kernel final
 		/// characters that the user typed.
 		ps2::KeyboardDriver _keyboardDriver;
 };
-
-/// The main, unique kernel class instance.
-extern Kernel kernel;
 
 /// \}
 

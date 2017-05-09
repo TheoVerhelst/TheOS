@@ -1,6 +1,5 @@
 #include <cpp/Printer.hpp>
 #include <cpp/string.hpp>
-#include <kernel/terminal/KernelTerminal.hpp>
 
 constexpr size_t Printer::_bufferLength;
 constexpr const char* Printer::_alphabet;

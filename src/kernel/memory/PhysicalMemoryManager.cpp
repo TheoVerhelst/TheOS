@@ -1,5 +1,4 @@
 #include <std/cstdint>
-#include <cpp/Printer.hpp>
 #include <kernel/memory/PhysicalMemoryManager.hpp>
 
 PhysicalMemoryManager::PhysicalMemoryManager():

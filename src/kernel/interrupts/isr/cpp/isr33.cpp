@@ -6,7 +6,7 @@ namespace isr
 
 void Table::isr33(Arguments /* args */)
 {
-	kernel._keyboardDriver.pollKeyboard();
+	Kernel::getInstance()._keyboardDriver.pollKeyboard();
 }
 
 }// namespace isr

@@ -40,7 +40,7 @@ section .bootInit
 	; the C++ environnement, it must be defined in assembly.
 	multibootInfoAddress resd 1
 	align 4
-	resb 0x1000  ; make a 4KB stack
+	resb 0x10000  ; make a 64KB stack
 	initStackTop:
 
 	_start:
@@ -82,5 +82,5 @@ section .bootInit
 
 section .bss
 	align 4
-	resb 0x4000 ; make a 16KB stack
+	resb 0x10000 ; make a 64KB stack
 	kernelStackTop:

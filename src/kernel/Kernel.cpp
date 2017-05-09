@@ -7,9 +7,9 @@
 #include <kernel/abort.hpp>
 #include <kernel/Kernel.hpp>
 
-Kernel kernel;
 KernelTerminal kernelTerminal;
 Printer out{kernelTerminal};
+Kernel* Kernel::_instance{nullptr};
 
 Kernel::Kernel():
 	_heapAddress{_physicalMemoryManager.allocateFrame()},
@@ -19,6 +19,7 @@ Kernel::Kernel():
 	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize,
 	             _heapManagerPoolAllocator}
 {
+	_instance = this;
 	testHeap();
 	printPrettyAsciiArt();
 	processMultibootInfo();
@@ -33,6 +34,11 @@ void Kernel::run()
 		while(_keyboardDriver.pendingCharacter())
 			out << _keyboardDriver.getCharacter();
 	abort();
+}
+
+Kernel& Kernel::getInstance()
+{
+	return *_instance;
 }
 
 MemoryManager& Kernel::getHeapManager()

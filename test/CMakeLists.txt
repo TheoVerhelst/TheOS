@@ -1,5 +1,6 @@
 set(TEST_SOURCE_FILES
     "main.cpp"
+    "StandardTerminal.cpp"
     "cpp/ArrayTest.cpp"
     "cpp/BitSetTest.cpp"
     "cpp/ListTest.cpp"

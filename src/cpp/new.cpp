@@ -5,17 +5,17 @@
 
 [[gnu::__externally_visible__]] void* operator new(size_t size)
 {
-	return kernel.getHeapManager().allocate(size);
+	return Kernel::getInstance().getHeapManager().allocate(size);
 }
 
 [[gnu::__externally_visible__]] void operator delete(void* address)
 {
-	kernel.getHeapManager().deallocate(address);
+	Kernel::getInstance().getHeapManager().deallocate(address);
 }
 
 [[gnu::__externally_visible__]] void operator delete(void* address, size_t size)
 {
-	kernel.getHeapManager().deallocate(address, size);
+	Kernel::getInstance().getHeapManager().deallocate(address, size);
 }
 
 [[gnu::__externally_visible__]] void* operator new[](size_t size)
