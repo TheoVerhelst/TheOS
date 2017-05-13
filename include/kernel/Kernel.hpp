@@ -5,7 +5,7 @@
 #include <kernel/interrupts/isr.hpp>
 #include <kernel/memory/PoolAllocator.hpp>
 #include <kernel/memory/MemoryManager.hpp>
-#include <kernel/memory/PhysicalMemoryManager.hpp>
+#include <kernel/memory/paging/PageTableManager.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 
 /// \defgroup Kernel Kernel
@@ -59,7 +59,7 @@ class Kernel final
 
 		static Kernel* _instance;
 
-		PhysicalMemoryManager _physicalMemoryManager;
+		paging::PageTableManager _pageTableManager;
 
 		void* _heapAddress;
 

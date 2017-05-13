@@ -12,7 +12,7 @@ Printer out{kernelTerminal};
 Kernel* Kernel::_instance{nullptr};
 
 Kernel::Kernel():
-	_heapAddress{_physicalMemoryManager.allocateFrame()},
+	_heapAddress{_pageTableManager.allocatePage()},
 	_heapManagerPoolAllocator{_heapManagerPool},
 	// Give a needed kernel size of zero if info about memory is not available
 	// (that's better than nothing)

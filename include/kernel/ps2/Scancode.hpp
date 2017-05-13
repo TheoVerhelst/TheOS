@@ -18,6 +18,11 @@ struct Scancode
 	constexpr bool operator==(const Scancode& other) const;
 };
 
+} // namespace ps2
+
+namespace ps2
+{
+
 constexpr bool Scancode::operator==(const Scancode& other) const
 {
 	if(_length != other._length)

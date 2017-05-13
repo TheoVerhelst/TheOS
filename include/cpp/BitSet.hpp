@@ -10,7 +10,7 @@
 /// Holds statically a set of boolean values, by using unsigned arithmetic to
 /// store them efficiently. This class behaves like std::bitset, and is part of
 /// the pseudo-implementation of the standard C++ library.
-/// \tparam N The number of values to store (the number of bit).
+/// \tparam N The number of values to store (the number of bits).
 template <size_t N>
 class BitSet
 {

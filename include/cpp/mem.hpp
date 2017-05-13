@@ -4,8 +4,6 @@
 #include <std/cstddef>
 #include <std/cstdint>
 
-// TODO namespace mem (containing copy and set)
-
 namespace mem
 {
 

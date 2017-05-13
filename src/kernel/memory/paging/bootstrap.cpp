@@ -1,41 +1,22 @@
-#include <kernel/memory/paging.hpp>
-#include <kernel/memory/PhysicalMemoryManager.hpp>
+#include <kernel/memory/paging/paging.hpp>
+#include <kernel/memory/paging/bootstrap.hpp>
 
 namespace paging
 {
 
-PageTableEntry::PageTableEntry(void* physicalAddress, uint16_t flags)
-{
-	set(physicalAddress, flags);
-}
-
-void PageTableEntry::set(void* physicalAddress, uint16_t flags)
-{
-	_physicalAddress = reinterpret_cast<uint32_t>(physicalAddress) >> 12;
-	_flags = flags;
-}
-
-PageDirectoryEntry::PageDirectoryEntry(PageTableEntry* pageTable, uint16_t flags)
-{
-	set(pageTable, flags);
-}
-
-void PageDirectoryEntry::set(PageTableEntry* pageTable, uint16_t flags)
-{
-	_pageTable = reinterpret_cast<uint32_t>(pageTable) >> 12;
-	_flags = flags;
-}
-
 namespace bootstrap
 {
 
-alignas(pageSize) [[gnu::section(".pagingTables")]] uint32_t kernelPageDirectory[entriesNumber];
+alignas(pageSize) [[gnu::section(".kernelPaging")]]
+uint32_t kernelPageDirectory[entriesNumber];
 
-alignas(pageSize) [[gnu::section(".pagingTables")]] uint32_t kernelPageTables[kernelPageTablesNumber][entriesNumber];
+alignas(pageSize) [[gnu::section(".kernelPaging")]]
+uint32_t kernelPageTables[kernelPageTablesNumber][entriesNumber];
 
 size_t usedPageTables{0UL};
 
-extern "C" [[gnu::section(".bootInit")]] void initKernelPaging()
+extern "C" [[gnu::section(".bootInit")]]
+void initKernelPaging()
 {
 	for(size_t i{0UL}; i < entriesNumber; ++i)
 	{
@@ -69,7 +50,8 @@ extern "C" [[gnu::section(".bootInit")]] void initKernelPaging()
 	*/
 }
 
-[[gnu::section(".bootInit")]] void mapMemory(intptr_t start, intptr_t end, bool higherHalf)
+[[gnu::section(".bootInit")]]
+void mapMemory(intptr_t start, intptr_t end, bool higherHalf)
 {
 	// Difference of indexes between a page table in the page tables array
 	// and the matching entry in the page directory
@@ -99,6 +81,6 @@ extern "C" [[gnu::section(".bootInit")]] void initKernelPaging()
 	}
 }
 
-}// namespace bootstrap
+} // namespace bootstrap
 
-}// namespace paging
+} // namespace paging

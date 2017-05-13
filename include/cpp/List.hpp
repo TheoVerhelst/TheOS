@@ -174,11 +174,13 @@ class List
 
 		/// Removes the last element of the list.
 		/// \pre not empty().
-		void popBack();
+		/// \return The removed element.
+		T popBack();
 
 		/// Removes the last element of the list.
 		/// \pre not empty().
-		void popFront();
+		/// \return The removed element.
+		T popFront();
 
 		/// Gets an iterator to the first element of the list.
 		/// \return An iterator to the first element of the list.
@@ -344,15 +346,19 @@ void List<T>::pushFront(T&& value)
 }
 
 template <class T>
-void List<T>::popBack()
+T List<T>::popBack()
 {
+	const T lastValue{back()};
 	erase(--end());
+	return lastValue;
 }
 
 template <class T>
-void List<T>::popFront()
+T List<T>::popFront()
 {
+	const T firstValue{front()};
 	erase(begin());
+	return firstValue;
 }
 
 template <class T>

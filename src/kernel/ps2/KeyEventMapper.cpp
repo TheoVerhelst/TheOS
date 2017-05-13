@@ -1,4 +1,5 @@
 #include <kernel/ps2/KeyEventMapper.hpp>
+#include <cpp/Printer.hpp>
 
 namespace ps2
 {
@@ -6,6 +7,7 @@ namespace ps2
 KeyEventMapper::KeyEventMapper(Mapping mapping):
 	_currentMapping{mapping}
 {
+	out << "CoucouMapper"; while(true);
 }
 
 void KeyEventMapper::registerEvent(const KeyEvent& event)
@@ -65,9 +67,7 @@ bool KeyEventMapper::pendingCharacter() const
 
 KeyEventMapper::Character KeyEventMapper::getCharacter()
 {
-	Character res{_characterQueue.front()};
-	_characterQueue.popFront();
-	return res;
+	return _characterQueue.popFront();
 }
 
 bool KeyEventMapper::isEventSatisfied(const KeyEventMapping& event) const

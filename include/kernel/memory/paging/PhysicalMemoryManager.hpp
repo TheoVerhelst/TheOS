@@ -2,12 +2,12 @@
 #define PHYSICALMEMORYMANAGER_HPP
 
 #include <std/cstddef>
-#include <kernel/memory/paging.hpp>
-#include <boot/MultibootInfo.hpp>
 #include <cpp/BitSet.hpp>
+#include <boot/MultibootInfo.hpp>
+#include <kernel/memory/paging/paging.hpp>
 
-/// \addtogroup Kernel
-/// \{
+namespace paging
+{
 
 /// Browses the memory map given by the boot loader and manages the physical
 /// memory frames.
@@ -16,7 +16,7 @@
 ///
 /// The frames are managed with a bitmap, where each bit represent an usable
 /// frame of memory.
-class PhysicalMemoryManager final
+class PhysicalMemoryManager
 {
 	public:
 		/// Default constructor. It expects multiboot::multibootInfoAddress
@@ -40,11 +40,21 @@ class PhysicalMemoryManager final
 		/// \param region The region to free.
 		void freeMemoryRegion(const multiboot::MemoryRegion& region);
 
+		/// Gets the first 4k-aligned number that is greater or equal to \a address.
+		/// \param address The address to convert.
+		/// \return The first 4k-aligned number that is greater or equal to \a address.
+		static constexpr uintptr_t alignUp(uintptr_t address);
+
+		/// Gets the first 4k-aligned address that is less or equal to \a address.
+		/// \param address The address to convert.
+		/// \return The first 4k-aligned address that is less or equal to \a address.
+		static constexpr uintptr_t alignDown(uintptr_t address);
+
 		BitSet<(-paging::lowerMemoryLimit) / paging::pageSize> _freeFrames;
 
 		/// Kernel bounds in physical memory.
-		const uintptr_t _kernelStart;
-		const uintptr_t _kernelEnd;
+		const uintptr_t _kernelPhysicalStart;
+		const uintptr_t _kernelPhysicalEnd;
 		const uintptr_t _lowKernelStart;
 		const uintptr_t _lowKernelEnd;
 };
@@ -58,6 +68,22 @@ extern "C" void* kernelPhysicalEnd;
 extern "C" void* lowKernelStart;
 extern "C" void* lowKernelEnd;
 
-/// \}
+} // namespace paging
+
+namespace paging
+{
+
+// We have to define these methods in the header because they are constexpr
+constexpr uintptr_t PhysicalMemoryManager::alignUp(uintptr_t address)
+{
+	return (address + paging::pageSize - 1) & ~(paging::pageSize - 1);
+}
+
+constexpr uintptr_t PhysicalMemoryManager::alignDown(uintptr_t address)
+{
+	return address & ~(paging::pageSize - 1);
+}
+
+} // namespace paging
 
 #endif // PHYSICALMEMORYMANAGER_HPP

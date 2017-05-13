@@ -3,7 +3,6 @@
 
 #include <std/cstdint>
 #include <std/cstddef>
-#include <kernel/memory/Byte.hpp>
 
 /// \defgroup Boot Boot
 /// Classes and functions related to the boot sequence.

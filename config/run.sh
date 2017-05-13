@@ -7,7 +7,7 @@ if [[ $? -ne 4 ]]; then
 fi
 
 memory="4G"
-debug="true"
+debug=false
 short_options="gm:"
 
 # -temporarily store output to be able to check for errors
@@ -26,7 +26,7 @@ eval set -- "$parsed_options"
 while true; do
     case "$1" in
         -g)
-			debug="true"
+			debug=true
 			shift
 			;;
         -m)
@@ -44,9 +44,9 @@ while true; do
     esac
 done
 
-if [ debug = "true" ]
+if [ "$debug" = true ]
 then
-		mate-terminal -e "qemu-system-i386 -cdrom TheOS.iso -m $memory -S -s -d int -monitor stdio" & mate-terminal -e "gdb -ex 'target remote localhost:1234' -ex 'file TheOS.bin' -quiet"
+	mate-terminal -e "qemu-system-i386 -cdrom TheOS.iso -m $memory -S -s -d int -monitor stdio" & mate-terminal -e "gdb -ex 'target remote localhost:1234' -ex 'file TheOS.bin' -quiet"
 else
-		qemu-system-i386 -cdrom TheOS.iso -m $memory -monitor stdio
+	qemu-system-i386 -cdrom TheOS.iso -m $memory -monitor stdio
 fi

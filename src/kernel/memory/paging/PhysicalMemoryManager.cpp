@@ -1,4 +1,5 @@
 #include <std/cstdint>
+#include <cpp/Printer.hpp>
 #include <kernel/memory/paging/PhysicalMemoryManager.hpp>
 
 namespace paging

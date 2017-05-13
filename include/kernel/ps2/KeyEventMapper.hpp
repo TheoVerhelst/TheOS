@@ -25,6 +25,7 @@ class KeyEventMapper
 			AzertyBe,
 			MappingNumber
 		};
+		
 		KeyEventMapper(Mapping mapping);
 		void registerEvent(const KeyEvent& event);
 		bool pendingCharacter() const;

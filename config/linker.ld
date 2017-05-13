@@ -16,7 +16,7 @@ SECTIONS
 	{
 		*(.multiboot)
 		*(.bootInit)
-		*(.pagingTables)
+		*(.kernelPaging)
 	}
 
 	lowKernelEnd = .;
