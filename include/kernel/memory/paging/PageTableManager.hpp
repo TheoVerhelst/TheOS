@@ -16,8 +16,9 @@ class PageTableManager
 		void* allocatePage();
 
 	private:
+		void allocateAlreadyPagedFrames();
+
 		PageDirectoryEntry* _pageDirectory;
-		PageTableEntry** _pageTables;
 		PhysicalMemoryManager _physicalMemoryManager;
 		static constexpr uint16_t _defaultFlags{Flags::Present | Flags::ReadWrite};
 };

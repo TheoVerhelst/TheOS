@@ -1,4 +1,5 @@
 #include <kernel/memory/paging/paging.hpp>
+#include <kernel/memory/kernelLocation.hpp>
 #include <kernel/memory/paging/bootstrap.hpp>
 
 namespace paging
@@ -18,6 +19,7 @@ size_t usedPageTables{0UL};
 extern "C" [[gnu::section(".bootInit")]]
 void initKernelPaging()
 {
+	// Clear all entries to zero
 	for(size_t i{0UL}; i < entriesNumber; ++i)
 	{
 		kernelPageDirectory[i] = 0UL;
@@ -25,9 +27,10 @@ void initKernelPaging()
 			kernelPageTables[j][i] = 0UL;
 	}
 
+	/*
 	for(size_t i{0}; i < 8; ++i)
 	{
-		kernelPageDirectory[i] = (reinterpret_cast<intptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
+		kernelPageDirectory[i] = (reinterpret_cast<uint32_t>(&kernelPageTables[i]) & 0xFFFFF000) | kernelPagingFlags;
 		for(size_t j{0}; j < entriesNumber; ++j)
 			kernelPageTables[i][j] = ((i * entriesNumber + j) * pageSize) | kernelPagingFlags;
 	}
@@ -37,47 +40,44 @@ void initKernelPaging()
 		kernelPageDirectory[i-8 + (kernelVirtualOffset / pageTableCoverage)] = (reinterpret_cast<intptr_t>(kernelPageTables + i) & 0xFFFFF000) | kernelPagingFlags;
 		for(size_t j{0}; j < entriesNumber; ++j)
 			kernelPageTables[i][j] = (((i-8) * entriesNumber + j) * pageSize) | kernelPagingFlags;
-	}/*
+	}*/
 
 	// map lower memory
-	mapMemory(0UL, 16*1024*4096, false);
+	mapMemory(0UL, lowerMemoryLimit, false);
 
 	// map low kernel
-	mapMemory(reinterpret_cast<intptr_t>(&lowKernelStart), reinterpret_cast<intptr_t>(&lowKernelEnd), false);
+	mapMemory(reinterpret_cast<uintptr_t>(&lowKernelStart), reinterpret_cast<uintptr_t>(&lowKernelEnd), false);
 
 	// map higher half kernel
-	mapMemory(reinterpret_cast<intptr_t>(&kernelPhysicalStart), reinterpret_cast<intptr_t>(&kernelPhysicalEnd), true);
-	*/
+	mapMemory(reinterpret_cast<uintptr_t>(&kernelPhysicalStart), reinterpret_cast<uintptr_t>(&kernelPhysicalEnd), true);
+
 }
 
 [[gnu::section(".bootInit")]]
-void mapMemory(intptr_t start, intptr_t end, bool higherHalf)
+void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf)
 {
-	// Difference of indexes between a page table in the page tables array
-	// and the matching entry in the page directory
-	const size_t offset{higherHalf ? kernelVirtualOffset / pageTableCoverage : 0};
-
-	start = BOOTSTRAP_ALIGN_DOWN(start);
-	end = BOOTSTRAP_ALIGN_UP(end);
-
-	// Loop over the page directory entries to initialize them
-	// i is the index of the current page directory entry
-	for(size_t i{start / pageTableCoverage}; i < (end == 0 ? 0 : ((end - 1) / pageTableCoverage) + 1); ++i)
-		if(not (kernelPageDirectory[i + offset] & Flags::Present))
-			BOOTSTRAP_FILL_ENTRY(kernelPageDirectory[i + offset], &(kernelPageTables[usedPageTables++]), kernelPagingFlags);
-
-	// Loop over the page table entries to initialize them
-	// i is the frame number in the whole memory (e.g. when i == 2, we are
-	// initializing the frame starting at 0x2000)
-	for(size_t i{start / pageSize}; i < (end == 0 ? 0 : ((end - 1) / pageSize) + 1); ++i)
+	start = BOOTSTRAP_ALIGN_UP(start);
+	end = BOOTSTRAP_ALIGN_DOWN(end);
+	const size_t indexOffset{higherHalf ? kernelVirtualOffset / pageTableCoverage : 0};
+	const size_t firstDirectoryEntry{start / pageTableCoverage};
+	const size_t lastDirectoryEntry{(end - 1) / pageTableCoverage};
+	// directoryEntry is the current page directory entry
+	for(size_t directoryEntry{firstDirectoryEntry}; directoryEntry <= lastDirectoryEntry; ++directoryEntry)
 	{
-		size_t pageDirectoryIndex{(i / entriesNumber) + offset};
-		size_t pageTableIndex{i % entriesNumber};
-		if(kernelPageDirectory[pageDirectoryIndex] & Flags::Present)
+		// If the page directory entry is not filled yet
+		if(not (kernelPageDirectory[directoryEntry + indexOffset] & Flags::Present))
 		{
-			uint32_t* pageTable{reinterpret_cast<uint32_t*>(kernelPageDirectory[pageDirectoryIndex] & 0xFFFFF000)};
-			BOOTSTRAP_FILL_ENTRY(pageTable[pageTableIndex], i * pageSize, kernelPagingFlags);
+			// Use a new page table from the array
+			kernelPageDirectory[directoryEntry + indexOffset] =
+					(reinterpret_cast<uint32_t>(&kernelPageTables[usedPageTables]) & 0xFFFFF000) | kernelPagingFlags;
+			++usedPageTables;
 		}
+
+		uint32_t* pageTable{reinterpret_cast<uint32_t*>(kernelPageDirectory[directoryEntry + indexOffset] & 0xFFFFF000)};
+		// TODO use start and end rather than maping the whole page table
+		// tableEntry is the current page table entry
+		for(size_t tableEntry{0}; tableEntry < entriesNumber; ++tableEntry)
+			pageTable[tableEntry] = (((directoryEntry * entriesNumber + tableEntry) * pageSize) & 0xFFFFF000) | kernelPagingFlags;
 	}
 }
 

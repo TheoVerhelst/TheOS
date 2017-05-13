@@ -16,16 +16,6 @@ constexpr size_t pageSize{4096};
 /// The quantity of memory that a page table maps when fully used, in bytes.
 constexpr size_t pageTableCoverage{entriesNumber * pageSize};
 
-/// The address of the end of the lower memory, i.e. the memory
-/// before the 1Mo limit. Lower memory shouldn't be used, since only
-/// a very short part is usable (about 640Ko).
-constexpr intptr_t lowerMemoryLimit{0x100000};
-
-/// The offset between the physical and te logical location of the kernel in the
-/// memory. This value is defined in the linker script, but we redefine it here
-/// in order to be able to use it as a constexpr (such as for array sizing).
-constexpr size_t kernelVirtualOffset{0xC0000000};
-
 /// All the flags of a page directory entry or a page table entry. Undocumented
 /// flags are not yet useful, and/or I don't yet understand their usage.
 namespace Flags
@@ -73,22 +63,24 @@ enum Flags : uint16_t
 
 } // namespace Flags
 
-/// An entry in a page table that points to a physical page of the memory.
+/// An entry in a page table that points to a physical frame of the memory.
 class PageTableEntry
 {
 	public:
 		/// Default constructor.
-		/// \param address The address of the physical page.
+		/// \param address The address of the physical frame.
 		/// \param flags Various flags of the page.
-		PageTableEntry(void* physicalAddress, uint16_t flags);
+		PageTableEntry(void* frameAddress, uint16_t flags);
+
+		void* getFrameAddress() const;
 
 		/// Gets the flags of this entry.
 		/// \return The flags of this entry.
 		uint16_t getFlags() const;
 
 	private:
-		uint32_t _physicalAddress : 20;///< The address of the physical page.
-		uint16_t _flags : 12;          ///< Various flags of the page.
+		uint32_t _frameAddress : 20;///< The address of the physical frame.
+		uint16_t _flags : 12;      ///< Various flags of the page.
 };
 static_assert(sizeof(PageTableEntry) == 4, "PageTableEntry must be 32-bit.");
 
@@ -100,6 +92,8 @@ class PageDirectoryEntry
 		/// \param pageTable The pointer to the page table.
 		/// \param flags Various flags about the page directory entry.
 		PageDirectoryEntry(PageTableEntry* pageTable, uint16_t flags);
+
+		PageTableEntry* getPageTableAddress() const;
 
 		uint16_t getFlags() const;
 

@@ -33,11 +33,9 @@ constexpr size_t kernelPageTablesNumber{16};
 #define BOOTSTRAP_FILL_ENTRY(entry, address, flags)                            \
 	entry = (reinterpret_cast<uint32_t>(address) & 0xFFFFF000) | (flags & 0xFFF)
 
-#define BOOTSTRAP_ALIGN_UP(address)                                            \
-	((reinterpret_cast<intptr_t>(address) + pageSize - 1UL) & ~(pageSize - 1UL))
+#define BOOTSTRAP_ALIGN_UP(address) ((address + pageSize - 1UL) & ~(pageSize - 1UL))
 
-#define BOOTSTRAP_ALIGN_DOWN(address)                                          \
-	(reinterpret_cast<intptr_t>(address) & ~(pageSize - 1UL))
+#define BOOTSTRAP_ALIGN_DOWN(address) (address & ~(pageSize - 1UL))
 
 /// The page directory that is primarily used by the kernel, when the paging is
 /// enabled .
@@ -62,7 +60,7 @@ extern "C" [[gnu::section(".bootInit")]]
 void initKernelPaging();
 
 [[gnu::section(".bootInit")]]
-void mapMemory(intptr_t start, intptr_t end, bool higherHalf);
+void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf);
 
 } // namespace bootstrap
 

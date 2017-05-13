@@ -5,11 +5,7 @@
 namespace paging
 {
 
-PhysicalMemoryManager::PhysicalMemoryManager():
-	_kernelPhysicalStart{reinterpret_cast<uintptr_t>(&kernelPhysicalStart)},
-	_kernelPhysicalEnd{reinterpret_cast<uintptr_t>(&kernelPhysicalEnd)},
-	_lowKernelStart{reinterpret_cast<uintptr_t>(&lowKernelStart)},
-	_lowKernelEnd{reinterpret_cast<uintptr_t>(&lowKernelEnd)}
+PhysicalMemoryManager::PhysicalMemoryManager()
 {
 	if(not (multiboot::multibootInfoAddress->_flags & multiboot::InfoAvailable::mmap))
 		return;
@@ -27,25 +23,38 @@ void* PhysicalMemoryManager::allocateFrame()
 	else
 	{
 		_freeFrames.reset(index);
-		return reinterpret_cast<void*>(paging::lowerMemoryLimit + index * paging::pageSize);
+		return reinterpret_cast<void*>(lowerMemoryLimit + index * paging::pageSize);
 	}
 }
 
+void PhysicalMemoryManager::allocateFrame(void* address)
+{
+	setFrame(address, false);
+}
+
 void PhysicalMemoryManager::freeFrame(void* address)
+{
+	setFrame(address, true);
+}
+
+void PhysicalMemoryManager::setFrame(void* address, bool free)
 {
 	intptr_t intAddress{reinterpret_cast<intptr_t>(address)};
 
 	// If the address is not 4k-aligned
 	if((intAddress & 0xFFF) != 0)
 	{
-		out << "PhysicalMemoryManager::freeFrame: freeing frame not 4k-aligned (" << intAddress << ")\n";
+		out << "PhysicalMemoryManager::freeFrame: "
+			<< (free ? "free" : "allocat")
+			<< "ing a frame that is not 4k-aligned ("
+			<< intAddress << ")\n";
 		return;
 	}
 
-	size_t index{(intAddress - paging::lowerMemoryLimit) / paging::pageSize};
+	size_t index{(intAddress - lowerMemoryLimit) / paging::pageSize};
 
 	if(index < _freeFrames.size())
-		_freeFrames.set(index);
+		_freeFrames.set(index, free);
 }
 
 void PhysicalMemoryManager::parseMemoryMap()
@@ -79,15 +88,9 @@ void PhysicalMemoryManager::freeMemoryRegion(const multiboot::MemoryRegion& regi
 	for(size_t i{address / paging::pageSize}; i < upperBound / paging::pageSize; ++i)
 	{
 		const uintptr_t frame{i * paging::pageSize};
-		// Ensure that the kernel is not added to the free frames
-		if((frame + paging::pageSize < _kernelPhysicalStart or frame > _kernelPhysicalEnd)
-				// Ensure that the low kernel is not added
-				and (frame + paging::pageSize < _lowKernelStart or frame > _lowKernelEnd)
-				// Ensure that no low memory is added
-				and frame >= paging::lowerMemoryLimit
-				// FIXME: If this condition is removed, the boot sequence crashes
-				// This may be a special area not told by the BIOS
-				and (frame <= 0x1D5000 or frame > 0x250000))
+		// FIXME: If this condition is removed, the boot sequence crashes
+		// This may be a special area not told by the BIOS
+		if(frame <= 0x1D5000 or frame > 0x250000)
 			freeFrame(reinterpret_cast<void*>(frame));
 	}
 }
