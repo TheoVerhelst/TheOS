@@ -1,5 +1,5 @@
 #include <kernel/ps2/KeyEventMapper.hpp>
-#include <cpp/Printer.hpp>
+#include <cpp/log.hpp>
 
 namespace ps2
 {
@@ -7,7 +7,7 @@ namespace ps2
 KeyEventMapper::KeyEventMapper(Mapping mapping):
 	_currentMapping{mapping}
 {
-	out << "CoucouMapper"; while(true);
+	STOP();
 }
 
 void KeyEventMapper::registerEvent(const KeyEvent& event)

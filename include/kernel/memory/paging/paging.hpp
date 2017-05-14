@@ -21,7 +21,7 @@ constexpr size_t pageTableCoverage{entriesNumber * pageSize};
 namespace Flags
 {
 
-enum Flags : uint16_t
+enum Flags : uint32_t
 {
 	/// Indicates whether the entry is valid and maps a page / page table.
 	Present        = 1 << 0,
@@ -70,19 +70,20 @@ class PageTableEntry
 		/// Default constructor.
 		/// \param address The address of the physical frame.
 		/// \param flags Various flags of the page.
-		PageTableEntry(void* frameAddress, uint16_t flags);
+		PageTableEntry(void* frameAddress, uint32_t flags);
 
 		void* getFrameAddress() const;
 
 		/// Gets the flags of this entry.
 		/// \return The flags of this entry.
-		uint16_t getFlags() const;
+		uint32_t getFlags() const;
 
 	private:
-		uint32_t _frameAddress : 20;///< The address of the physical frame.
-		uint16_t _flags : 12;      ///< Various flags of the page.
+		/// According to IA-32 reference, the 12 least significant bits are
+		/// flags, while the 20 most significant bits are the address of the
+		/// referenced frame.
+		uint32_t _value;
 };
-static_assert(sizeof(PageTableEntry) == 4, "PageTableEntry must be 32-bit.");
 
 /// An entry in the page directoy, it points to a specific page table.
 class PageDirectoryEntry
@@ -91,17 +92,18 @@ class PageDirectoryEntry
 		/// Default constructor.
 		/// \param pageTable The pointer to the page table.
 		/// \param flags Various flags about the page directory entry.
-		PageDirectoryEntry(PageTableEntry* pageTable, uint16_t flags);
+		PageDirectoryEntry(PageTableEntry* pageTable, uint32_t flags);
 
 		PageTableEntry* getPageTableAddress() const;
 
-		uint16_t getFlags() const;
+		uint32_t getFlags() const;
 
 	private:
-		uint32_t _pageTable : 20;///< The pointer to the page table.
-		uint16_t _flags : 12;    ///< Various flags about the page directory entry.
+		/// According to IA-32 reference, the 12 least significant bits are
+		/// flags, while the 20 most significant bits are the address of the
+		/// referenced page table.
+		uint32_t _value;
 };
-static_assert(sizeof(PageDirectoryEntry) == 4, "PageDirectoryEntry must be 32-bit.");
 
 } // namespace paging
 

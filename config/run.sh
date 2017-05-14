@@ -46,7 +46,8 @@ done
 
 if [ "$debug" = true ]
 then
-	mate-terminal -e "qemu-system-i386 -cdrom TheOS.iso -m $memory -S -s -d int -monitor stdio" & mate-terminal -e "gdb -ex 'target remote localhost:1234' -ex 'file TheOS.bin' -quiet"
+	mate-terminal -t "TheOS on QEMU" -e "qemu-system-i386 -cdrom TheOS.iso -m $memory -S -s -d int -monitor stdio" &
+    mate-terminal -t "GDB Debugger"  -e "gdb -ex 'target remote localhost:1234' -ex 'file TheOS.bin' -quiet"
 else
 	qemu-system-i386 -cdrom TheOS.iso -m $memory -monitor stdio
 fi

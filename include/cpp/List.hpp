@@ -2,7 +2,6 @@
 #define LIST_HPP
 
 #include <std/cstddef>
-#include <std/type_traits>
 #include <cpp/utility.hpp>
 #include <cpp/Allocator.hpp>
 
@@ -241,11 +240,14 @@ class List
 
 /// \}
 
+#include <cpp/log.hpp>
+
 template <class T>
 List<T>::List(Allocator<NodeType>& allocator):
 	_size{0UL},
 	_allocator{allocator}
 {
+	STOP();
 	_begin = _end = _allocator.construct();
 }
 

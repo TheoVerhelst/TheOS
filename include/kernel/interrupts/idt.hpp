@@ -227,12 +227,13 @@ struct [[gnu::packed]] IdtEntry
 		/// Indicates in which segment the entry belongs to.
 		uint16_t _segment;
 
+		// TODO do not use bit fields when ordering and packing is critical
 		/// Indicates the kind of interrupt descriptor.
-		uint16_t _gateSelector:13;
+		uint16_t _gateSelector : 13;
 
 		/// Some flags indicating if the interrupt handler is present and its
 		/// privilege level.
-		uint8_t _flags:3;
+		uint8_t _flags : 3;
 
 		/// Second part of the address of the interrupt handler.
 		uint16_t _base1;

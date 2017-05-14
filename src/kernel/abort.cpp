@@ -1,11 +1,8 @@
-#include <cpp/Printer.hpp>
+#include <cpp/log.hpp>
 #include <kernel/abort.hpp>
 
 void abort(const char* message)
 {
-	if(message == nullptr)
-		out << "Aborting...";
-	else
-		out << message;
+	LOG(Severity::Error) << (message == nullptr ? "Aborting..." : message);
 	while(true);
 }

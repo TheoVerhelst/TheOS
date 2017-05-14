@@ -5,6 +5,8 @@ project(TheOS LANGUAGES CXX ASM_NASM)
 # Add include directory
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
+option(SKIP_TEST "True to skip unit tests after build")
+
 # Add flags to the C++ compiler
 set(CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")

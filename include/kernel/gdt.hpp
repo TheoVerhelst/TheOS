@@ -35,6 +35,7 @@ class [[gnu::packed]] GdtEntry
 		uint16_t _base0;
 		uint8_t _base1;
 		uint8_t _access;
+		// TODO do not use bit fields when ordering and packing is critical
 		uint8_t _limit1 : 4;
 		uint8_t _flags : 4;
 		uint8_t _base2;

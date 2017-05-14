@@ -1,4 +1,5 @@
 set(SOURCES
+	"log.cpp"
 	"mem.cpp"
 	"new.cpp"
 	"Printer.cpp"

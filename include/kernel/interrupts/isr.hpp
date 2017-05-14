@@ -19,6 +19,7 @@ namespace isr
 /// code contains 3 flags:
 struct [[gnu::packed]] ErrorCode
 {
+	// TODO do not use bit fields when ordering and packing is critical
 	/// When set, indicates that the exception occurred during delivery of an
 	/// event external to the program, such as an interrupt or an earlier exception.
 	uint8_t _externalEvent:1;

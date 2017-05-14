@@ -44,7 +44,7 @@ uint32_t kernelPageDirectory[entriesNumber];
 static_assert(sizeof(kernelPageDirectory) == pageSize, "The page directory must fit in one page.");
 
 /// The page tables used to map the kernel.
-alignas(pageSize) [[gnu::section(".kernelPaging")]] extern
+extern "C" alignas(pageSize) [[gnu::section(".kernelPaging")]]
 uint32_t kernelPageTables[kernelPageTablesNumber][entriesNumber];
 static_assert(sizeof(kernelPageTables[0]) == pageSize, "The page tables must fit in one page.");
 

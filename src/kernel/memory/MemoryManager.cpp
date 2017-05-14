@@ -1,6 +1,6 @@
 #include <cpp/math.hpp>
 #include <cpp/algo.hpp>
-#include <cpp/Printer.hpp>
+#include <cpp/log.hpp>
 #include <kernel/memory/MemoryManager.hpp>
 
 MemoryManager::MemoryManager(Allocator<BlockList::NodeType>& allocator):
@@ -38,7 +38,7 @@ void* MemoryManager::allocate(size_t size, size_t alignment)
 	if(_activateMemoryDump)
 		memoryDump();
 	if(it == _allocatedBlocks[index].end())
-		out << "Error: MemoryMamanger::allocate: no more memory, nullptr returned\n";
+		LOG(Severity::Error) << "no more memory, nullptr returned\n";
 	else
 		result = getAlignedAddress(it, alignment);
 
@@ -71,7 +71,7 @@ void MemoryManager::deallocate(void* address)
 		tryMerge(_freeBlocks[index].begin(), index);
 	}
 	else
-		out << "Error: MemoryMamanger::deallocate: invalid pointer argument (" << address << ")\n";
+		LOG(Severity::Error) << "invalid pointer argument (" << address << ")\n";
 	if(_activateMemoryDump)
 		memoryDump();
 }
@@ -95,7 +95,7 @@ void MemoryManager::deallocate(void* address, size_t size)
 		tryMerge(_freeBlocks[index].begin(), index);
 	}
 	else
-		out << "Error: MemoryMamanger::deallocate: invalid pointer argument (" << address << ")\n";
+		LOG(Severity::Error) << "invalid pointer argument (" << address << ")\n";
 	if(_activateMemoryDump)
 		memoryDump();
 }
@@ -198,11 +198,11 @@ inline intptr_t MemoryManager::getAlignedAddress(typename BlockList::Iterator bl
 void MemoryManager::memoryDump() const
 {
 	static const char* separator{" | "};
-	out << "A = ";
+	LOG(Severity::Info) << "A = ";
 	for(size_t i{0}; i < _addressSize; ++i)
-		out << i << " " << _allocatedBlocks[i].size() << separator;
-	out << "\nF = ";
+		LOG(Severity::Info) << i << " " << _allocatedBlocks[i].size() << separator;
+	LOG(Severity::Info) << "\nF = ";
 	for(size_t i{0}; i < _addressSize; ++i)
-		out << i << " " << _freeBlocks[i].size() << separator;
-	out << "\n";
+		LOG(Severity::Info) << i << " " << _freeBlocks[i].size() << separator;
+	LOG(Severity::Info) << "\n";
 }

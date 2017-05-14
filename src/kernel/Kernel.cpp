@@ -86,6 +86,7 @@ void Kernel::printDeviceInfo(uint32_t bootDevice)
 
 void Kernel::testHeap()
 {
+	// TODO remove this
 	int *ptrA = new int;
 	int *ptrB = new int;
 	if(ptrA == ptrB)

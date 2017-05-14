@@ -38,6 +38,7 @@ class ColourProfile
 		explicit operator uint8_t() const;
 
 	private:
+		// TODO do not use bit fields
 		uint8_t _foreground:4;
 		uint8_t _background:4;
 };

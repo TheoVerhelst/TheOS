@@ -1,4 +1,5 @@
 #include <cpp/flags.hpp>
+#include <cpp/log.hpp>
 #include <kernel/memory/paging/bootstrap.hpp>
 #include <kernel/memory/paging/PageTableManager.hpp>
 
@@ -24,15 +25,18 @@ void* PageTableManager::allocatePage()
 				// If this is a free page
 				if(not flags::allSet(pageTable[tableEntry].getFlags(), Flags::Present))
 				{
-					void* frameAddress{_physicalMemoryManager.allocateFrame()};
+					void* physicalAddress{_physicalMemoryManager.allocateFrame()};
 					// Set the page table entry to a valid page
-					pageTable[tableEntry] = PageTableEntry(frameAddress, _defaultFlags);
-					return reinterpret_cast<void*>((directoryEntry * entriesNumber + tableEntry) * pageSize);
+					pageTable[tableEntry] = PageTableEntry(physicalAddress, _defaultFlags);
+					void* virtualAddress{reinterpret_cast<void*>((directoryEntry * entriesNumber + tableEntry) * pageSize)};
+					invalidatePage(virtualAddress);
+					return virtualAddress;
 				}
 			}
 		}
 	}
-	// No suitable page has been found
+
+	LOG(Severity::Error) << "No page found for allocation, nullptr returned\n";
 	return nullptr;
 }
 
@@ -52,6 +56,11 @@ void PageTableManager::allocateAlreadyPagedFrames()
 			}
 		}
 	}
+}
+
+void PageTableManager::invalidatePage(void* pageAddress)
+{
+	asm volatile("invlpg (%0)" : : "r" (pageAddress) : "memory");
 }
 
 } // namespace paging
