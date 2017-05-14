@@ -53,8 +53,6 @@ class Kernel final
 		/// Print information about the device on which the kernel was loaded.
 		static void printDeviceInfo(uint32_t bootDevice);
 
-		void testHeap();
-
 		void printPrettyAsciiArt();
 
 		static Kernel* _instance;

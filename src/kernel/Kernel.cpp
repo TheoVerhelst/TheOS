@@ -20,7 +20,6 @@ Kernel::Kernel():
 	             _heapManagerPoolAllocator}
 {
 	_instance = this;
-	testHeap();
 	printPrettyAsciiArt();
 	processMultibootInfo();
 	gdt::initializeGdt();
@@ -82,34 +81,6 @@ void Kernel::printDeviceInfo(uint32_t bootDevice)
 	out << ((bootDevice & 0x0000FF00) >> 8) << ".";
 	out << ((bootDevice & 0x00FF0000) >> 16) << ".";
 	out << ((bootDevice & 0xFF000000) >> 24) << "\n";
-}
-
-void Kernel::testHeap()
-{
-	// TODO remove this
-	int *ptrA = new int;
-	int *ptrB = new int;
-	if(ptrA == ptrB)
-		out << "Memory allocation failure: allocated 2 int at " << ptrA << ".\n";
-	int *oldPtrA = ptrA;
-	delete ptrA;
-	ptrA = new int;
-	if(ptrA != oldPtrA)
-		out << "Memory allocation failure: the same object is not reallocated at the same place after deallocation.\n";
-	delete ptrB;
-	delete ptrA;
-
-	int *ptr8 = new int[8];
-	int *ptr2 = new int[2];
-	if(ptr8 == ptr2)
-		out << "Memory allocation failure: allocated 2 differents objects at " << ptr8 << ".\n";
-	int *oldPtr8 = ptr8;
-	delete[] ptr8;
-	ptr8 = new int[8];
-	if(ptr8 != oldPtr8)
-		out << "Memory allocation failure: the same object is not reallocated at the same place after deallocation.\n";
-	delete[] ptr2;
-	delete[] ptr8;
 }
 
 void Kernel::printPrettyAsciiArt()
