@@ -3,30 +3,11 @@
 #include <cpp/log.hpp>
 #include <kernel/memory/MemoryManager.hpp>
 
-MemoryManager::MemoryManager(Allocator<BlockList::NodeType>& allocator):
-	_allocator{allocator},
-	_freeBlocks{allocator},
-	_allocatedBlocks{_allocator}
-{
-}
-
 MemoryManager::MemoryManager(void* address, size_t size, Allocator<BlockList::NodeType>& allocator):
-	MemoryManager{allocator}
+	_freeBlocks{allocator},
+	_allocatedBlocks{allocator}
 {
 	addMemoryChunk(address, size);
-}
-
-void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
-{
-	intptr_t baseAddressInt{reinterpret_cast<intptr_t>(baseAddress)};
-	// Avoid nullptr in the allocable space
-	if(baseAddressInt == _nullPointer and size > 0)
-	{
-		++baseAddressInt;
-		--size;
-	}
-	const size_t index{getIndexFromSize(size)};
-	_freeBlocks[index].pushBack(baseAddressInt);
 }
 
 void* MemoryManager::allocate(size_t size, size_t alignment)
@@ -100,6 +81,19 @@ void MemoryManager::deallocate(void* address, size_t size)
 		LOG(Severity::Error) << "invalid pointer argument (" << address << ")\n";
 	if(_activateMemoryDump)
 		memoryDump();
+}
+
+void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
+{
+	intptr_t baseAddressInt{reinterpret_cast<intptr_t>(baseAddress)};
+	// Avoid nullptr in the allocable space
+	if(baseAddressInt == _nullPointer and size > 0)
+	{
+		++baseAddressInt;
+		--size;
+	}
+	const size_t index{getIndexFromSize(size)};
+	_freeBlocks[index].pushBack(baseAddressInt);
 }
 
 void MemoryManager::tryMerge(typename BlockList::Iterator blockToMergeIt, size_t index)

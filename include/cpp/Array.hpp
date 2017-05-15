@@ -116,7 +116,7 @@ class Array
 
 	private:
 		char _array[N * sizeof(T)];
-		T* _pointer{reinterpret_cast<T*>(&_array)};
+		T* const _pointer{reinterpret_cast<T*>(&_array)};
 };
 
 template <typename T, size_t N>
@@ -131,7 +131,7 @@ Array<T, N>::Array(const T& value)
 	T* pointer{_pointer};
 	for(size_t i{0}; i < N; ++i)
 		// Construct in-place the elements
-		new(pointer++) T(value);
+		new (pointer++) T(value);
 }
 
 template <typename T, size_t N>

@@ -15,6 +15,16 @@ class Kernel final
 		static constexpr size_t _heapSize{paging::pageSize};
 
 	public:
+		/// Constructor.
+		Kernel();
+
+		/// Main function.
+		[[noreturn]] void run();
+
+		static Kernel& getInstance();
+
+		MemoryManager& getHeapManager();
+
 		/// Maximum number of blocks in the MemoryManager. Even if the memory is
 		/// not full, memory allocation will fail if there is too much blocks.
 		/// The limit of blocks must be static, and reserve too much room
@@ -27,16 +37,6 @@ class Kernel final
 		/// area, a little pool area is needed. This is a pool allocator that
 		/// uses a pool instance stored as an attribute of the kernel.
 		typedef PoolAllocator<MemoryManager::ToAllocate, _maxBlocksNumber> HeapManagerPoolAllocator;
-
-		/// Constructor.
-		Kernel();
-
-		/// Main function.
-		[[noreturn]] void run();
-
-		static Kernel& getInstance();
-
-		MemoryManager& getHeapManager();
 
 	private:
 		/// The static class isr::Table have access to member of the kernel
