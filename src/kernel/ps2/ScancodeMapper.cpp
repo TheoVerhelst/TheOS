@@ -7,7 +7,6 @@ namespace ps2
 ScancodeMapper::ScancodeMapper(Mapping mapping):
 	_currentMapping{mapping}
 {
-	out << "Hello!\n";
 }
 
 const KeyEvent& ScancodeMapper::get(const Scancode& scancode)
@@ -251,4 +250,4 @@ const ScancodeMapper::ScancodeMapping ScancodeMapper::_mappings[][ScancodeMapper
 	}
 };
 
-}// namespace ps2
+} // namespace ps2

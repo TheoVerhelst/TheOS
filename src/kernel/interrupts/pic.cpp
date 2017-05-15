@@ -42,5 +42,5 @@ void remap()
    outb(slaveData, ~UINT8_C(0));
 }
 
-}// namespace pic
+} // namespace pic
 

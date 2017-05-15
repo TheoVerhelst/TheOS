@@ -3,9 +3,6 @@
 
 #include <std/cstddef>
 
-/// \addtogroup Cpp
-/// \{
-
 /// Initializer list class helper. This class behaves like std::initialize_list,
 /// and is part of the pseudo-implementation of the standard C++ library.
 /// This class is directly copied from the implementation of
@@ -63,7 +60,7 @@ constexpr const typename InitializerList<T>::Iterator begin(InitializerList<T> i
 template<class T>
 constexpr const typename InitializerList<T>::Iterator end(InitializerList<T> initializerList) noexcept;
 
-/// \}
+
 
 template<class T>
 constexpr InitializerList<T>::InitializerList(ConstIterator array, SizeType length):
@@ -108,4 +105,4 @@ constexpr const typename InitializerList<T>::Iterator end(InitializerList<T> ini
 	return initializerList.end();
 }
 
-#endif// INITIALIZERLIST_HPP
+#endif // INITIALIZERLIST_HPP

@@ -5,9 +5,6 @@
 #include <cpp/utility.hpp>
 #include <cpp/Allocator.hpp>
 
-/// \addtogroup Cpp
-/// \{
-
 namespace details
 {
 
@@ -40,9 +37,6 @@ class List
 		class NodeIterator
 		{
 			public:
-				/// Default constructor, constructs an invalid iterator.
-				NodeIterator() = default;
-
 				/// Constructor from list node.
 				/// \param node The node that the iterator has to point to.
 				explicit NodeIterator(NodeType* node);
@@ -88,7 +82,7 @@ class List
 				bool operator!=(const NodeIterator& other) const;
 
 			private:
-				NodeType* _node = nullptr; ///< The underlying node.
+				NodeType* _node; ///< The underlying node.
 				friend class List;
 		};
 
@@ -238,7 +232,7 @@ class List
 		Allocator<NodeType>& _allocator;
 };
 
-/// \}
+
 
 #include <cpp/log.hpp>
 
@@ -247,7 +241,6 @@ List<T>::List(Allocator<NodeType>& allocator):
 	_size{0UL},
 	_allocator{allocator}
 {
-	STOP();
 	_begin = _end = _allocator.construct();
 }
 
@@ -338,7 +331,8 @@ void List<T>::pushBack(T&& value)
 template <class T>
 void List<T>::pushFront(const T& value)
 {
-	insert(begin(), value);
+	auto it = begin();
+	insert(it, value);
 }
 
 template <class T>
@@ -517,4 +511,4 @@ bool List<T>::NodeIterator<U, NodeType>::operator!=(const NodeIterator<U, NodeTy
 	return _node != other._node;
 }
 
-#endif// LIST_HPP
+#endif // LIST_HPP

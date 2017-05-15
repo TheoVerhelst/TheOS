@@ -3,9 +3,6 @@
 
 #include <std/cstdint>
 
-/// \addtogroup Kernel
-/// \{
-
 namespace gdt
 {
 
@@ -59,7 +56,7 @@ enum Access : uint8_t
 	Present             = 1 << 7
 };
 
-}// namespace Access
+} // namespace Access
 
 namespace Flags
 {
@@ -73,18 +70,18 @@ enum Flags : uint8_t
 	Granularity     = 1 << 3
 };
 
-}// namespace Flags
+} // namespace Flags
 
 extern GdtEntry globalDescriptorTable[3];
 
 void initializeGdt();
 
-}// namespace gdt
+} // namespace gdt
 
 extern gdt::GdtDescriptor descriptor;
 
 extern "C" void flushGdt();
 
-/// \}
 
-#endif// GDT_HPP
+
+#endif // GDT_HPP

@@ -4,9 +4,6 @@
 #include <std/cstddef>
 #include <std/cstdint>
 
-/// \addtogroup Cpp
-/// \{
-
 /// Holds statically a set of boolean values, by using unsigned arithmetic to
 /// store them efficiently. This class behaves like std::bitset, and is part of
 /// the pseudo-implementation of the standard C++ library.
@@ -96,7 +93,7 @@ class BitSet
 		size_t _lastIndex;
 };
 
-/// \}
+
 
 template <size_t N>
 BitSet<N>::BitSet(bool value):
@@ -208,4 +205,4 @@ constexpr size_t BitSet<N>::size() const
 	return N;
 }
 
-#endif// BITSET_HPP
+#endif // BITSET_HPP

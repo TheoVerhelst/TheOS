@@ -5,9 +5,6 @@
 #include <cpp/AbstractTerminal.hpp>
 #include <kernel/video/vgaManagement.hpp>
 
-/// \addtogroup Kernel
-/// \{
-
 /// Class managing the kernel terminal.
 class KernelTerminal : public AbstractTerminal
 {
@@ -42,6 +39,6 @@ class KernelTerminal : public AbstractTerminal
 		bool _writing;
 };
 
-/// \}
 
-#endif// TERMINAL_HPP
+
+#endif // TERMINAL_HPP

@@ -190,10 +190,10 @@ const KeyEventMapper::KeyEventMapping KeyEventMapper::_mappings[][KeyEventMapper
 		{Key::RBracket, '\x9C', true, false},// The £ character
 		{Key::BackSlash, '\xE6', true, false},// The µ character
 		{Key::Dash, '\xF8', true, false},// The ù character
-		{Key::BackTick, '\xFD', false, false}// The square (power) character
+		{Key::BackTick, '\xFD', false, false} // The square (power) character
 	},
 	{
 	}
 };
 
-}// namespace ps2
+} // namespace ps2

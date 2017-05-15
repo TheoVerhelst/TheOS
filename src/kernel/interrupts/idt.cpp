@@ -27,4 +27,4 @@ IdtEntry::IdtEntry(uint32_t base):
 {
 }
 
-}// namespace idt
+} // namespace idt

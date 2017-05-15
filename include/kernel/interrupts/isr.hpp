@@ -5,9 +5,6 @@
 #include <cpp/Printer.hpp>
 #include <kernel/interrupts/idt.hpp>
 
-/// \addtogroup Kernel
-/// \{
-
 /// Structures and functions related to the Interrupt Service Routines.
 namespace isr
 {
@@ -93,8 +90,8 @@ class Table
 /// \return \a out.
 Printer& operator<<(Printer& out, const ErrorCode& errorCode);
 
-}// namespace isr
+} // namespace isr
 
-/// \}
 
-#endif// ISRDISPATCHER_HPP
+
+#endif // ISRDISPATCHER_HPP

@@ -3,9 +3,6 @@
 
 #include <std/cstddef>
 
-/// \addtogroup Kernel
-/// \{
-
 // TODO save as kernel/config.hpp
 
 /// This typedef is used to have a representation of a low-level byte, and is
@@ -17,6 +14,6 @@ typedef unsigned char Byte;
 /// we "assume" that there is 8 bits in a byte.
 constexpr size_t addressSize{sizeof(void*) * 8};
 
-/// \}
 
-#endif// BYTE_HPP
+
+#endif // BYTE_HPP

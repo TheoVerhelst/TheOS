@@ -6,9 +6,6 @@
 #include <cpp/List.hpp>
 #include <cpp/Array.hpp>
 
-/// \addtogroup Kernel
-/// \{
-
 /// Holds some things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.
 class MemoryManager
@@ -73,6 +70,6 @@ class MemoryManager
 		static typename BlockList::Iterator findBlock(BlockList& blockList, intptr_t address, size_t index);
 };
 
-/// \}
+
 
 #endif // MEMORYMANAGER_HPP

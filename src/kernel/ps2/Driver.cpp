@@ -26,4 +26,4 @@ bool Driver::testStatus(uint8_t statusToTest)
 	return inb(_commandPort) & statusToTest;
 }
 
-}// namespace ps2
+} // namespace ps2

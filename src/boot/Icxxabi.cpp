@@ -102,4 +102,4 @@ void __cxa_pure_virtual()
 	abort("Pure virtual function called");
 }
 
-}// extern "C"
+} // extern "C"

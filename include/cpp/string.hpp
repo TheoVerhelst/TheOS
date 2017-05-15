@@ -3,9 +3,6 @@
 
 #include <std/cstddef>
 
-/// \addtogroup C++
-/// \{
-
 /// Functions related to native C strings.
 namespace string // TODO rename to str
 {
@@ -29,6 +26,6 @@ namespace string // TODO rename to str
 	char* copy(char* dest, const char* src);
 }
 
-/// \}
+
 
 #endif // STRING_HPP

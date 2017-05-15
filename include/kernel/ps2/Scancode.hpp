@@ -4,9 +4,6 @@
 #include <std/cstddef>
 #include <std/cstdint>
 
-/// \addtogroup Kernel
-/// \{
-
 namespace ps2
 {
 
@@ -33,8 +30,8 @@ constexpr bool Scancode::operator==(const Scancode& other) const
 	return true;
 }
 
-}// namespace ps2
+} // namespace ps2
 
-/// \}
 
-#endif// SCANCODE_HPP
+
+#endif // SCANCODE_HPP

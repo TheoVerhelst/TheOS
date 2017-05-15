@@ -33,4 +33,4 @@ char KeyboardDriver::getCharacter()
 		return '\0';
 }
 
-}// namespace ps2
+} // namespace ps2

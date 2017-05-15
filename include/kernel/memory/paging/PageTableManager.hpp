@@ -29,6 +29,6 @@ class PageTableManager
 		static constexpr uint16_t _defaultFlags{Flags::Present | Flags::ReadWrite};
 };
 
-}// namespace paging
+} // namespace paging
 
 #endif // PAGETABLEMANAGER_HPP

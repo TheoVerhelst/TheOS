@@ -9,4 +9,4 @@ void Table::isr56(Arguments /* args */)
 	abort("Interrupt 56 caught!\n");
 }
 
-}// namespace isr
+} // namespace isr

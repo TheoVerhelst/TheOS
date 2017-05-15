@@ -3,9 +3,6 @@
 
 #define ATEXIT_MAX_FUNCS 128
 
-/// \addtogroup Boot
-/// \{
-
 extern "C"
 {
 
@@ -28,8 +25,8 @@ void __cxa_finalize(void *f);
 /// error message.
 void __cxa_pure_virtual();
 
-}// extern "C"
+} // extern "C"
 
-/// \}
 
-#endif// ICXXABI_HPP
+
+#endif // ICXXABI_HPP

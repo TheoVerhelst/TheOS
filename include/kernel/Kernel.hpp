@@ -8,10 +8,6 @@
 #include <kernel/memory/paging/PageTableManager.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 
-/// \defgroup Kernel Kernel
-/// All classes and functions directly related to the kernel
-/// \{
-
 class Kernel final
 {
 	private:
@@ -77,6 +73,4 @@ class Kernel final
 		ps2::KeyboardDriver _keyboardDriver;
 };
 
-/// \}
-
-#endif// KERNEL_HPP
+#endif // KERNEL_HPP

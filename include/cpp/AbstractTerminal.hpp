@@ -1,9 +1,6 @@
 #ifndef ABSTRACTTERMINAL_HPP
 #define ABSTRACTTERMINAL_HPP
 
-/// \addtogroup Cpp
-/// \{
-
 /// Interface of a terminal, used to differenciate the kernel terminal from the
 /// standard one (in unit test for the latter).
 class AbstractTerminal
@@ -18,6 +15,6 @@ class AbstractTerminal
     	virtual void putString(const char* str) = 0;
 };
 
-/// \}
 
-#endif// ABSTRACTTERMINAL_HPP
+
+#endif // ABSTRACTTERMINAL_HPP

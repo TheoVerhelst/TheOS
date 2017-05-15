@@ -3,9 +3,6 @@
 
 #include <std/cstdint>
 
-/// \addtogroup Kernel
-/// \{
-
 /// Objects related to the Programmable Interrupt Controller (PIC). The PIC is
 /// an hardware device that manages the interrupts before passing them to the
 /// CPU. This device is programmable by the OS, and this namespace holds
@@ -52,7 +49,7 @@ enum Command : uint8_t
 	EndOfInterrupt = 1 << 5
 };
 
-}// namespace Command
+} // namespace Command
 
 namespace InitCommandWord4
 {
@@ -66,7 +63,7 @@ enum InitCommandWord4 : uint8_t
 	SpecialFullyNested = 1 << 4,             ///< Special fully nested.
 };
 
-}// namespace InitCommandWord4
+} // namespace InitCommandWord4
 
 namespace MasterInterrupMask
 {
@@ -83,7 +80,7 @@ enum MasterInterrupMask : uint8_t
 	Lpt1       = 1 << 7
 };
 
-}// namespace MasterInterrupMask
+} // namespace MasterInterrupMask
 
 namespace SlaveInterruptMask
 {
@@ -100,7 +97,7 @@ enum SlaveInterruptMask : uint8_t
 	SecondaryAtaHdd = 1 << 7,
 };
 
-}// namespace SlaveInterruptMask
+} // namespace SlaveInterruptMask
 
 void initializePic();
 
@@ -108,8 +105,8 @@ void sendEndOfInterrupt(uint32_t interruptNumber);
 
 void remap();
 
-}// namespace pic
+} // namespace pic
 
-/// \}
 
-#endif// PIC_HPP
+
+#endif // PIC_HPP

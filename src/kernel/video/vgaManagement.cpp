@@ -25,4 +25,4 @@ Entry::operator uint16_t() const
 	return static_cast<uint16_t>(_character) | (static_cast<uint16_t>(_colourProfile) << 8);
 }
 
-}// namespace vga
+} // namespace vga

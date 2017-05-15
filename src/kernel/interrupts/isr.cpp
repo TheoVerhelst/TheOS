@@ -30,4 +30,4 @@ Printer& operator<<(Printer& out, const ErrorCode& errorCode)
 	return out;
 }
 
-}// namespace isr
+} // namespace isr

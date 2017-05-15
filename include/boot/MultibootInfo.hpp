@@ -4,10 +4,6 @@
 #include <std/cstdint>
 #include <std/cstddef>
 
-/// \defgroup Boot Boot
-/// Classes and functions related to the boot sequence.
-/// \{
-
 /// Contains structs related to the Multiboot Specification version 0.6.96,
 /// which is applied by the bootloader used by the kernel.
 namespace multiboot
@@ -198,10 +194,10 @@ enum InfoAvailable : uint32_t
 	vbe              = 1 << 11
 };
 
-}// namespace InfoAvailable
+} // namespace InfoAvailable
 
-}// namespace multiboot
+} // namespace multiboot
 
-/// \}
 
-#endif// MULTIBOOTINFO_HPP
+
+#endif // MULTIBOOTINFO_HPP

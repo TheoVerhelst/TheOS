@@ -31,4 +31,4 @@ void initializeGdt()
 	flushGdt();
 }
 
-}// namespace gdt
+} // namespace gdt

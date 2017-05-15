@@ -5,9 +5,6 @@
 #include <std/cstddef>
 #include <kernel/interrupts/pic.hpp>
 
-/// \addtogroup Kernel
-/// \{
-
 /// Namespace related to the managing of the Interrupt Descriptor Table (IDT).
 /// An interrupt descriptor is a structure indicating where is located an
 /// interrupt handler, among other things.
@@ -165,7 +162,7 @@ enum Interrupt : uint32_t
 	SecondaryAtaHdd
 };
 
-}// namespace Interrupt
+} // namespace Interrupt
 
 /// Namespace of the flags to put in an interrupt descriptor.
 namespace Flags
@@ -181,7 +178,7 @@ enum Flags : uint8_t
 	Present = 1 << 2
 };
 
-}// namespace Flags
+} // namespace Flags
 
 /// Namespace for the gate selector values.
 namespace GateSelector
@@ -197,7 +194,7 @@ enum GateSelector : uint16_t
 	Size          = 1 << 11///< Set for 32-bit sized gate, unset for 16-bit.
 };
 
-}// namespace GateSelector
+} // namespace GateSelector
 
 /// Namespace for the segment selector values.
 namespace Segment
@@ -210,7 +207,7 @@ enum Segment : uint16_t
 	Data = 0x08
 };
 
-}// namespace Segment
+} // namespace Segment
 
 /// An entry in the IDT, i.e. an interrupt descriptor.
 struct [[gnu::packed]] IdtEntry
@@ -257,13 +254,13 @@ extern IdtEntry idt[idtSize];
 /// The descriptor of the IDT to give to the CPU.
 extern IdtDescriptor idtDescriptor;
 
-}// namespace idt
+} // namespace idt
 
 /// Declare all 64 ISR handler with the item trick
 #define ITEM(INDEX) extern "C" void isr##INDEX();
 #include <kernel/item64Helper.itm>
 #undef ITEM
 
-/// \}
 
-#endif// IDT_HPP
+
+#endif // IDT_HPP

@@ -6,9 +6,6 @@
 #include <cpp/List.hpp>
 #include <kernel/ps2/Key.hpp>
 
-/// \addtogroup Kernel
-/// \{
-
 namespace ps2
 {
 
@@ -25,7 +22,7 @@ class KeyEventMapper
 			AzertyBe,
 			MappingNumber
 		};
-		
+
 		KeyEventMapper(Mapping mapping);
 		void registerEvent(const KeyEvent& event);
 		bool pendingCharacter() const;
@@ -56,8 +53,8 @@ class KeyEventMapper
 		static const KeyEventMapping _mappings[_mappingNumber][_keyEventMappingNumber];
 };
 
-}// namespace ps2
+} // namespace ps2
 
-/// \}
 
-#endif// KEYEVENTMAPPER_HPP
+
+#endif // KEYEVENTMAPPER_HPP

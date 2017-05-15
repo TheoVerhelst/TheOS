@@ -9,4 +9,4 @@ void Table::isr33(Arguments /* args */)
 	Kernel::getInstance()._keyboardDriver.pollKeyboard();
 }
 
-}// namespace isr
+} // namespace isr

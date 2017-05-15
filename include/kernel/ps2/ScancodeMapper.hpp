@@ -7,9 +7,6 @@
 #include <kernel/ps2/Key.hpp>
 #include <kernel/ps2/Scancode.hpp>
 
-/// \addtogroup Kernel
-/// \{
-
 namespace ps2
 {
 
@@ -43,8 +40,8 @@ class ScancodeMapper
 		static const ScancodeMapping _mappings[_mappingNumber][_scancodeMappingNumber];
 };
 
-}// namespace ps2
+} // namespace ps2
 
-/// \}
 
-#endif// SCANCODEMAPPER_HPP
+
+#endif // SCANCODEMAPPER_HPP
