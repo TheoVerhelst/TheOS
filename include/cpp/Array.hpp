@@ -136,11 +136,9 @@ Array<T, N>::Array(const T& value)
 
 template <typename T, size_t N>
 template <typename... Args>
-Array<T, N>::Array(Args&... args)
+Array<T, N>::Array(Args&... args):
+	Array(T(args...))
 {
-	T* pointer{_pointer};
-	for(size_t i{0}; i < N; ++i)
-		new (pointer++) T(args...);
 }
 
 template <typename T, size_t N>
