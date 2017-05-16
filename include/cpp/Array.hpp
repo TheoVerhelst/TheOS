@@ -3,6 +3,7 @@
 
 #include <std/cstddef>
 #include <cpp/new.hpp>
+#include <cpp/utility.hpp>
 
 /// \defgroup Cpp C++
 /// Pseudo-implementation of the standard C++ library.
@@ -39,11 +40,19 @@ class Array
 		/// \param value The value to copy.
 		Array(const T& value);
 
+		/// Constructs the array by copying \a value to each element in the
+		/// array.
+		/// \param value The value to copy.
+		Array(T&& value);
+
 		/// Constructs the array by giving args to the constructor of each
 		/// element in the array.
 		/// \param args The arguments to copy to the constructors.
 		template <typename... Args>
-		Array(Args&... args);
+		Array(const Args&... args);
+
+		template <typename... Args>
+		Array(Args&&... args);
 
 		/// Destructor.
 		~Array();
@@ -135,9 +144,25 @@ Array<T, N>::Array(const T& value)
 }
 
 template <typename T, size_t N>
+Array<T, N>::Array(T&& value)
+{
+	T* pointer{_pointer};
+	for(size_t i{0}; i < N; ++i)
+		// Construct in-place the elements
+		new (pointer++) T(forward<T>(value));
+}
+
+template <typename T, size_t N>
 template <typename... Args>
-Array<T, N>::Array(Args&... args):
+Array<T, N>::Array(const Args&... args):
 	Array(T(args...))
+{
+}
+
+template <typename T, size_t N>
+template <typename... Args>
+Array<T, N>::Array(Args&&... args):
+	Array(T(forward<Args>(args)...))
 {
 }
 
