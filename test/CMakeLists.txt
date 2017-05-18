@@ -1,8 +1,9 @@
 set(TEST_SOURCE_FILES
     "cpp/allocators/MemoryManagerTest.cpp"
-    "cpp/ArrayTest.cpp"
+    "cpp/containers/ArrayTest.cpp"
+    "cpp/containers/ListTest.cpp"
     "cpp/BitSetTest.cpp"
-    "cpp/ListTest.cpp"
+    "cpp/stringTest.cpp"
     "main.cpp"
     "StandardTerminal.cpp"
 )
