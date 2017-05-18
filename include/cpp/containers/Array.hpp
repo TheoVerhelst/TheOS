@@ -36,21 +36,15 @@ class Array
 		Array();
 
 		/// Constructs the array by copying \a value to each element in the
-		/// array.
+		/// array. We take the copy by value, since we will do N copy in all
+		/// cases, so another one does not matter, and it makes the interface
+		/// simpler.
 		/// \param value The value to copy.
-		Array(const T& value);
+		Array(T value);
 
-		/// Constructs the array by copying \a value to each element in the
-		/// array.
-		/// \param value The value to copy.
-		Array(T&& value);
-
-		/// Constructs the array by giving args to the constructor of each
+		/// Constructs the array by forwarding args to the constructor of each
 		/// element in the array.
 		/// \param args The arguments to copy to the constructors.
-		template <typename... Args>
-		Array(const Args&... args);
-
 		template <typename... Args>
 		Array(Args&&... args);
 
@@ -135,28 +129,12 @@ Array<T, N>::Array():
 }
 
 template <typename T, size_t N>
-Array<T, N>::Array(const T& value)
+Array<T, N>::Array(T value)
 {
 	T* pointer{_pointer};
 	for(size_t i{0}; i < N; ++i)
 		// Construct in-place the elements
-		new (pointer++) T(value);
-}
-
-template <typename T, size_t N>
-Array<T, N>::Array(T&& value)
-{
-	T* pointer{_pointer};
-	for(size_t i{0}; i < N; ++i)
-		// Construct in-place the elements
-		new (pointer++) T(forward<T>(value));
-}
-
-template <typename T, size_t N>
-template <typename... Args>
-Array<T, N>::Array(const Args&... args):
-	Array(T(args...))
-{
+		new (static_cast<void*>(pointer++)) T(value);
 }
 
 template <typename T, size_t N>
