@@ -3,7 +3,7 @@
 
 #include <std/cstddef>
 #include <cpp/BitSet.hpp>
-#include <cpp/Allocator.hpp>
+#include <cpp/allocators/Allocator.hpp>
 #include <kernel/memory/Byte.hpp>
 
 /// Manage a pool of memory that has a size of sizeof(T) * Size.

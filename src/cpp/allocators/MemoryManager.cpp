@@ -1,7 +1,7 @@
 #include <cpp/math.hpp>
 #include <cpp/algo.hpp>
 #include <cpp/log.hpp>
-#include <kernel/memory/MemoryManager.hpp>
+#include <cpp/allocators/MemoryManager.hpp>
 
 MemoryManager::MemoryManager(void* address, size_t size, Allocator<BlockList::NodeType>& allocator):
 	_freeBlocks{allocator},
@@ -59,30 +59,6 @@ void MemoryManager::deallocate(void* address)
 		memoryDump();
 }
 
-void MemoryManager::deallocate(void* address, size_t size)
-{
-	intptr_t addressInt{reinterpret_cast<intptr_t>(address)};
-
-	if(addressInt == _nullPointer)
-		return;
-
-	// Find the block corresponding to the address
-	const size_t index{getIndexFromSize(size)};
-	typename BlockList::Iterator it{findBlock(_allocatedBlocks[index], addressInt, index)};
-
-	if(it != _allocatedBlocks[index].end())
-	{
-		// Add the freed block to the free list
-		_allocatedBlocks[index].erase(it);
-		_freeBlocks[index].pushFront(addressInt);
-		tryMerge(_freeBlocks[index].begin(), index);
-	}
-	else
-		LOG(Severity::Error) << "invalid pointer argument (" << address << ")\n";
-	if(_activateMemoryDump)
-		memoryDump();
-}
-
 void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
 {
 	intptr_t baseAddressInt{reinterpret_cast<intptr_t>(baseAddress)};
@@ -124,7 +100,7 @@ void MemoryManager::tryMerge(typename BlockList::Iterator blockToMergeIt, size_t
 
 typename MemoryManager::BlockList::Iterator MemoryManager::allocateBlock(size_t index)
 {
-	// This should never happens (TODO: write an assert instead)
+	// This should never happen (TODO: write an assert instead)
 	if(index >= _addressSize)
 		return _allocatedBlocks[_addressSize].end();
 

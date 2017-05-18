@@ -14,6 +14,4 @@ typedef unsigned char Byte;
 /// we "assume" that there is 8 bits in a byte.
 constexpr size_t addressSize{sizeof(void*) * 8};
 
-
-
 #endif // BYTE_HPP

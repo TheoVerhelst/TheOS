@@ -1,4 +1,4 @@
-#include <kernel/abort.hpp>
+#include <cpp/abort.hpp>
 #include <kernel/interrupts/isr.hpp>
 
 namespace isr

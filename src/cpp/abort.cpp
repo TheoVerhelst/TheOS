@@ -1,5 +1,5 @@
 #include <cpp/log.hpp>
-#include <kernel/abort.hpp>
+#include <cpp/abort.hpp>
 
 void abort(const char* message)
 {

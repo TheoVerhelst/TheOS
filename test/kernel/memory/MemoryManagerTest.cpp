@@ -1,5 +1,5 @@
 #include <catch/catch.hpp>
-#include <kernel/memory/MemoryManager.hpp>
+#include <cpp/allocators/MemoryManager.hpp>
 
 SCENARIO("Allocation reuses previously freed memory")
 {

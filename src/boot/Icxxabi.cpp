@@ -1,4 +1,4 @@
-#include <kernel/abort.hpp>
+#include <cpp/abort.hpp>
 #include <boot/Icxxabi.hpp>
 
 extern "C"

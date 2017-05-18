@@ -4,7 +4,7 @@
 #include <kernel/gdt.hpp>
 #include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/pic.hpp>
-#include <kernel/abort.hpp>
+#include <cpp/abort.hpp>
 #include <kernel/Kernel.hpp>
 
 KernelTerminal kernelTerminal;

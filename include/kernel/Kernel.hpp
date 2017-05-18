@@ -3,8 +3,8 @@
 
 #include <boot/MultibootInfo.hpp>
 #include <kernel/interrupts/isr.hpp>
-#include <kernel/memory/PoolAllocator.hpp>
-#include <kernel/memory/MemoryManager.hpp>
+#include <cpp/allocators/PoolAllocator.hpp>
+#include <cpp/allocators/MemoryManager.hpp>
 #include <kernel/memory/paging/PageTableManager.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 

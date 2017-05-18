@@ -1,5 +1,5 @@
 #include <catch/catch.hpp>
-#include <cpp/List.hpp>
+#include <cpp/containers/List.hpp>
 
 template <typename T>
 void requireListIsEmpty(const List<T>& list)

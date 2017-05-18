@@ -2,9 +2,9 @@
 #define MEMORYMANAGER_HPP
 
 #include <std/cstddef>
-#include <cpp/Allocator.hpp>
-#include <cpp/List.hpp>
-#include <cpp/Array.hpp>
+#include <cpp/allocators/Allocator.hpp>
+#include <cpp/containers/List.hpp>
+#include <cpp/containers/Array.hpp>
 
 /// Holds some things related to the implementation of the memory management.
 /// The memory is implemented with the buddy algorithm.
@@ -22,8 +22,6 @@ class MemoryManager
 		void* allocate(size_t size, size_t alignment = 0UL);
 
 		void deallocate(void* address);
-
-		void deallocate(void* address, size_t size);
 
 	private:
 		/// Registers a chunk of memory, making it available for allocations.
