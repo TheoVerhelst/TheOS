@@ -1,9 +1,10 @@
 set(TEST_SOURCE_FILES
-    "main.cpp"
-    "StandardTerminal.cpp"
+    "cpp/allocators/MemoryManagerTest.cpp"
     "cpp/ArrayTest.cpp"
     "cpp/BitSetTest.cpp"
     "cpp/ListTest.cpp"
+    "main.cpp"
+    "StandardTerminal.cpp"
 )
 
 # Add another include directory

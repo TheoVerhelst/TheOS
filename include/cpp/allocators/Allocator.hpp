@@ -34,7 +34,7 @@ template <typename T>
 template <typename... Args>
 T* Allocator<T>::construct(Args&&... args)
 {
-	return ::new (allocate()) T(forward<Args>(args)...);
+	return new (static_cast<void*>(allocate())) T(forward<Args>(args)...);
 }
 
 template <typename T>
@@ -54,7 +54,7 @@ T* Allocator<T>::allocate()
 template <typename T>
 void Allocator<T>::deallocate(T* pointer)
 {
-	::operator delete(static_cast<void*>(pointer));
+	operator delete(static_cast<void*>(pointer));
 }
 
 template <typename T>

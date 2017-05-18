@@ -23,8 +23,6 @@ void* MemoryManager::allocate(size_t size, size_t alignment)
 	else
 		result = getAlignedAddress(it, alignment);
 
-	LOG(Severity::Info) << "found address " << result << "\n";
-	STOP();
 	return reinterpret_cast<void*>(result);
 }
 
@@ -131,7 +129,6 @@ typename MemoryManager::BlockList::Iterator MemoryManager::allocateBlock(size_t 
 	else
 	{
 		// Move an element from the free list to the allocated list
-		LOG(Severity::Info) << "trying to push front\n";
 		_allocatedBlocks[index].pushFront(_freeBlocks[index].front());
 		_freeBlocks[index].popFront();
 		return _allocatedBlocks[index].begin();
