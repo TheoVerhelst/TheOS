@@ -3,7 +3,6 @@
 
 #include <std/cstddef>
 #include <std/cstdint>
-#include <std/type_traits>
 #include <kernel/ps2/Key.hpp>
 #include <kernel/ps2/Scancode.hpp>
 
