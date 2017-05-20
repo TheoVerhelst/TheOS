@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cstdint>
 #include <catch/catch.hpp>
+#include <cpp/log.hpp>
 #include <cpp/allocators/MemoryManager.hpp>
 
 SCENARIO("Memory manager tests")
@@ -27,7 +28,7 @@ SCENARIO("Memory manager tests")
             {
                 manager.deallocate(first);
                 void* third{manager.allocate(firstAskedSize)};
-                
+
                 THEN("The new region is at the same place as the first")
                     REQUIRE(first == third);
             }
@@ -36,6 +37,7 @@ SCENARIO("Memory manager tests")
         WHEN("A really big region is requested")
         {
             constexpr size_t bigRequestedSize{bufferSize + 1};
+            LOG(Severity::Info) << "Following error output is expected:\n";
             void* allocated{manager.allocate(bigRequestedSize)};
             THEN("The returned address is nullptr")
                 REQUIRE(allocated == nullptr);

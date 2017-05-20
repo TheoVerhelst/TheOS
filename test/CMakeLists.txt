@@ -4,6 +4,7 @@ set(TEST_SOURCE_FILES
     "cpp/containers/ArrayTest.cpp"
     "cpp/containers/ListTest.cpp"
     "cpp/BitSetTest.cpp"
+    "cpp/mathTest.cpp"
     "cpp/stringTest.cpp"
     "main.cpp"
     "StandardTerminal.cpp"
