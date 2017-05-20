@@ -11,7 +11,7 @@ SCENARIO("Pool allocator returns nullptr when full")
 		Pool<int, size> pool;
 		PoolAllocator<int, size> allocator{pool};
 
-		WHEN("Ints are allocated repeatidly")
+		WHEN("Ints are allocated repeatedly")
 		{
 			std::vector<int*> addresses;
 			for(size_t i{0}; i < size + 1; ++i)

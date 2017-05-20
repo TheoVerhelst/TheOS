@@ -5,6 +5,7 @@
 #include <cpp/BitSet.hpp>
 #include <cpp/allocators/Allocator.hpp>
 #include <kernel/memory/Byte.hpp>
+#include <cpp/Printer.hpp>
 
 /// Manage a pool of memory that has a size of sizeof(T) * Size.
 template <typename T, size_t Size>

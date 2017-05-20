@@ -74,76 +74,70 @@ class BitSet
 	private:
 		/// The size of a word. A word is a number used internally that will be
 		/// modified and accessed bitwise.
-		static constexpr size_t _wordsSize = sizeof(uintmax_t) * 8;
+		static constexpr size_t _wordSize = sizeof(uintmax_t) * 8;
 
 		/// The number of words needed to have at least N bits.
-		static constexpr size_t _wordsNumber = (N - 1) / _wordsSize + 1;
+		static constexpr size_t _wordsNumber = (N == 0 ? 0 :((N - 1) / _wordSize) + 1);
+
+		static constexpr uintmax_t _zero{UINTMAX_C(0)};
+
+		static constexpr uintmax_t _one{UINTMAX_C(1)};
 
 		/// The bits, stocked as an array of words.
 		uintmax_t _words[_wordsNumber];
-
-		/// An index pointing to the last word reached in a call to find().
-		/// It is useful because a common use case of a BitSet is to
-		/// repeatitively call find() and then toggle the result, so this
-		/// attribute avoids a lot of useless tests.
-		/// \note This attributes is an index to a word in _words, not to a bit.
-		/// \note We do not worry about the fact that we can search for set or
-		/// unset bit, because these two use cases are generaly not met at the
-		/// same time.
-		size_t _lastIndex;
 };
 
-
+#include <cpp/math.hpp>
 
 template <size_t N>
-BitSet<N>::BitSet(bool value):
-	_words{}, // zero-initialize the elements in the array
-	_lastIndex{0}
+BitSet<N>::BitSet(bool value)
 {
 	if(value)
 		set();
+	else
+		reset();
 }
 
 template <size_t N>
 void BitSet<N>::set()
 {
-	for(size_t i{0}; i < _wordsNumber; ++i)
-		_words[i] = ~UINTMAX_C(0);
+	for(auto& word : _words)
+		word = ~_zero;
 }
 
 template <size_t N>
 void BitSet<N>::set(size_t index, bool value)
 {
 	if(value)
-		_words[index / _wordsSize] |= UINTMAX_C(1) << (index % _wordsSize);
+		_words[index / _wordSize] |= _one << (index % _wordSize);
 	else
-		reset(index);
+		_words[index / _wordSize] &= ~ (_one << (index % _wordSize));
 }
 
 template <size_t N>
 void BitSet<N>::reset()
 {
-	for(size_t i{0}; i < _wordsNumber; ++i)
-		_words[i] = UINTMAX_C(0);
+	for(auto& word : _words)
+		word = _zero;
 }
 
 template <size_t N>
 void BitSet<N>::reset(size_t index)
 {
-	_words[index / _wordsSize] &= ~ (UINTMAX_C(1) << (index % _wordsSize));
+	set(index, false);
 }
 
 template <size_t N>
 void BitSet<N>::flip()
 {
-	for(size_t i{0}; i < _wordsNumber; ++i)
-		_words[i] = ~ _words[i];
+	for(auto& word : _words)
+		word = ~word;
 }
 
 template <size_t N>
 void BitSet<N>::flip(size_t index)
 {
-	_words[index / _wordsSize] ^= ~ (UINTMAX_C(1) << (index % _wordsSize));
+	_words[index / _wordSize] ^= ~ (_one << (index % _wordSize));
 }
 
 template <size_t N>
@@ -155,8 +149,8 @@ bool BitSet<N>::none() const
 template <size_t N>
 bool BitSet<N>::any() const
 {
-	for(size_t i{0}; i < _wordsNumber; ++i)
-		if(_words[i])
+	for(auto& word : _words)
+		if(word != _zero)
 			return true;
 	return false;
 }
@@ -164,8 +158,8 @@ bool BitSet<N>::any() const
 template <size_t N>
 bool BitSet<N>::all() const
 {
-	for(size_t i{0}; i < _wordsNumber; ++i)
-		if(_words[i] != ~UINTMAX_C(0))
+	for(auto& word : _words)
+		if(word != ~_zero)
 			return false;
 	return true;
 }
@@ -173,29 +167,17 @@ bool BitSet<N>::all() const
 template <size_t N>
 bool BitSet<N>::test(size_t index) const
 {
-	return _words[index / _wordsSize] & (UINTMAX_C(1) << (index % _wordsSize));
+	return _words[index / _wordSize] & (_one << (index % _wordSize));
 }
 
 template <size_t N>
 size_t BitSet<N>::find(bool value) const
 {
-	size_t firstTriedWord{_lastIndex};
-	do
+	for(size_t i{0}; i < N; ++i)
 	{
-		// Get the index of the first set or cleared bit in the word.
-		// __builtin_ffsll is a GCC extension that maps to the CPU bit find function
-		int result{__builtin_ffsll(value ? _words[_lastIndex] : ~_words[_lastIndex])};
-		if(result == 0)
-			// No bit was found, go to the next word
-			// This function is const, but we need to update the _lastIndex
-			// So rather than making BitSet::find non-const (breaking some use cases),
-			// we const-cast the pointer `this`.
-			const_cast<BitSet*>(this)->_lastIndex = (_lastIndex + 1) % _wordsNumber;
-		else
-			return _lastIndex * _wordsSize + result - 1;
-	// Loop until we tested each word
-	} while(_lastIndex != firstTriedWord);
-
+		if(test(i) == value)
+			return i;
+	}
 	return _invalidIndex;
 }
 

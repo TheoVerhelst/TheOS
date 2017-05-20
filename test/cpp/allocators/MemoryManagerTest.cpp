@@ -27,6 +27,7 @@ SCENARIO("Memory manager tests")
             {
                 manager.deallocate(first);
                 void* third{manager.allocate(firstAskedSize)};
+                
                 THEN("The new region is at the same place as the first")
                     REQUIRE(first == third);
             }

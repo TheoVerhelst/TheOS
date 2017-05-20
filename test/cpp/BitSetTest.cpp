@@ -20,6 +20,29 @@ SCENARIO("BitSet with size 20")
         THEN("It is all false")
             requireBitSetState(bitset, true, false, false, false);
 
+        WHEN("We search for false bit 20 times")
+        {
+            for(size_t i{0}; i < size; ++i)
+            {
+                const size_t index{bitset.find(false)};
+                THEN("The found index is valid")
+                {
+                    REQUIRE(index != bitset._invalidIndex);
+                    REQUIRE(index < size);
+                }
+                bitset.set(index);
+            }
+
+            WHEN("... and we search for a false bit once again")
+            {
+                const size_t index{bitset.find(false)};
+                THEN("The found index is not valid")
+                    REQUIRE(index == bitset._invalidIndex);
+            }
+
+
+        }
+
         WHEN("A bit is set")
         {
             bitset.set(3);
