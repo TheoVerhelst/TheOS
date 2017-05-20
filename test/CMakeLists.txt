@@ -1,5 +1,6 @@
 set(TEST_SOURCE_FILES
     "cpp/allocators/MemoryManagerTest.cpp"
+    "cpp/allocators/PoolAllocatorTest.cpp"
     "cpp/containers/ArrayTest.cpp"
     "cpp/containers/ListTest.cpp"
     "cpp/BitSetTest.cpp"

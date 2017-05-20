@@ -13,10 +13,11 @@ class MemoryManager
 	public:
 		typedef List<intptr_t> BlockList;
 		typedef BlockList::NodeType ToAllocate;
+
 		/// Constructs the manager from a memory block.
 		/// \param address The address of the memory block to manage.
 		/// \param Size The size of the memory block to manage.
-		/// \param allocator The allocator to use.
+		/// \param allocator The allocator to use for internal data structures.
 		MemoryManager(void* address, size_t size, Allocator<BlockList::NodeType>& allocator = Allocator<BlockList::NodeType>::getDefault());
 
 		void* allocate(size_t size, size_t alignment = 0UL);
@@ -38,10 +39,6 @@ class MemoryManager
 
 		static inline intptr_t getAlignedAddress(typename BlockList::Iterator blockIt, size_t alignment);
 
-		void memoryDump() const;
-
-		static constexpr size_t getIndexFromSize(size_t size);
-
 		static typename BlockList::Iterator findBlock(BlockList& blockList, intptr_t address, size_t index);
 
 		/// The number of bits in a pointer.
@@ -55,8 +52,6 @@ class MemoryManager
 		/// Array of list of addresses of allocated blocks.
 		/// \see freeBlocks
 		Array<BlockList, _addressSize> _allocatedBlocks;
-
-		static constexpr bool _activateMemoryDump{false};
 
 		static constexpr intptr_t _nullPointer{reinterpret_cast<intptr_t>(nullptr)};
 };

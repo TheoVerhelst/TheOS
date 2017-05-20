@@ -12,16 +12,21 @@ MemoryManager::MemoryManager(void* address, size_t size, Allocator<BlockList::No
 
 void* MemoryManager::allocate(size_t size, size_t alignment)
 {
-	const size_t index{getIndexFromSize(size + alignment)};
+	// When asking, for example, for a block of size 4, we want the index to be
+	// 2. However, when the size is 5, we want the index to be 3. This is why
+	// we need this -1 and +1 magic here.
+	const size_t index{math::log2(size + alignment - 1) + 1};
 	intptr_t result{_nullPointer};
-	typename BlockList::Iterator it{allocateBlock(index)};
 
-	if(_activateMemoryDump)
-		memoryDump();
-	if(it == _allocatedBlocks[index].end())
-		LOG(Severity::Error) << "no more memory, nullptr returned\n";
-	else
-		result = getAlignedAddress(it, alignment);
+	if(index < _addressSize)
+	{
+		typename BlockList::Iterator it{allocateBlock(index)};
+
+		if(it == _allocatedBlocks[index].end())
+			LOG(Severity::Error) << "no more memory, nullptr returned\n";
+		else
+			result = getAlignedAddress(it, alignment);
+	}
 
 	return reinterpret_cast<void*>(result);
 }
@@ -53,8 +58,6 @@ void MemoryManager::deallocate(void* address)
 	}
 	else
 		LOG(Severity::Error) << "invalid pointer argument (" << address << ")\n";
-	if(_activateMemoryDump)
-		memoryDump();
 }
 
 void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
@@ -66,7 +69,7 @@ void MemoryManager::addMemoryChunk(void* baseAddress, size_t size)
 		++baseAddressInt;
 		--size;
 	}
-	const size_t index{getIndexFromSize(size)};
+	const size_t index{math::min(math::log2(size), _addressSize - 1)};
 	_freeBlocks[index].pushBack(baseAddressInt);
 }
 
@@ -135,17 +138,6 @@ typename MemoryManager::BlockList::Iterator MemoryManager::allocateBlock(size_t 
 	}
 }
 
-constexpr size_t MemoryManager::getIndexFromSize(size_t size)
-{
-	// Test all power of two until one is bigger than size
-	// Note that when size == 0, 0 is returned (corresponding
-	// to a chunk of size 1) according to C++ ISO standard
-	size_t i{0};
-	while(size > (1UL << i) and i + 1 <= _addressSize)
-		++i;
-	return i;
-}
-
 typename MemoryManager::BlockList::Iterator MemoryManager::findBlock(BlockList& blockList, intptr_t address, size_t index)
 {
 	return algo::find(blockList.begin(), blockList.end(), [index, address](intptr_t block)
@@ -163,16 +155,4 @@ inline intptr_t MemoryManager::getAlignedAddress(typename BlockList::Iterator bl
 	}
 	else
 		return *blockIt;
-}
-
-void MemoryManager::memoryDump() const
-{
-	static const char* separator{" | "};
-	LOG(Severity::Info) << "A = ";
-	for(size_t i{0}; i < _addressSize; ++i)
-		LOG(Severity::Info) << i << " " << _allocatedBlocks[i].size() << separator;
-	LOG(Severity::Info) << "\nF = ";
-	for(size_t i{0}; i < _addressSize; ++i)
-		LOG(Severity::Info) << i << " " << _freeBlocks[i].size() << separator;
-	LOG(Severity::Info) << "\n";
 }
