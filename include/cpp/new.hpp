@@ -17,6 +17,8 @@ void operator delete[](void* address, size_t size);
 
 #endif // not __STDC_HOSTED__
 
+// In some cases, the placement new appear to be defined, but not declared,
+// in hosted environment. So we need to declare outside the condition.
 inline void* operator new(size_t size, void* address);
 
 inline void* operator new[](size_t size, void* address);

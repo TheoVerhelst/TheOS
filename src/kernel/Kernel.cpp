@@ -1,9 +1,6 @@
 #include <cpp/Printer.hpp>
 #include <cpp/new.hpp>
 #include <kernel/terminal/KernelTerminal.hpp>
-#include <kernel/gdt.hpp>
-#include <kernel/interrupts/idt.hpp>
-#include <kernel/interrupts/pic.hpp>
 #include <cpp/abort.hpp>
 #include <kernel/Kernel.hpp>
 
@@ -22,9 +19,6 @@ Kernel::Kernel():
 	_instance = this;
 	printPrettyAsciiArt();
 	processMultibootInfo();
-	gdt::initializeGdt();
-	idt::initializeIdt();
-	pic::initializePic();
 }
 
 void Kernel::run()

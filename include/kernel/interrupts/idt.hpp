@@ -21,88 +21,88 @@ namespace Interrupt
 /// Enumeration of all interrupts that can arise.
 enum Interrupt : uint32_t
 {
-	/// Divide error.
+	/// 0: Divide error.
 	/// **Source:** DIV and IDIV instructions.
 	DivideError = 0,
 
-	/// Debug exception.
+	/// 1: Debug exception.
 	/// **Source:** instruction, data, and I/O breakpoints; single-step; and others.
 	DebugException,
 
-	/// NMI interrupt.
+	/// 2: NMI interrupt.
 	/// **Source:** nonmaskable external interrupt.
 	NmiInterrupt,
 
-	/// Break point.
+	/// 3: Break point.
 	/// **Source:** INT 3 instruction.
 	BreakPoint,
 
-	/// Overflow.
+	/// 4: Overflow.
 	/// **Source:** INTO instruction.
 	Overflow,
 
-	/// Bound range exception.
+	/// 5: Bound range exception.
 	/// **Source:** BOUND instruction.
 	BoundRangeException,
 
-	/// Invalid opcode.
+	/// 6: Invalid opcode.
 	/// **Source:** UD2 instruction or reserved opcode.
 	InvalidOpcode,
 
-	/// Device not available.
+	/// 7: Device not available.
 	/// **Source:** floating-point or WAIT/FWAIT instruction.
 	DeviceNotAvailable,
 
-	/// Double fault.
+	/// 8: Double fault.
 	/// **Source:** any instruction that can generate an exception, an NMI, or an
 	/// INTR.
 	DoubleFault,
 
-	/// Coprocessor segment overrun.
+	/// 9: Coprocessor segment overrun.
 	/// **Source:** floating-point instruction.
 	CoprocessorSegmentOverrun,
 
-	/// Invalid TSS.
+	/// 10: Invalid TSS.
 	/// **Source:** task switch or TSS access.
 	InvalidTss,
 
-	/// Segment not present.
+	/// 11: Segment not present.
 	/// **Source:** loading segment registers or accessing system segments.
 	SegmentNotPresent,
 
-	/// Stack segment fault.
+	/// 12: Stack segment fault.
 	/// **Source:** stack operations and SS register loads.
 	StackSegmentFault,
 
-	/// General protection.
+	/// 13: General protection.
 	/// **Source:** any memory reference and other protection checks.
 	GeneralProtection,
 
-	/// Page fault.
+	/// 14: Page fault.
 	/// **Source:** any memory reference.
 	PageFault,
 
-	/// X87 FPU floating point error.
+	/// 15: X87 FPU floating point error.
 	/// **Source:** x87 FPU floating-point or WAIT/FWAIT instruction.
 	X87FpuFloatingPointError,
 
-	/// Alignement check.
+	/// 16: Alignement check.
 	/// **Source:** any data reference in memory.
 	AlignementCheck,
 
-	/// Machine check.
+	/// 17: Machine check.
 	/// **Source:** error codes (if any) and source are model dependent.
 	MachineCheck,
 
-	/// SIMD floating point exception.
+	/// 18: SIMD floating point exception.
 	/// **Source:** SSE/SSE2/SSE3 floating-point instructions.
 	SimdFloatingPointException,
 
-	/// Virtualization exception.
+	/// 19: Virtualization exception.
 	/// **Source:** EPT violations.
 	VirtualizationException,
 
-	/// Intel reserved.
+	/// 20: Intel reserved.
 	/// **Source:**
 	IntelReserved,
 
