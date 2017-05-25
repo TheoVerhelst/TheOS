@@ -1,13 +1,16 @@
-#include <kernel/Kernel.hpp>
 #include <kernel/gdt.hpp>
 #include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/pic.hpp>
+#include <boot/MultibootInfo.hpp>
+#include <boot/MemoryMap.hpp>
+#include <kernel/Kernel.hpp>
 
-extern "C" void kernelMain()
+extern "C" void kernelMain(const multiboot::MultibootInfo& multibootInfoAddress)
 {
     gdt::initializeGdt();
     idt::initializeIdt();
     pic::initializePic();
-    Kernel kernel;
+    const MemoryMap memoryMap{multibootInfoAddress};
+    Kernel kernel{multibootInfoAddress};
 	kernel.run();
 }

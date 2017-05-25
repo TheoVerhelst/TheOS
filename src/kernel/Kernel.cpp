@@ -8,7 +8,8 @@ KernelTerminal kernelTerminal;
 Printer out{kernelTerminal};
 Kernel* Kernel::_instance{nullptr};
 
-Kernel::Kernel():
+Kernel::Kernel(const MemoryMap& memoryMap):
+	_pageTableManager{memoryMap},
 	_heapAddress{_pageTableManager.allocatePage()},
 	_heapManagerPoolAllocator{_heapManagerPool},
 	// Give a needed kernel size of zero if info about memory is not available
@@ -18,7 +19,6 @@ Kernel::Kernel():
 {
 	_instance = this;
 	printPrettyAsciiArt();
-	processMultibootInfo();
 }
 
 void Kernel::run()
@@ -37,44 +37,6 @@ Kernel& Kernel::getInstance()
 MemoryManager& Kernel::getHeapManager()
 {
 	return _heapManager;
-}
-
-void Kernel::processMultibootInfo() const
-{
-	const multiboot::MultibootInfo& info{*multiboot::multibootInfoAddress};
-	if(info._flags & multiboot::InfoAvailable::boot_loader_name)
-		out << "This kernel has been loaded by \"" << info._boot_loader_name << "\"\n";
-	if(info._flags & multiboot::InfoAvailable::boot_device)
-		printDeviceInfo(info._boot_device);
-	if(not (info._flags & multiboot::InfoAvailable::mmap))
-		abort("Memory map not available, aborting\n");
-}
-
-void Kernel::printDeviceInfo(uint32_t bootDevice)
-{
-	const uint32_t drive{bootDevice & 0x000000FF};
-	out << "Loaded from ";
-	switch(drive)
-	{
-		case 0x00:
-			out << "first floppy";
-			break;
-		case 0x01:
-			out << "second floppy";
-			break;
-		case 0x80:
-			out << "first hard";
-			break;
-		case 0x81:
-			out << "second hard";
-			break;
-		default:
-			out << "unrecognized";
-	}
-	out << " disk (" << drive << ") on partition ";
-	out << ((bootDevice & 0x0000FF00) >> 8) << ".";
-	out << ((bootDevice & 0x00FF0000) >> 16) << ".";
-	out << ((bootDevice & 0xFF000000) >> 24) << "\n";
 }
 
 void Kernel::printPrettyAsciiArt()

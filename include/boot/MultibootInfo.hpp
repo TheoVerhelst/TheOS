@@ -15,7 +15,6 @@ namespace multiboot
 /// itself, then the size (4-byte unsigned long) of a set of zero-terminated
 /// ascii strings (plus sizeof(unsigned long) in this case), and finally the
 /// set of strings itself.
-/// \ingroup boot
 struct AOutSyms
 {
 	size_t _tabsize;   ///< Size of the array.
@@ -29,7 +28,6 @@ struct AOutSyms
 /// entries (‘shdr_num’, etc.) in the ELF specification in the program header.
 /// See the Executable and Linkable Format (ELF) specification for more
 /// informations.
-/// \ingroup boot
 struct Elf32Syms
 {
 	uint32_t _num;///< Number of entries.
@@ -40,7 +38,6 @@ struct Elf32Syms
 
 /// Structure used to represent a region of the memory that is potentially
 /// available for the kernel.
-/// \ingroup boot
 struct MemoryRegion
 {
 	/// Size of the structure (may be greater than sizeof(MemoryRegion)).
@@ -65,7 +62,6 @@ struct MemoryRegion
 /// operating system. The operating system can use or ignore any parts of the
 /// structure as it chooses; all information passed by the boot loader is
 /// advisory only.
-/// \ingroup boot
 struct MultibootInfo
 {
 	static_assert(sizeof(void*) == sizeof(uint32_t), "Addresses must be 32-bit");
@@ -143,17 +139,12 @@ struct MultibootInfo
 	uint32_t _vbe_interface_len;
 };
 
-/// The address of the structure, it needs to be set (in the boot assembly)
-/// before the static initialization of the Kernel instance.
-extern "C" const MultibootInfo* multibootInfoAddress;
-
 /// Namespace of the enumeration used to test the flag attribute in
 /// MultibootInfo.
 namespace InfoAvailable
 {
 
 /// Enumeration used to test the flag attribute in MultibootInfo.
-/// \ingroup boot
 enum InfoAvailable : uint32_t
 {
 	/// Indicates that _mem_upper and _mem_lower are valid.
@@ -197,7 +188,5 @@ enum InfoAvailable : uint32_t
 } // namespace InfoAvailable
 
 } // namespace multiboot
-
-
 
 #endif // MULTIBOOTINFO_HPP

@@ -1,7 +1,7 @@
 #ifndef KERNEL_HPP
 #define KERNEL_HPP
 
-#include <boot/MultibootInfo.hpp>
+#include <boot/MemoryMap.hpp>
 #include <kernel/interrupts/isr.hpp>
 #include <cpp/allocators/PoolAllocator.hpp>
 #include <cpp/allocators/MemoryManager.hpp>
@@ -16,7 +16,9 @@ class Kernel final
 
 	public:
 		/// Constructor.
-		Kernel();
+		/// \param memoryMap The memory map containing all available memory
+		/// areas, constructed from the multiboot info.
+		Kernel(const MemoryMap& memoryMap);
 
 		/// Main function.
 		[[noreturn]] void run();
@@ -24,7 +26,8 @@ class Kernel final
 		static Kernel& getInstance();
 
 		MemoryManager& getHeapManager();
-
+		
+	private:
 		/// Maximum number of blocks in the MemoryManager. Even if the memory is
 		/// not full, memory allocation will fail if there is too much blocks.
 		/// The limit of blocks must be static, and reserve too much room
@@ -38,16 +41,10 @@ class Kernel final
 		/// uses a pool instance stored as an attribute of the kernel.
 		typedef PoolAllocator<MemoryManager::ToAllocate, _maxBlocksNumber> HeapManagerPoolAllocator;
 
-	private:
+
 		/// The static class isr::Table have access to member of the kernel
 		/// (so the ISRs can modify the kernel).
 		friend class isr::Table;
-
-		/// Process the information given by the bootloader.
-		void processMultibootInfo() const;
-
-		/// Print information about the device on which the kernel was loaded.
-		static void printDeviceInfo(uint32_t bootDevice);
 
 		void printPrettyAsciiArt();
 

@@ -14,8 +14,6 @@ CHECKSUM equ -(MAGIC + FLAGS)
 ; _start is the entry point of the OS kernel where the bootloader jumps when it's done.
 global _start
 
-global multibootInfoAddress:data
-
 ; this is the function that maps memory in page tables and directories at init stage
 extern initKernelPaging
 
@@ -36,15 +34,15 @@ section .multiboot
 	dd CHECKSUM
 
 section .bootInit
-	; this is the multiboot info structure address that is available to
-	; the C++ environnement, it must be defined in assembly.
+	; this is the multiboot info structure address
 	multibootInfoAddress resd 1
 	align 4
 	resb 0x1000  ; make a 4Kb stack
 	initStackTop:
 
 	_start:
-		cli ; Block interrupts
+		; Block interrupts
+		cli
 
 		; set up a little stack for paging init functions
 		mov esp, initStackTop
@@ -70,7 +68,9 @@ section .bootInit
 		call _init
 
 		; let's go for some fun
+		push multibootInfoAddress
 		call kernelMain
+		add esp, byte 4
 
 		; reset the interrupt flag (IF) to not handle maskable interrupts
 		cli

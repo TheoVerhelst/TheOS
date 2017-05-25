@@ -3,7 +3,7 @@
 
 #include <std/cstddef>
 #include <cpp/BitSet.hpp>
-#include <boot/MultibootInfo.hpp>
+#include <boot/MemoryMap.hpp>
 #include <kernel/memory/paging/paging.hpp>
 #include <kernel/memory/kernelLocation.hpp>
 
@@ -22,7 +22,9 @@ class PhysicalMemoryManager
 	public:
 		/// Default constructor. It expects multiboot::multibootInfoAddress
 		/// to be available for use.
-		PhysicalMemoryManager();
+		/// \param memoryMap The memory map containing all available memory
+		/// areas, constructed from the multiboot info.
+		PhysicalMemoryManager(const MemoryMap& memoryMap);
 
 		/// Allocates a frame and return its address.
 		/// \return the address of the allocated frame.
@@ -50,7 +52,7 @@ class PhysicalMemoryManager
 
 		/// Frees the set of frames contained in the given region.
 		/// \param region The region to free.
-		void freeMemoryRegion(const multiboot::MemoryRegion& region);
+		void freeMemoryRegion(const MemoryRegion& region);
 
 		/// Gets the first 4k-aligned number that is greater or equal to \a address.
 		/// \param address The address to convert.

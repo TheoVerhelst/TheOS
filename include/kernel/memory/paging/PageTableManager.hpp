@@ -1,6 +1,7 @@
 #ifndef PAGETABLEMANAGER_HPP
 #define PAGETABLEMANAGER_HPP
 
+#include <boot/MemoryMap.hpp>
 #include <kernel/memory/paging/paging.hpp>
 #include <kernel/memory/paging/PhysicalMemoryManager.hpp>
 
@@ -11,7 +12,9 @@ class PageTableManager
 {
 	public:
 		/// Constructor.
-		PageTableManager();
+		/// \param memoryMap The memory map containing all available memory
+		/// areas, constructed from the multiboot info.
+		PageTableManager(const MemoryMap& memoryMap);
 
 		void* allocatePage();
 
