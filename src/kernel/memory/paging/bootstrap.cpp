@@ -53,9 +53,8 @@ void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf)
 		if(not (kernelPageDirectory[directoryEntry + indexOffset] & Flags::Present))
 		{
 			// Use a new page table from the array
-			// TODO use BOOTSTRAP_FILL_ENTRY
-			kernelPageDirectory[directoryEntry + indexOffset] =
-					(reinterpret_cast<uint32_t>(&kernelPageTables[usedPageTables]) & 0xFFFFF000) | kernelPagingFlags;
+			BOOTSTRAP_FILL_ENTRY(kernelPageDirectory[directoryEntry + indexOffset],
+					&kernelPageTables[usedPageTables], kernelPagingFlags);
 			++usedPageTables;
 		}
 
@@ -66,7 +65,7 @@ void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf)
 				(end - directoryEntry * pageTableCoverage) / pageSize : entriesNumber};
 		// tableEntry is the current page table entry
 		for(size_t tableEntry{firstTableEntry}; tableEntry <= lastTableEntry; ++tableEntry)
-			pageTable[tableEntry] = (((directoryEntry * entriesNumber + tableEntry) * pageSize) & 0xFFFFF000) | kernelPagingFlags;
+			BOOTSTRAP_FILL_ENTRY(pageTable[tableEntry], ((directoryEntry * entriesNumber + tableEntry) * pageSize), kernelPagingFlags);
 	}
 }
 

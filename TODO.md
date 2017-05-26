@@ -2,7 +2,6 @@
 * Rename the namespace `string` to `str`
 * Rename `KeyboardDriver::pendingCharacter`
 * Complete Icxxabi finalize methods
-* Use `BOOTSTRAP_FILL_ENTRY` in `paging/bootstrap.cpp`
 * Find a better directory structure for `test/`
 * Write more unit tests
 * Don't use underscore for public struct fields
