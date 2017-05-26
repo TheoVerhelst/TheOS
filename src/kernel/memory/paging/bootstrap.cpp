@@ -41,8 +41,8 @@ void initKernelPaging()
 [[gnu::section(".bootInit")]]
 void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf)
 {
-	start = BOOTSTRAP_ALIGN_UP(start);
-	end = BOOTSTRAP_ALIGN_DOWN(end);
+	start = BOOTSTRAP_ALIGN_DOWN(start);
+	end = BOOTSTRAP_ALIGN_UP(end);
 	const size_t indexOffset{higherHalf ? kernelVirtualOffset / pageTableCoverage : 0};
 	const size_t firstDirectoryEntry{start / pageTableCoverage};
 	const size_t lastDirectoryEntry{(end - 1) / pageTableCoverage};
