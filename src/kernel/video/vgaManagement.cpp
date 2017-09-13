@@ -4,17 +4,13 @@ namespace vga
 {
 
 ColourProfile::ColourProfile(Colour foreground, Colour background):
-	_color{
-			static_cast<uint8_t>(foreground)
-			|
-			(static_cast<uint8_t>(background) << 4)
-	}
+	_color{static_cast<uint8_t>(static_cast<uint8_t>(foreground) | (static_cast<uint8_t>(background) << 4))}
 {
 }
 
 ColourProfile::operator uint8_t () const
 {
-	return static_cast<uint8_t>(_foreground) | (static_cast<uint8_t>(_background) << 4);
+	return _color;
 }
 
 Entry::Entry(char character, const ColourProfile& colourProfile):
