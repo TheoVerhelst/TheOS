@@ -20,9 +20,9 @@ extern "C" void isrDispatcher(Arguments args)
 
 Printer& operator<<(Printer& out, const ErrorCode& errorCode)
 {
-	out << (errorCode._externalEvent ? "external" : "internal") << " at ";
-	out << (errorCode._descriptorLocation ? "idt" : (errorCode._gdtLdt ? "ldt" : "gdt"));
-	out << "[" << errorCode._segmentSelectorIndex << "]";
+	out << (errorCode._indexAndFlags & Flags::ExternalEvent ? "external" : "internal") << " at ";
+	out << (errorCode._indexAndFlags & Flags::DescriptorLocation ? "idt" : (errorCode._indexAndFlags & Flags::GdtLdt ? "ldt" : "gdt"));
+	out << "[" << ((errorCode._indexAndFlags & 0xFFF8) >> 3) << "]";
 	return out;
 }
 

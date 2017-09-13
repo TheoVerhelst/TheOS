@@ -43,29 +43,24 @@ void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf)
 {
 	start = BOOTSTRAP_ALIGN_DOWN(start);
 	end = BOOTSTRAP_ALIGN_UP(end);
-	const size_t indexOffset{higherHalf ? kernelVirtualOffset / pageTableCoverage : 0};
-	const size_t firstDirectoryEntry{start / pageTableCoverage};
-	const size_t lastDirectoryEntry{(end - 1) / pageTableCoverage};
-	// directoryEntry is the current page directory entry
-	for(size_t directoryEntry{firstDirectoryEntry}; directoryEntry <= lastDirectoryEntry; ++directoryEntry)
+	const size_t directoryOffset{higherHalf ? kernelVirtualOffset / pageTableCoverage : 0};
+	const size_t firstPage{start / pageSize};
+	const size_t pastLastPage{end / pageSize};
+
+	for(size_t page{firstPage}; page < pastLastPage; ++page)
 	{
-		// If the page directory entry is not filled yet
-		if(not (kernelPageDirectory[directoryEntry + indexOffset] & Flags::Present))
+		const size_t directoryEntry{(page / entriesNumber) + directoryOffset};
+		if(not (kernelPageDirectory[directoryEntry] & Flags::Present))
 		{
 			// Use a new page table from the array
-			BOOTSTRAP_FILL_ENTRY(kernelPageDirectory[directoryEntry + indexOffset],
+			BOOTSTRAP_FILL_ENTRY(kernelPageDirectory[directoryEntry],
 					&kernelPageTables[usedPageTables], kernelPagingFlags);
 			++usedPageTables;
 		}
 
-		uint32_t* pageTable{reinterpret_cast<uint32_t*>(kernelPageDirectory[directoryEntry + indexOffset] & 0xFFFFF000)};
-		const size_t firstTableEntry{start > directoryEntry * pageTableCoverage ?
-				(start - directoryEntry * pageTableCoverage) / pageSize : 0};
-		const size_t lastTableEntry{end < (directoryEntry + 1) * pageTableCoverage ?
-				(end - directoryEntry * pageTableCoverage) / pageSize : entriesNumber};
-		// tableEntry is the current page table entry
-		for(size_t tableEntry{firstTableEntry}; tableEntry <= lastTableEntry; ++tableEntry)
-			BOOTSTRAP_FILL_ENTRY(pageTable[tableEntry], ((directoryEntry * entriesNumber + tableEntry) * pageSize), kernelPagingFlags);
+		uint32_t* pageTable{reinterpret_cast<uint32_t*>(kernelPageDirectory[directoryEntry] & 0xFFFFF000)};
+		const size_t tableEntry{page % entriesNumber};
+		BOOTSTRAP_FILL_ENTRY(pageTable[tableEntry], page * pageSize, kernelPagingFlags);
 	}
 }
 

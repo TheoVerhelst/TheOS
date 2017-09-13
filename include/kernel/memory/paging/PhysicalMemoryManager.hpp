@@ -3,25 +3,22 @@
 
 #include <std/cstddef>
 #include <cpp/BitSet.hpp>
+#include <cpp/math.hpp>
+#include <kernel/memory/Byte.hpp>
 #include <boot/MemoryMap.hpp>
 #include <kernel/memory/paging/paging.hpp>
-#include <kernel/memory/kernelLocation.hpp>
 
 namespace paging
 {
 
 /// Browses the memory map given by the boot loader and manages the physical
 /// memory frames.
-/// It is final because there can be only one physical memory manager, so
-/// inheritance would make no sense.
-///
-/// The frames are managed with a bitmap, where each bit represent an usable
+/// The frames are managed with a bitmap, where each bit represents a usable
 /// frame of memory.
 class PhysicalMemoryManager
 {
 	public:
-		/// Default constructor. It expects multiboot::multibootInfoAddress
-		/// to be available for use.
+		/// Default constructor.
 		/// \param memoryMap The memory map containing all available memory
 		/// areas, constructed from the multiboot info.
 		PhysicalMemoryManager(const MemoryMap& memoryMap);
@@ -31,8 +28,8 @@ class PhysicalMemoryManager
 		void* allocateFrame();
 
 		/// Makes the given frame allocated. This should be called only by the
-		/// page manager, in order to avoid allocating a frame that is already
-		/// paged.
+		/// page manager, in order to avoid allocating a frame that was already
+		/// paged in the bootstrap paging init.
 		void allocateFrame(void* address);
 
 		/// Frees a previously allocated frame.
@@ -64,7 +61,8 @@ class PhysicalMemoryManager
 		/// \return The first 4k-aligned address that is less or equal to \a address.
 		static constexpr uintptr_t alignDown(uintptr_t address);
 
-		BitSet<(-lowerMemoryLimit) / paging::pageSize> _freeFrames;
+		static constexpr size_t _numberOfFrames{1 << (addressSize - math::log2(paging::pageSize))};
+		BitSet<_numberOfFrames> _freeFrames;
 };
 
 } // namespace paging

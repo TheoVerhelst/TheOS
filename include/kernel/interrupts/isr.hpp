@@ -17,29 +17,40 @@ namespace isr
 struct [[gnu::packed]] ErrorCode
 {
 	// TODO do not use bit fields when ordering and packing is critical
-	/// When set, indicates that the exception occurred during delivery of an
-	/// event external to the program, such as an interrupt or an earlier exception.
-	uint8_t _externalEvent:1;
+	/// bit 0: When set, indicates that the exception occurred during delivery
+	/// of an event external to the program, such as an interrupt or an earlier
+	/// exception.
+	/// uint8_t _externalEvent:1;
 
-	/// When set, indicates that the index portion of the error code refers
-	/// to a gate descriptor in the IDT; when clear, indicates that the index
-	/// refers to a descriptor in the GDT or the current LDT.
-	uint8_t _descriptorLocation:1;
+	/// bit 1: When set, indicates that the index portion of the error code
+	/// refers to a gate descriptor in the IDT; when clear, indicates that the
+	/// index refers to a descriptor in the GDT or the current LDT. uint8_t
+	/// _descriptorLocation:1;
 
-	/// Only used when the IDT flag is clear. When set, the TI flag indicates
-	/// that the index portion of the error code refers to a segment or gate
-	/// descriptor in the LDT; when clear, it indicates that the index refers to
-	/// a descriptor in the current GDT.
-	uint8_t _gdtLdt:1;
+	/// bit 2: Only used when the IDT flag is clear. When set, the TI flag
+	/// indicates that the index portion of the error code refers to a segment
+	/// or gate descriptor in the LDT; when clear, it indicates that the index
+	/// refers to a descriptor in the current GDT.
+	/// uint8_t _gdtLdt:1;
 
-	/// Provides an index into the IDT, GDT, or current LDT to the segment or
-	/// gate selector being referenced by the error code.
-	uint16_t _segmentSelectorIndex:13;
+	/// bit 3 -> 15: Provides an index into the IDT, GDT, or current LDT to the
+	/// segment or gate selector being referenced by the error code.
+	uint16_t _indexAndFlags;
 
 	/// Bit reserverd for the CPU.
 	uint16_t _reserved;
 };
 static_assert(sizeof(ErrorCode) == 4, "Error code structure must be 32-bit");
+
+namespace Flags
+{
+	enum Flags : uint16_t
+	{
+		ExternalEvent      = 1 << 0,
+		DescriptorLocation = 1 << 1,
+		GdtLdt             = 1 << 2
+	};
+} // namespace Flags
 
 /// Arguments that are given by the assembler routine to the ISR.
 struct [[gnu::packed]] Arguments

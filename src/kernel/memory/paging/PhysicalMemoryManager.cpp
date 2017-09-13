@@ -14,14 +14,13 @@ PhysicalMemoryManager::PhysicalMemoryManager(const MemoryMap& memoryMap)
 void* PhysicalMemoryManager::allocateFrame()
 {
 	size_t index{_freeFrames.find(true)};
-	// The bitmap doesn't includes the lower memory limit, we have to take this
-	// into account
+
 	if(index == _freeFrames._invalidIndex)
 		return nullptr;
 	else
 	{
 		_freeFrames.reset(index);
-		return reinterpret_cast<void*>(lowerMemoryLimit + index * paging::pageSize);
+		return reinterpret_cast<void*>(index * paging::pageSize);
 	}
 }
 
@@ -47,7 +46,7 @@ void PhysicalMemoryManager::setFrame(void* address, bool free)
 		return;
 	}
 
-	size_t index{(intAddress - lowerMemoryLimit) / paging::pageSize};
+	size_t index{intAddress / paging::pageSize};
 
 	if(index < _freeFrames.size())
 		_freeFrames.set(index, free);
