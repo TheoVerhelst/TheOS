@@ -4,8 +4,11 @@ namespace vga
 {
 
 ColourProfile::ColourProfile(Colour foreground, Colour background):
-	_foreground{static_cast<uint8_t>(static_cast<uint8_t>(foreground) & UINT8_C(0x0F))},
-	_background{static_cast<uint8_t>(static_cast<uint8_t>(background) & UINT8_C(0x0F))}
+	_color{
+			static_cast<uint8_t>(foreground)
+			|
+			(static_cast<uint8_t>(background) << 4)
+	}
 {
 }
 

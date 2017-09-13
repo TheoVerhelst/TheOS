@@ -35,9 +35,9 @@ class ColourProfile
 		explicit operator uint8_t() const;
 
 	private:
-		// TODO do not use bit fields
-		uint8_t _foreground:4;
-		uint8_t _background:4;
+		// bits 0 -> 3: foreground color.
+		/// bits 4 -> 7: background color.
+		uint8_t _color;
 };
 static_assert(sizeof(ColourProfile) == 1, "ColourProfile must be 8-bits");
 
