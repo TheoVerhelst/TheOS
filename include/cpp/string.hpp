@@ -4,7 +4,7 @@
 #include <std/cstddef>
 
 /// Functions related to native C strings.
-namespace string // TODO rename to str
+namespace str
 {
 	/// Returns the length of the given null-terminated byte string, that is,
 	/// the number of characters in a character array whose first element is

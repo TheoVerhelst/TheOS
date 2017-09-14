@@ -7,14 +7,14 @@ SCENARIO("Testing string length function")
 	{
 		const char* aString{"123456789"};
 		THEN("Its computed length is 9")
-			REQUIRE(string::length(aString) == 9);
+			REQUIRE(str::length(aString) == 9);
 	}
 
 	GIVEN("An empty C-style string")
 	{
 		const char* aString{""};
 		THEN("Its computed length is 0")
-			REQUIRE(string::length(aString) == 0);
+			REQUIRE(str::length(aString) == 0);
 	}
 }
 
@@ -25,11 +25,11 @@ SCENARIO("Testing string copy function")
 		const char* original{"Hi dudes, what are you up to today?"};
 		WHEN("The original string is copied")
 		{
-			char* copy = new char[string::length(original) + 1];
-			string::copy(copy, original);
+			char* copy = new char[str::length(original) + 1];
+			str::copy(copy, original);
 			THEN("Both strings compare equal")
 			{
-				for(std::size_t i{0}; i < string::length(original); ++i)
+				for(std::size_t i{0}; i < str::length(original); ++i)
 					REQUIRE(original[i] == copy[i]);
 			}
 		}
@@ -41,9 +41,9 @@ SCENARIO("Testing string copy function")
 		WHEN("The original string is copied")
 		{
 			char* copy = new char[1];
-			string::copy(copy, original);
+			str::copy(copy, original);
 			THEN("The copied string is also empty")
-				REQUIRE(string::length(copy) == 0);
+				REQUIRE(str::length(copy) == 0);
 		}
 	}
 }

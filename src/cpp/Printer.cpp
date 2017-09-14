@@ -128,8 +128,8 @@ char* Printer::convertToString(unsigned long long int arg, bool showMinus)
 	if(_showBase)
 	{
 		const char* baseString{_prefixes[_numericBase - 1]};
-		string::copy(&_buffer[i], baseString);
-		i += string::length(baseString);
+		str::copy(&_buffer[i], baseString);
+		i += str::length(baseString);
 	}
 
 	if(arg == 0)

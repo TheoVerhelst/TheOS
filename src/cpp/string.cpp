@@ -1,6 +1,6 @@
 #include <cpp/string.hpp>
 
-namespace string
+namespace str
 {
 
 size_t length(const char *s)

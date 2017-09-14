@@ -1,5 +1,3 @@
-* Remove bit fields in structs, as their packing and ordering is not guaranteed
-* Rename the namespace `string` to `str`
 * Rename `KeyboardDriver::pendingCharacter`
 * Complete Icxxabi finalize methods
 * Find a better directory structure for `test/`
