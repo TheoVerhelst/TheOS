@@ -25,7 +25,7 @@ class KeyEventMapper
 
 		KeyEventMapper(Mapping mapping);
 		void registerEvent(const KeyEvent& event);
-		bool pendingCharacter() const;
+		bool characterQueueEmpty() const;
 		Character getCharacter();
 
 	private:

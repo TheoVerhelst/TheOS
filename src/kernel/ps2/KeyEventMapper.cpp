@@ -60,9 +60,9 @@ void KeyEventMapper::registerEvent(const KeyEvent& event)
 	}
 }
 
-bool KeyEventMapper::pendingCharacter() const
+bool KeyEventMapper::characterQueueEmpty() const
 {
-	return not _characterQueue.empty();
+	return _characterQueue.empty();
 }
 
 KeyEventMapper::Character KeyEventMapper::getCharacter()

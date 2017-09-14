@@ -15,7 +15,7 @@ class KeyboardDriver : public Driver
 {
 	public:
 		void pollKeyboard();
-		bool pendingCharacter();// TODO find a better name
+		bool characterQueueEmpty();
 		char getCharacter();
 
 	private:

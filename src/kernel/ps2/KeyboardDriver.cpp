@@ -20,14 +20,14 @@ void KeyboardDriver::pollKeyboard()
 	}
 }
 
-bool KeyboardDriver::pendingCharacter()
+bool KeyboardDriver::characterQueueEmpty()
 {
-	return _keyEventMapper.pendingCharacter();
+	return _keyEventMapper.characterQueueEmpty();
 }
 
 char KeyboardDriver::getCharacter()
 {
-	if(pendingCharacter())
+	if(not characterQueueEmpty())
 		return _keyEventMapper.getCharacter();
 	else
 		return '\0';
