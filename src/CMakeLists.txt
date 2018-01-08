@@ -46,5 +46,5 @@ add_custom_target(${ISO_NAME} ALL
     # Create a new iso with grub
     COMMAND grub-mkrescue -o "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${ISO_NAME}" "${CMAKE_BINARY_DIR}/iso/"
     # Finally copy the run script
-    COMMAND cp "${CONFIG_DIRECTORY}/run.sh" "${CMAKE_BINARY_DIR}"
+    COMMAND cp "${CONFIG_DIRECTORY}/run.py" "${CMAKE_BINARY_DIR}"
 )
