@@ -6,8 +6,8 @@
 
 struct MemoryRegion
 {
-	void* _address;
-	size_t _size;
+	void* address;
+	size_t size;
 };
 
 class MemoryMapIterator

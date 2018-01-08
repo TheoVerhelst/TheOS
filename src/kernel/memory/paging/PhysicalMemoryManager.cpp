@@ -55,8 +55,8 @@ void PhysicalMemoryManager::setFrame(void* address, bool free)
 void PhysicalMemoryManager::freeMemoryRegion(const MemoryRegion& region)
 {
 	// region.base_addr is 64-bits, get only the first 32 bits
-	uintptr_t address{reinterpret_cast<uintptr_t>(region._address)};
-	const size_t size{region._size};
+	uintptr_t address{reinterpret_cast<uintptr_t>(region.address)};
+	const size_t size{region.size};
 	// Get the upper bound aligned to 4k (rounded down to the first 4k multiple)
 	uintptr_t upperBound{alignDown(address + size)};
 	address = alignUp(address);

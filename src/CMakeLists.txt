@@ -2,11 +2,11 @@
 set(CMAKE_ASM_NASM_OBJECT_FORMAT "elf32")
 
 # Add OS-build specific flags
-set(CMAKE_CXX_COMPILER "i686-elf-g++")
+set(CMAKE_CXX_COMPILER "/usr/local/cross/bin/i686-elf-g++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffreestanding -fno-exceptions -fno-rtti")
 
 # Set up the linker
-set(CRT_PATH "/usr/local/cross/lib/gcc/i686-elf/6.2.0")
+set(CRT_PATH "/usr/local/cross/lib/gcc/i686-elf/7.2.0")
 set(CRTBEGIN_O "${CRT_PATH}/crtbegin.o")
 set(CRTEND_O "${CRT_PATH}/crtend.o")
 set(CONFIG_DIRECTORY "${PROJECT_SOURCE_DIR}/config")
