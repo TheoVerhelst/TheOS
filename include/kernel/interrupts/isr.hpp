@@ -16,7 +16,6 @@ namespace isr
 /// code contains 3 flags:
 struct [[gnu::packed]] ErrorCode
 {
-	// TODO do not use bit fields when ordering and packing is critical
 	/// bit 0: When set, indicates that the exception occurred during delivery
 	/// of an event external to the program, such as an interrupt or an earlier
 	/// exception.
@@ -35,10 +34,10 @@ struct [[gnu::packed]] ErrorCode
 
 	/// bit 3 -> 15: Provides an index into the IDT, GDT, or current LDT to the
 	/// segment or gate selector being referenced by the error code.
-	uint16_t _indexAndFlags;
+	uint16_t indexAndFlags;
 
 	/// Bit reserverd for the CPU.
-	uint16_t _reserved;
+	uint16_t reserved;
 };
 static_assert(sizeof(ErrorCode) == 4, "Error code structure must be 32-bit");
 
@@ -55,17 +54,17 @@ namespace Flags
 /// Arguments that are given by the assembler routine to the ISR.
 struct [[gnu::packed]] Arguments
 {
-	uint32_t _gs;             ///< The GS register.
-	uint32_t _fs;             ///< The FS register.
-	uint32_t _es;             ///< The ES register.
-	uint32_t _ds;             ///< The DS register.
-	uint32_t _interruptNumber;///< The index of the interrupt that occurred.
-	ErrorCode _errorCode;     ///< The additional error code given by the CPU.
-	uint32_t _eip;            ///< The EIP register.
-	uint32_t _cs;             ///< The CS register.
-	uint32_t _eflags;         ///< The flags register.
-	uint32_t _useresp;        ///< The ESP register of the user.
-	uint32_t _ss;             ///< The SS register.
+	uint32_t gs;             ///< The GS register.
+	uint32_t fs;             ///< The FS register.
+	uint32_t es;             ///< The ES register.
+	uint32_t ds;             ///< The DS register.
+	uint32_t interruptNumber;///< The index of the interrupt that occurred.
+	ErrorCode errorCode;     ///< The additional error code given by the CPU.
+	uint32_t eip;            ///< The EIP register.
+	uint32_t cs;             ///< The CS register.
+	uint32_t eflags;         ///< The flags register.
+	uint32_t useresp;        ///< The ESP register of the user.
+	uint32_t ss;             ///< The SS register.
 };
 
 /// Calls the apropriate C-written ISR, and logs the interrupt if needed.

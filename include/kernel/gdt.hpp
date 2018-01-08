@@ -12,8 +12,8 @@ namespace gdt
 /// then its address is given to the CPU in order to initialize segmentation.
 struct [[gnu::packed]] GdtDescriptor
 {
-	uint16_t _size;
-	uint32_t _address;
+	uint16_t size;
+	uint32_t address;
 };
 static_assert(sizeof(GdtDescriptor) == 6, "GdtDescriptor must be 6-bytes long.");
 

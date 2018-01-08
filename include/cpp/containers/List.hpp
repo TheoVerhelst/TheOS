@@ -13,9 +13,9 @@ namespace details
 template <class T>
 struct ListNode
 {
-	T _value;                    ///< The value of the node.
-	ListNode* _next{nullptr};    ///< The next node.
-	ListNode* _previous{nullptr};///< The previous node.
+	T value;                    ///< The value of the node.
+	ListNode* next {nullptr};    ///< The next node.
+	ListNode* previous {nullptr};///< The previous node.
 };
 
 } // namespace details
@@ -289,25 +289,25 @@ size_t List<T>::size() const
 template <class T>
 T& List<T>::back()
 {
-	return _end->_previous->_value;
+	return _end->previous->_value;
 }
 
 template <class T>
 const T& List<T>::back() const
 {
-	return _end->_previous->_value;
+	return _end->previous->_value;
 }
 
 template <class T>
 T& List<T>::front()
 {
-	return _begin->_value;
+	return _begin->value;
 }
 
 template <class T>
 const T& List<T>::front() const
 {
-	return _begin->_value;
+	return _begin->value;
 }
 
 template <class T>
@@ -411,11 +411,11 @@ typename List<T>::Iterator List<T>::erase(Iterator first, Iterator last)
 	if(first._node == _begin)
 		_begin = last._node;
 	else if(first != last)
-		first._node->_previous->_next = last._node;
+		first._node->previous->next = last._node;
 	if(last._node == _end)
-		_end->_previous = first._node->_previous;
+		_end->previous = first._node->previous;
 	else if(first != last)
-		last._node->_previous = first._node->_previous;
+		last._node->previous = first._node->previous;
 	while(first != last)
 	{
 		_allocator.destroy(first._node);
@@ -429,13 +429,13 @@ template <class T>
 typename List<T>::Iterator List<T>::insertImpl(Iterator pos)
 {
 	NodeType* node{_allocator.construct()};
-	node->_previous = pos._node->_previous;
-	node->_next = pos._node;
-	pos._node->_previous = node;
-	if(node->_previous == nullptr)
+	node->previous = pos._node->previous;
+	node->next = pos._node;
+	pos._node->previous = node;
+	if(node->previous == nullptr)
 		_begin = node;
 	else
-		node->_previous->_next = node;
+		node->previous->next = node;
 	++_size;
 	return Iterator(node);
 }
@@ -453,21 +453,21 @@ template <class T>
 template <typename U, typename NodeType>
 U&  List<T>::NodeIterator<U, NodeType>::operator*() const
 {
-	return _node->_value;
+	return _node->value;
 }
 
 template <class T>
 template <typename U, typename NodeType>
 U*  List<T>::NodeIterator<U, NodeType>::operator->() const
 {
-	return &_node->_value;
+	return &_node->value;
 }
 
 template <class T>
 template <typename U, typename NodeType>
 List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator++()
 {
-	_node = _node->_next;
+	_node = _node->next;
 	return static_cast<NodeIterator&>(*this);
 }
 
@@ -476,7 +476,7 @@ template <typename U, typename NodeType>
 List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator++(int)
 {
 	NodeIterator tmp{*this};
-	_node = _node->_next;
+	_node = _node->next;
 	return tmp;
 }
 
@@ -484,7 +484,7 @@ template <class T>
 template <typename U, typename NodeType>
 List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator--()
 {
-	_node = _node->_previous;
+	_node = _node->previous;
 	return static_cast<NodeIterator&>(*this);
 }
 
@@ -493,7 +493,7 @@ template <typename U, typename NodeType>
 List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator--(int)
 {
 	NodeIterator tmp{*this};
-	_node = _node->_previous;
+	_node = _node->previous;
 	return tmp;
 }
 

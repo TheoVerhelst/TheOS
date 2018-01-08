@@ -17,10 +17,10 @@ namespace multiboot
 /// set of strings itself.
 struct AOutSyms
 {
-	size_t _tabsize;   ///< Size of the array.
-	size_t _strsize;   ///< Size of the null-terminated strings structure.
-	void* _addr;       ///< Address of the whole structure described above.
-	uint32_t _reserved;///< Reserved (probably already set to 0).
+	size_t tabsize;   ///< Size of the array.
+	size_t strsize;   ///< Size of the null-terminated strings structure.
+	void* addr;       ///< Address of the whole structure described above.
+	uint32_t reserved;///< Reserved (probably already set to 0).
 };
 
 /// Structure representing data about the ELF32
@@ -30,10 +30,10 @@ struct AOutSyms
 /// informations.
 struct Elf32Syms
 {
-	uint32_t _num;///< Number of entries.
-	size_t _size; ///< Size of each entry.
-	void* _addr;  ///< Address of the section header table.
-	char** _shndx;///< String table used as the index of names.
+	uint32_t num;///< Number of entries.
+	size_t size; ///< Size of each entry.
+	void* addr;  ///< Address of the section header table.
+	char** shndx;///< String table used as the index of names.
 };
 
 /// Structure used to represent a region of the memory that is potentially
@@ -41,20 +41,20 @@ struct Elf32Syms
 struct MemoryRegion
 {
 	/// Size of the structure (may be greater than sizeof(MemoryRegion)).
-	size_t _size;
+	size_t size;
 
 	/// Address of the first byte of the region.
-	uint64_t _base_addr;
+	uint64_t base_addr;
 
 	/// Length of the region.
-	uint64_t _length;
+	uint64_t length;
 
 	/// Contains _validType if the region is available for use, any other value
 	/// otherwise.
-	uint32_t _type;
+	uint32_t type;
 
 	/// The value for _type that indicates a valid memory region.
-	static constexpr uint32_t _validType{UINT32_C(1)};
+	static constexpr uint32_t validType {UINT32_C(1)};
 };
 
 /// This is the Multiboot information data structure,
@@ -68,75 +68,75 @@ struct MultibootInfo
 	static_assert(sizeof(size_t) == sizeof(uint32_t), "Sizes must be 32-bit");
 
 	/// Indicates the presence and the validity of the following fields.
-	uint32_t _flags;
+	uint32_t flags;
 
 	/// Amount of lower memory, in kilobytes.
-	size_t _mem_lower;
+	size_t mem_lower;
 
 	/// Amount of upper memory, in kilobytes.
-	size_t _mem_upper;
+	size_t mem_upper;
 
 	 /// Indicates which bios disk device the boot loader loaded the OS image
 	 /// from.
-	uint32_t _boot_device;
+	uint32_t boot_device;
 
 	/// Command line to be passed to the kernel.
-	char* _cmdline;
+	char* cmdline;
 
 	/// Number of modules loaded.
-	size_t _mods_count;
+	size_t mods_count;
 
 	/// Physical address of the first module structure.
-	void* _mods_addr;
+	void* mods_addr;
 	union
 	{
 		/// Data about the a.out symbol table of the kernel.
-		AOutSyms _a_out_syms;
+		AOutSyms a_out_syms;
 
 		/// Data about the elf32 symbol table of the kernel.
-		Elf32Syms _elf32_syms;
+		Elf32Syms elf32_syms;
 	};
 
 	/// Size of the memory map.
-	size_t _mmap_length;
+	size_t mmap_length;
 
 	/// Address of the first memory map entry.
-	MemoryRegion* _mmap_addr;
+	MemoryRegion* mmap_addr;
 
 	/// Size of the drives structure.
-	size_t _drives_length;
+	size_t drives_length;
 
 	/// Address of the first drives structure entry.
-	void* _drives_addr;
+	void* drives_addr;
 
 	/// Address of the rom configuration table returned by the GET CONFIGURATION
 	/// bios call.
-	uint32_t _config_table;
+	uint32_t config_table;
 
 	/// Name of the bootloader.
-	char* _boot_loader_name;
+	char* boot_loader_name;
 
 	/// Address of an APM table. See Advanced Power Management (APM) BIOS
 	/// Interface Specification, for more information.
-	void* _apm_table;
+	void* apm_table;
 
 	/// Addresses of VBE control information returned by the VBE Function 00h.
-	uint32_t _vbe_control_info;
+	uint32_t vbe_control_info;
 
 	/// Addresses of VBE mode information returned by the VBE Function 01h.
-	uint32_t _vbe_mode_info;
+	uint32_t vbe_mode_info;
 
 	/// Current video mode in the format specified in VBE 3.0.
-	uint16_t _vbe_mode;
+	uint16_t vbe_mode;
 
 	/// The table of a protected mode interface as defined in VBE 2.0+.
-	uint16_t _vbe_interface_seg;
+	uint16_t vbe_interface_seg;
 
 	/// The table of a protected mode interface as defined in VBE 2.0+.
-	uint16_t _vbe_interface_off;
+	uint16_t vbe_interface_off;
 
 	/// The table of a protected mode interface as defined in VBE 2.0+.
-	uint32_t _vbe_interface_len;
+	uint32_t vbe_interface_len;
 };
 
 /// Namespace of the enumeration used to test the flag attribute in
@@ -190,3 +190,4 @@ enum InfoAvailable : uint32_t
 } // namespace multiboot
 
 #endif // MULTIBOOTINFO_HPP
+

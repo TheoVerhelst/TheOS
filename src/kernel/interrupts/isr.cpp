@@ -11,18 +11,18 @@ constexpr void (*Table::_table[idt::idtSize])(Arguments);
 extern "C" void isrDispatcher(Arguments args)
 {
 	// Call the proper ISR
-	Table::_table[args._interruptNumber](args);
+	Table::_table[args.interruptNumber](args);
 
 	// If the interrupt is a mapped IRQ, then send a EOI command to the PIC
-	if(args._interruptNumber >= pic::masterOffset and args._interruptNumber <= pic::slaveOffset + 8)
-		pic::sendEndOfInterrupt(args._interruptNumber);
+	if(args.interruptNumber >= pic::masterOffset and args.interruptNumber <= pic::slaveOffset + 8)
+		pic::sendEndOfInterrupt(args.interruptNumber);
 }
 
 Printer& operator<<(Printer& out, const ErrorCode& errorCode)
 {
-	out << (errorCode._indexAndFlags & Flags::ExternalEvent ? "external" : "internal") << " at ";
-	out << (errorCode._indexAndFlags & Flags::DescriptorLocation ? "idt" : (errorCode._indexAndFlags & Flags::GdtLdt ? "ldt" : "gdt"));
-	out << "[" << ((errorCode._indexAndFlags & 0xFFF8) >> 3) << "]";
+	out << (errorCode.indexAndFlags & Flags::ExternalEvent ? "external" : "internal") << " at ";
+	out << (errorCode.indexAndFlags & Flags::DescriptorLocation ? "idt" : (errorCode.indexAndFlags & Flags::GdtLdt ? "ldt" : "gdt"));
+	out << "[" << ((errorCode.indexAndFlags & 0xFFF8) >> 3) << "]";
 	return out;
 }
 

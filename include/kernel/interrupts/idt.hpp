@@ -240,8 +240,8 @@ static_assert(sizeof(IdtEntry) == 8, "And IDT entry must be 8-bytes long.");
 /// Structure to gives to the CPU indicating where is located the IDT.
 struct [[gnu::packed]] IdtDescriptor
 {
-	uint16_t _size;   ///< Size of the IDT in bytes, minus 1.
-	uint32_t _address;///< Address of the IDT.
+	uint16_t size;   ///< Size of the IDT in bytes, minus 1.
+	uint32_t address;///< Address of the IDT.
 };
 static_assert(sizeof(IdtDescriptor) == 6, "The IDT descriptor must be 6-bytes long.");
 

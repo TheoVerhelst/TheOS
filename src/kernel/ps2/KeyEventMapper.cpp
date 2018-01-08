@@ -12,46 +12,46 @@ KeyEventMapper::KeyEventMapper(Mapping mapping):
 
 void KeyEventMapper::registerEvent(const KeyEvent& event)
 {
-	if(event._pressed)
+	if(event.pressed)
 	{
 		const size_t mappingIndex{static_cast<size_t>(_currentMapping)};
 		for(const auto& mapping : _mappings[mappingIndex])
 		{
-			if(mapping._key == event._key and isEventSatisfied(mapping))
+			if(mapping._key == event.key and isEventSatisfied(mapping))
 			{
 				_characterQueue.pushBack(mapping._character);
 				return;
 			}
 		}
 	}
-	switch(event._key)
+	switch(event.key)
 	{
 		case Key::LAlt:
-			_lAltPressed = event._pressed;
+			_lAltPressed = event.pressed;
 			break;
 
 		case Key::RAlt:
-			_rAltPressed = event._pressed;
+			_rAltPressed = event.pressed;
 			break;
 
 		case Key::LControl:
-			_lControlPressed = event._pressed;
+			_lControlPressed = event.pressed;
 			break;
 
 		case Key::RControl:
-			_rControlPressed = event._pressed;
+			_rControlPressed = event.pressed;
 			break;
 
 		case Key::LShift:
-			_lShiftPressed = event._pressed;
+			_lShiftPressed = event.pressed;
 			break;
 
 		case Key::RShift:
-			_rShiftPressed = event._pressed;
+			_rShiftPressed = event.pressed;
 			break;
 
 		case Key::CapsLock:
-			if(event._pressed)
+			if(event.pressed)
 				_capsLocked = not _capsLocked;
 			break;
 

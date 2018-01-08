@@ -19,8 +19,8 @@ SegmentDescriptor::SegmentDescriptor(uint32_t base, uint32_t limit, uint8_t flag
 
 void initializeGdt()
 {
-	descriptor._address = reinterpret_cast<uint32_t>(&globalDescriptorTable);
-	descriptor._size = sizeof(globalDescriptorTable);
+	descriptor.address = reinterpret_cast<uint32_t>(&globalDescriptorTable);
+	descriptor.size = sizeof(globalDescriptorTable);
 	globalDescriptorTable[1] = SegmentDescriptor(0, 0xFFFFF,
 			Flags0::Enabled | Flags0::DataOrCode | Flags0::DescriptorType | Flags0::Present,
 			Flags1::Size);

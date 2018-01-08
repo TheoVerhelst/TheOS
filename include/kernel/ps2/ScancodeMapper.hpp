@@ -26,8 +26,8 @@ class ScancodeMapper
 	private:
 		struct ScancodeMapping
 		{
-			Scancode _scancode;
-			KeyEvent _keyEvent;
+			Scancode scancode;
+			KeyEvent keyEvent;
 		};
 
 		Mapping _currentMapping{Mapping::ScancodeSet1};

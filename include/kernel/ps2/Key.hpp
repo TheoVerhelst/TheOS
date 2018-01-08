@@ -119,8 +119,8 @@ enum class Key
 
 struct KeyEvent
 {
-	Key _key;
-	bool _pressed;
+	Key key;
+	bool pressed;
 };
 
 
