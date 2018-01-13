@@ -1,13 +1,13 @@
 #include <cpp/flags.hpp>
 #include <cpp/log.hpp>
-#include <kernel/memory/paging/bootstrap.hpp>
+#include <boot/paging.hpp>
 #include <kernel/memory/paging/PageTableManager.hpp>
 
 namespace paging
 {
 
 PageTableManager::PageTableManager(const MemoryMap& memoryMap):
-	_pageDirectory{reinterpret_cast<PageDirectoryEntry*>(bootstrap::kernelPageDirectory)},
+	_pageDirectory{reinterpret_cast<PageDirectoryEntry*>(::boot::paging::kernelPageDirectory)},
 	_physicalMemoryManager{memoryMap}
 {
 	allocateAlreadyPagedFrames();

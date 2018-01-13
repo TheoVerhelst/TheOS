@@ -15,8 +15,8 @@ SECTIONS
 	.bootInit ALIGN(4K) :
 	{
 		*(.multiboot)
-		*(.kernelPaging)
-		*(.bootInit)
+		*(.bootBss)
+		*(.bootText)
 	}
 
 	lowKernelEnd = .;

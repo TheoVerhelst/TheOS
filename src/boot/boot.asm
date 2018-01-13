@@ -58,7 +58,10 @@ section .bootInit
 		mov cr3, eax
 		; turn on paging bit
 		mov eax, cr0
-		or eax, 0x100000000
+		or eax, 0x80000000
+
+		loop: jmp loop
+
 		mov cr0, eax
 
 		; set up a stack by putting TOS in ESP

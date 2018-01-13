@@ -3,6 +3,9 @@
 
 #include <std/cstdint>
 
+namespace boot
+{
+
 namespace gdt
 {
 
@@ -25,20 +28,16 @@ static_assert(sizeof(GdtDescriptor) == 6, "GdtDescriptor must be 6-bytes long.")
 /// by using two segments (code and data) that fit the whole memory.
 /// Note that the limit and base fields are split across the structure, and
 /// their parts are numbered from 0.
-class [[gnu::packed]] SegmentDescriptor
+struct [[gnu::packed]] SegmentDescriptor
 {
-	public:
-		SegmentDescriptor(uint32_t base = 0, uint32_t limit = 0, uint8_t flags0 = 0, uint8_t flags1 = 0);
-
-	private:
 		/// First part of segment limit.
-		uint16_t _limit0;
+		uint16_t limit0;
 
 		/// First part of base address.
-		uint16_t _base0;
+		uint16_t base0;
 
 		/// Second part of base address.
-		uint8_t _base1;
+		uint8_t base1;
 
 		/// bit 0: accessed.
 		/// bit 1: enabled
@@ -48,7 +47,7 @@ class [[gnu::packed]] SegmentDescriptor
 		/// bit 4 (S): Descriptor type (0 = system; 1 = code or data).
 		/// bits 5 and 6 (DPL): Descriptor privilege level.
 		/// bit 7 (P): Segment present.
-		uint8_t _flags0;
+		uint8_t flags0;
 
 		/// bits 0 -> 3: Second part of segment limit.
 		/// bit 4 (AVL): Available for use by system software.
@@ -56,10 +55,10 @@ class [[gnu::packed]] SegmentDescriptor
 		/// bit 6 (D/B): Default operation size (0 = 16-bit segment; 1 = 32-bit
 		/// segment).
 		/// bit 6 (G): Granularity.
-		uint8_t _limit1AndFlags1;
+		uint8_t limit1AndFlags1;
 
 		/// Third part of base address.
-		uint8_t _base2;
+		uint8_t base2;
 };
 static_assert(sizeof(SegmentDescriptor) == 8, "SegmentDescriptor must be 8-bytes long.");
 
@@ -87,23 +86,31 @@ namespace Flags1
 /// The set of bits that can be set in the second flag field.
 enum Flags1 : uint8_t
 {
-	Available   = 1 << 4,
-	LongMode    = 1 << 5,
-	Size        = 1 << 6,
-	Granularity = 1 << 7
+	AvailableForOs = 1 << 4,
+	LongMode       = 1 << 5,
+	Size           = 1 << 6,
+	Granularity    = 1 << 7
 };
 
 } // namespace Flags1
 
+alignas(sizeof(SegmentDescriptor)) [[gnu::section(".bootBss")]]
 extern SegmentDescriptor globalDescriptorTable[3];
 
-void initializeGdt();
+extern "C" [[gnu::section(".bootBss")]] gdt::GdtDescriptor gdtDescriptor;
+
+[[gnu::section(".bootText")]] void initializeGdt();
+
+// We use function rather than a constructor in order to prevent its code being
+// in the text section in the higher half (we need it in the boot section).
+[[gnu::section(".bootText")]]
+SegmentDescriptor constructSegmentDescriptor(uint32_t base, uint32_t limit, uint8_t flags0, uint8_t flags1);
+
+extern "C" [[gnu::section(".bootText")]] void flushGdt();
 
 } // namespace gdt
 
-extern gdt::GdtDescriptor descriptor;
-
-extern "C" void flushGdt();
+} // namespace boot
 
 
 

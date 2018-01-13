@@ -1,8 +1,11 @@
 set(SOURCES
 	"boot.asm"
+	"gdt.asm"
+	"gdt.cpp"
 	"Icxxabi.cpp"
 	"kernelMain.cpp"
 	"MemoryMap.cpp"
+	"paging.cpp"
 )
 
 add_library(boot OBJECT ${SOURCES})

@@ -3,7 +3,6 @@ set(SOURCES
 	"interrupts/interruptHandler.asm"
 	"interrupts/isr.cpp"
 	"interrupts/pic.cpp"
-	"memory/paging/bootstrap.cpp"
 	"memory/paging/PageTableManager.cpp"
 	"memory/paging/paging.cpp"
 	"memory/paging/PhysicalMemoryManager.cpp"
@@ -14,8 +13,6 @@ set(SOURCES
 	"ps2/ScancodeMapper.cpp"
 	"terminal/KernelTerminal.cpp"
 	"video/vgaManagement.cpp"
-	"gdt.asm"
-	"gdt.cpp"
 	"io.cpp"
 	"Kernel.cpp"
 )
