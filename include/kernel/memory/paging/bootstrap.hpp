@@ -50,7 +50,10 @@ static_assert(sizeof(kernelPageTables[0]) == pageSize, "The page tables must fit
 
 extern "C" void* lowKernelStart;
 extern "C" void* lowKernelEnd;
+
+[[gnu::section(".bootInit")]]
 extern size_t usedPageTables;
+
 constexpr uint16_t kernelPagingFlags{Flags::Present | Flags::ReadWrite | Flags::UserSupervisor};
 
 /// Initializes the kernel paging by just setting up the page directory and the

@@ -16,9 +16,10 @@ extern "C" void* lowKernelEnd;
 /// a very short part is usable (about 640Ko).
 constexpr uintptr_t lowerMemoryLimit{0x100000};
 
-/// The offset between the physical and te logical location of the kernel in the
-/// memory. This value is defined in the linker script, but we redefine it here
-/// in order to be able to use it as a constexpr (such as for array sizing).
+/// The offset between the physical and the logical location of the kernel in
+/// the memory. This value is defined in the linker script, but we redefine it
+/// here in order to be able to use it as a constexpr (such as for array
+/// sizing).
 constexpr size_t kernelVirtualOffset{0xC0000000};
 
 #endif // KERNELLOCATION_HPP

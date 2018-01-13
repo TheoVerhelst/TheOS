@@ -14,6 +14,7 @@ uint32_t kernelPageDirectory[entriesNumber];
 alignas(pageSize) [[gnu::section(".kernelPaging")]]
 uint32_t kernelPageTables[kernelPageTablesNumber][entriesNumber];
 
+[[gnu::section(".kernelPaging")]]
 size_t usedPageTables{0UL};
 
 extern "C" [[gnu::section(".bootInit")]]
@@ -35,7 +36,6 @@ void initKernelPaging()
 
 	// map higher half kernel
 	mapMemory(reinterpret_cast<uintptr_t>(&kernelPhysicalStart), reinterpret_cast<uintptr_t>(&kernelPhysicalEnd), true);
-
 }
 
 [[gnu::section(".bootInit")]]
@@ -54,7 +54,7 @@ void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf)
 		{
 			// Use a new page table from the array
 			BOOTSTRAP_FILL_ENTRY(kernelPageDirectory[directoryEntry],
-					&kernelPageTables[usedPageTables], kernelPagingFlags);
+				&kernelPageTables[usedPageTables], kernelPagingFlags);
 			++usedPageTables;
 		}
 
