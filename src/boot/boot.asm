@@ -60,8 +60,6 @@ section .bootInit
 		mov eax, cr0
 		or eax, 0x80000000
 
-		loop: jmp loop
-
 		mov cr0, eax
 
 		; set up a stack by putting TOS in ESP
@@ -71,7 +69,7 @@ section .bootInit
 		call _init
 
 		; let's go for some fun
-		push multibootInfoAddress
+		push DWORD [multibootInfoAddress]
 		call kernelMain
 		add esp, byte 4
 
