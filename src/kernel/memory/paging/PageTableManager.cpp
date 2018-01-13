@@ -1,5 +1,6 @@
 #include <cpp/flags.hpp>
 #include <cpp/log.hpp>
+#include <cpp/abort.hpp>
 #include <boot/paging.hpp>
 #include <kernel/memory/paging/PageTableManager.hpp>
 
@@ -15,21 +16,24 @@ PageTableManager::PageTableManager(const MemoryMap& memoryMap):
 
 void* PageTableManager::allocatePage()
 {
-	for(size_t directoryEntry{0}; directoryEntry < entriesNumber; ++directoryEntry)
+	for(size_t i{0}; i < entriesNumber; ++i)
 	{
 		// If the page directory entry is available
-		if(flags::allSet(_pageDirectory[directoryEntry].getFlags(), Flags::Present | Flags::ReadWrite))
+		if(flags::allSet(_pageDirectory[i].getFlags(), Flags::Present | Flags::ReadWrite))
 		{
-			PageTableEntry* pageTable{_pageDirectory[directoryEntry].getPageTableAddress()};
-			for(size_t tableEntry{0}; tableEntry < entriesNumber; ++tableEntry)
+			PageTableEntry* pageTable{_pageDirectory[i].getPageTableAddress()};
+			for(size_t j{0}; j < entriesNumber; ++j)
 			{
 				// If this is a free page
-				if(not flags::allSet(pageTable[tableEntry].getFlags(), Flags::Present))
+				if(not flags::allSet(pageTable[j].getFlags(), Flags::Present))
 				{
 					void* physicalAddress{_physicalMemoryManager.allocateFrame()};
+					if(physicalAddress == nullptr)
+						abort("No frame found when allocating a page");
+
 					// Set the page table entry to a valid page
-					pageTable[tableEntry] = PageTableEntry(physicalAddress, _defaultFlags);
-					void* virtualAddress{reinterpret_cast<void*>((directoryEntry * entriesNumber + tableEntry) * pageSize)};
+					pageTable[j] = PageTableEntry(physicalAddress, _defaultFlags);
+					void* virtualAddress{reinterpret_cast<void*>((i * entriesNumber + j) * pageSize)};
 					invalidatePage(virtualAddress);
 					return virtualAddress;
 				}
@@ -43,17 +47,17 @@ void* PageTableManager::allocatePage()
 
 void PageTableManager::allocateAlreadyPagedFrames()
 {
-	for(size_t directoryEntry{0}; directoryEntry < entriesNumber; ++directoryEntry)
+	for(size_t i{0}; i < entriesNumber; ++i)
 	{
 		// If the page directory entry is available
-		if(flags::allSet(_pageDirectory[directoryEntry].getFlags(), Flags::Present))
+		if(flags::allSet(_pageDirectory[i].getFlags(), Flags::Present))
 		{
-			PageTableEntry* pageTable{_pageDirectory[directoryEntry].getPageTableAddress()};
-			for(size_t tableEntry{0}; tableEntry < entriesNumber; ++tableEntry)
+			PageTableEntry* pageTable{_pageDirectory[i].getPageTableAddress()};
+			for(size_t j{0}; j < entriesNumber; ++j)
 			{
 				// If this is not a free page
-				if(flags::allSet(pageTable[tableEntry].getFlags(), Flags::Present))
-					_physicalMemoryManager.allocateFrame(pageTable[tableEntry].getFrameAddress());
+				if(flags::allSet(pageTable[j].getFlags(), Flags::Present))
+					_physicalMemoryManager.allocateFrame(pageTable[j].getFrameAddress());
 			}
 		}
 	}
