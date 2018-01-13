@@ -39,6 +39,4 @@ class KernelTerminal : public AbstractTerminal
 		bool _writing;
 };
 
-
-
 #endif // TERMINAL_HPP

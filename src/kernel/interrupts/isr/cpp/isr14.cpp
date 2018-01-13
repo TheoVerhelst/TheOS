@@ -7,7 +7,7 @@ namespace isr
 
 void Table::isr14(Arguments args)
 {
-	out << args.errorCode << "\nAt " << Printer::Flags::Hexadecimal << args.eip << "\n";
+	out << args.errorCode << "\nAt " << Printer::Flags::Hex << args.eip << "\n";
 	abort("Interrupt 14 caught!\n");
 }
 

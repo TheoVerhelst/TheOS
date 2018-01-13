@@ -79,7 +79,7 @@ class PageTableEntry
 		uint32_t getFlags() const;
 
 	private:
-		/// According to IA-32 reference, the 12 least significant bits are
+		/// According to Intel 386 reference, the 12 least significant bits are
 		/// flags, while the 20 most significant bits are the address of the
 		/// referenced frame.
 		uint32_t _value;
@@ -99,7 +99,7 @@ class PageDirectoryEntry
 		uint32_t getFlags() const;
 
 	private:
-		/// According to IA-32 reference, the 12 least significant bits are
+		/// According to Intel 386 reference, the 12 least significant bits are
 		/// flags, while the 20 most significant bits are the address of the
 		/// referenced page table.
 		uint32_t _value;

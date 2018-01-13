@@ -49,12 +49,12 @@ struct MemoryRegion
 	/// Length of the region.
 	uint64_t length;
 
-	/// Contains _validType if the region is available for use, any other value
+	/// Contains validType if the region is available for use, any other value
 	/// otherwise.
 	uint32_t type;
 
-	/// The value for _type that indicates a valid memory region.
-	static constexpr uint32_t validType {UINT32_C(1)};
+	/// The value for type that indicates a valid memory region.
+	static constexpr uint32_t validType{UINT32_C(1)};
 };
 
 /// This is the Multiboot information data structure,
@@ -190,4 +190,3 @@ enum InfoAvailable : uint32_t
 } // namespace multiboot
 
 #endif // MULTIBOOTINFO_HPP
-

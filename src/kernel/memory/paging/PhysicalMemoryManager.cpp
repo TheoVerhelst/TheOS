@@ -61,7 +61,6 @@ void PhysicalMemoryManager::freeMemoryRegion(const MemoryRegion& region)
 	uintptr_t upperBound{alignDown(address + size)};
 	address = alignUp(address);
 
-	// TODO replace i by frame, do not divide by pageSize all the way
 	for(size_t i{address / paging::pageSize}; i < upperBound / paging::pageSize; ++i)
 		freeFrame(reinterpret_cast<void*>(i * paging::pageSize));
 }

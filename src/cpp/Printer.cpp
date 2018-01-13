@@ -76,7 +76,7 @@ Printer& Printer::operator<<(void* arg)
 	const size_t oldBase{_numericBase};
 	const bool oldBoolAlpha{_boolAlpha};
 	const bool oldShowBase{_showBase};
-	*this << Flags::Hexadecimal << Flags::ShowBase << reinterpret_cast<uintptr_t>(arg);
+	*this << Flags::Hex << Flags::ShowBase << reinterpret_cast<uintptr_t>(arg);
 	_numericBase = oldBase;
 	_boolAlpha = oldBoolAlpha;
 	_showBase = oldShowBase;
@@ -87,15 +87,15 @@ Printer& Printer::operator<<(const Flags& arg)
 {
 	switch(arg)
 	{
-		case Flags::Binary:
+		case Flags::Bin:
 			_numericBase = 2;
 			break;
 
-		case Flags::Decimal:
+		case Flags::Dec:
 			_numericBase = 10;
 			break;
 
-		case Flags::Hexadecimal:
+		case Flags::Hex:
 			_numericBase = 16;
 			break;
 

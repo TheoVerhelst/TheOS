@@ -19,15 +19,15 @@ class Printer
 		{
 			/// Use the hexadecimal base for displaying numbers, the used prefix
 			/// is 0x.
-			Hexadecimal,
+			Hex,
 
 			/// Use the decimal base for displaying numbers, there is no prefix
 			/// for this base.
-			Decimal,
+			Dec,
 
 			/// Use the binary base for displaying numbers, the used prefix is
 			/// 0b.
-			Binary,
+			Bin,
 
 			/// If set, booleans are printed as "true" or "false" rather than
 			/// "1" or "0".
@@ -110,7 +110,7 @@ class Printer
 
 		/// Modifies some flags of the printer. This should be used like this:
 		/// \code
-		/// out << Printer::Flags::hexadecimal << 32; // Prints "B0"
+		/// out << Printer::Flags::Hex << 32; // Prints "B0"
 		/// \endcode
 		/// \param arg a Flags object.
 		/// \return *this.
@@ -143,7 +143,5 @@ class Printer
 /// The main printer instance. Must be instanciated by the environnement, by
 /// giving the terminal to use.
 extern Printer out;
-
-
 
 #endif // PRINTER_HPP
