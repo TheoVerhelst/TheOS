@@ -10,11 +10,10 @@
 
 class Kernel final
 {
-	private:
-		/// Size of the heap that will be allocated for the kernel.
-		static constexpr size_t _heapSize{paging::pageSize};
-
 	public:
+
+	static Kernel* _instance;
+	
 		/// Constructor.
 		/// \param memoryMap The memory map containing all available memory
 		/// areas, constructed from the multiboot info.
@@ -26,13 +25,16 @@ class Kernel final
 		static Kernel& getInstance();
 
 		MemoryManager& getHeapManager();
-		
+
 	private:
+		/// Size of the heap that will be allocated for the kernel.
+		static constexpr size_t _heapSize{paging::pageSize};
+
 		/// Maximum number of blocks in the MemoryManager. Even if the memory is
 		/// not full, memory allocation will fail if there is too much blocks.
 		/// The limit of blocks must be static, and reserve too much room
 		/// to blocks information will result in bigger kernel.
-		/// The value 8 is totally arbitrary.
+		/// The divisor 8 is totally arbitrary.
 		static constexpr size_t _maxBlocksNumber{_heapSize / 8};
 
 		/// The type of the allocator that the heap manager will use to allocate
@@ -47,8 +49,6 @@ class Kernel final
 		friend class isr::Table;
 
 		void printPrettyAsciiArt();
-
-		static Kernel* _instance;
 
 		paging::PageTableManager _pageTableManager;
 

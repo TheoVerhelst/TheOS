@@ -17,7 +17,6 @@ Kernel::Kernel(const MemoryMap& memoryMap):
 	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize,
 	             _heapManagerPoolAllocator}
 {
-	_instance = this;
 	printPrettyAsciiArt();
 }
 

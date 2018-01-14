@@ -18,7 +18,8 @@ class MemoryManager
 		/// \param address The address of the memory block to manage.
 		/// \param Size The size of the memory block to manage.
 		/// \param allocator The allocator to use for internal data structures.
-		MemoryManager(void* address, size_t size, Allocator<BlockList::NodeType>& allocator = Allocator<BlockList::NodeType>::getDefault());
+		MemoryManager(void* address, size_t size,
+				Allocator<BlockList::NodeType>& allocator = Allocator<BlockList::NodeType>::getDefault());
 
 		void* allocate(size_t size, size_t alignment = 0UL);
 
