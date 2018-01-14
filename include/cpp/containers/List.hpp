@@ -277,7 +277,7 @@ List<T>& List<T>::operator=(List<T> other)
 template <class T>
 bool List<T>::empty() const
 {
-	return _begin == _end;
+	return size() == 0;
 }
 
 template <class T>
@@ -331,8 +331,7 @@ void List<T>::pushBack(T&& value)
 template <class T>
 void List<T>::pushFront(const T& value)
 {
-	auto it = begin();
-	insert(it, value);
+	insert(begin(), value);
 }
 
 template <class T>
