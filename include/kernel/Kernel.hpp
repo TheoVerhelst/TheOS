@@ -11,9 +11,6 @@
 class Kernel final
 {
 	public:
-
-	static Kernel* _instance;
-	
 		/// Constructor.
 		/// \param memoryMap The memory map containing all available memory
 		/// areas, constructed from the multiboot info.
@@ -49,6 +46,8 @@ class Kernel final
 		friend class isr::Table;
 
 		void printPrettyAsciiArt();
+
+		static Kernel* _instance;
 
 		paging::PageTableManager _pageTableManager;
 
