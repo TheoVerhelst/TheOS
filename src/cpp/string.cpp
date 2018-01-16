@@ -23,4 +23,25 @@ char* copy(char* dest, const char * src)
 	return dest;
 }
 
+char* concat(char* dest, const char* src, size_t n)
+{
+	if(n != 0)
+	{
+		char *d = dest;
+		const char *s = src;
+
+		while (*d != 0)
+			d++;
+		do
+		{
+			*d = *s++;
+			if(*d == 0)
+				break;
+			d++;
+		} while (--n != 0);
+		*d = 0;
+	}
+	return dest;
 }
+
+} // namespace string

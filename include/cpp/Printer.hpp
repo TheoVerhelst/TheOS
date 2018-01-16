@@ -117,8 +117,6 @@ class Printer
 		Printer& operator<<(const Flags& arg);
 
 	private:
-		char* convertToString(unsigned long long int arg, bool showMinus);
-
 		AbstractTerminal& _terminal;
 		size_t _numericBase{10};
 		bool _boolAlpha{true};
@@ -131,13 +129,6 @@ class Printer
 
 		char _buffer[_bufferLength];
 
-		/// The alphabet used for numbers.
-		static constexpr const char* _alphabet = "0123456789abcdef";
-
-		/// All prefixes used for different bases. Most are empty because they
-		/// never will be used.
-		static constexpr const char* _prefixes[] = {"", "0b", "", "", "", "",
-			"", "0", "", "", "", "", "", "", "", "0x"};
 };
 
 /// The main printer instance. Must be instanciated by the environnement, by

@@ -2,8 +2,6 @@
 #include <cpp/string.hpp>
 
 constexpr size_t Printer::_bufferLength;
-constexpr const char* Printer::_alphabet;
-constexpr const char* Printer::_prefixes[];
 
 Printer::Printer(AbstractTerminal& terminal):
 	_terminal{terminal}
@@ -53,13 +51,13 @@ Printer& Printer::operator<<(long unsigned int arg)
 }
 Printer& Printer::operator<<(long long int arg)
 {
-	_terminal.putString(convertToString(static_cast<long long unsigned int>(arg), arg < 0));
+	_terminal.putString(str::toString(_buffer, _bufferLength, arg, _numericBase, _showBase));
 	return *this;
 }
 
 Printer& Printer::operator<<(long long unsigned int arg)
 {
-	_terminal.putString(convertToString(arg, false));
+	_terminal.putString(str::toString(_buffer, _bufferLength, arg, _numericBase, _showBase));
 	return *this;
 }
 
@@ -116,47 +114,4 @@ Printer& Printer::operator<<(const Flags& arg)
 			break;
 	}
 	return *this;
-}
-
-char* Printer::convertToString(unsigned long long int arg, bool showMinus)
-{
-	size_t i{0};
-
-	if(showMinus)
-		_buffer[i++] = '-';
-
-	if(_showBase)
-	{
-		const char* baseString{_prefixes[_numericBase - 1]};
-		str::copy(&_buffer[i], baseString);
-		i += str::length(baseString);
-	}
-
-	if(arg == 0)
-		_buffer[i++] = '0';
-
-	size_t firstDigit{i};
-
-	while(arg > 0 and i < _bufferLength)
-	{
-		_buffer[i++] = _alphabet[arg % _numericBase];
-		arg /= _numericBase;
-	}
-
-	size_t lastDigit{i - 1};
-
-	_buffer[i++] = '\0';
-
-	// Reverse the string
-	char tmp;
-	while(firstDigit < lastDigit)
-	{
-		tmp = _buffer[lastDigit];
-		_buffer[lastDigit] = _buffer[firstDigit];
-		_buffer[firstDigit] = tmp;
-		firstDigit++;
-		lastDigit--;
-	}
-
-	return _buffer;
 }

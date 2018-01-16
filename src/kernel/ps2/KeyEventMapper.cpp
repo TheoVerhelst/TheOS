@@ -7,7 +7,6 @@ namespace ps2
 KeyEventMapper::KeyEventMapper(Mapping mapping):
 	_currentMapping{mapping}
 {
-	STOP();
 }
 
 void KeyEventMapper::registerEvent(const KeyEvent& event)

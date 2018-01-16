@@ -1,6 +1,7 @@
 set(SOURCES
 	"allocators/MemoryManager.cpp"
 	"abort.cpp"
+	"assert.cpp"
 	"log.cpp"
 	"mem.cpp"
 	"new.cpp"

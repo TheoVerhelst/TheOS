@@ -232,10 +232,6 @@ class List
 		Allocator<NodeType>& _allocator;
 };
 
-
-
-#include <cpp/log.hpp>
-
 template <class T>
 List<T>::List(Allocator<NodeType>& allocator):
 	_size{0UL},

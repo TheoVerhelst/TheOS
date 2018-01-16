@@ -3,7 +3,7 @@
 
 #include <std/limits>
 #include <std/cstddef>
-#include <cpp/containers/List.hpp>
+#include <cpp/containers/StaticQueue.hpp>
 #include <kernel/ps2/Key.hpp>
 
 namespace ps2
@@ -39,7 +39,8 @@ class KeyEventMapper
 
 		bool isEventSatisfied(const KeyEventMapping& event) const;
 
-		List<Character> _characterQueue;
+		static constexpr size_t _characterQueueCapacity{16};
+		StaticQueue<Character, _characterQueueCapacity> _characterQueue;
 		bool _lShiftPressed{false};
 		bool _rShiftPressed{false};
 		bool _capsLocked{false};
