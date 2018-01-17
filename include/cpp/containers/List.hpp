@@ -4,21 +4,7 @@
 #include <std/cstddef>
 #include <cpp/utility.hpp>
 #include <cpp/allocators/Allocator.hpp>
-
-namespace details
-{
-
-/// Represents a node in the list.
-/// \tparam U The type of element to store as value of the node.
-template <class T>
-struct ListNode
-{
-	T value;                    ///< The value of the node.
-	ListNode* next {nullptr};    ///< The next node.
-	ListNode* previous {nullptr};///< The previous node.
-};
-
-} // namespace details
+#include <cpp/containers/impl/Node.hpp>
 
 /// Dynamic double-linked list. This class has approximatively the same
 /// interface as `std::list`, and is part of the pseudo-implementation of the
@@ -32,65 +18,11 @@ struct ListNode
 template <class T>
 class List
 {
-	private:
-		template <typename U, typename NodeType>
-		class NodeIterator
-		{
-			public:
-				/// Constructor from list node.
-				/// \param node The node that the iterator has to point to.
-				explicit NodeIterator(NodeType* node);
-
-				/// Dereferencement operator.
-				/// \return A reference to the pointed object.
-				U& operator*() const;
-
-				/// Dereferencement operator.
-				/// \return A pointer to the pointed object.
-				U* operator->() const;
-
-				/// Increment operator. This advances the iterator by one
-				/// element.
-				/// \return A reference to the advanced iterator.
-				NodeIterator& operator++();
-
-				/// Increment operator. This advances the iterator by one
-				/// element.
-				/// \return A reference to the old, non advanced iterator.
-				NodeIterator operator++(int);
-
-				/// Decrement operator. This moves the iterator by one
-				/// element back.
-				/// \return A reference to the moved iterator.
-				NodeIterator& operator--();
-
-				/// Decrement operator. This moves the iterator by one
-				/// element back.
-				/// \return A reference to the old, non advanced iterator.
-				NodeIterator operator--(int);
-
-				/// Comparison operator.
-				/// \param other The other iterator to compare to.
-				/// \return True if the iterators point to the same node, false
-				/// otherwhise.
-				bool operator==(const NodeIterator& other) const;
-
-				/// Comparison operator.
-				/// \param other The other iterator to compare to.
-				/// \return True if the iterators do not point to the same node,
-				/// false otherwhise.
-				bool operator!=(const NodeIterator& other) const;
-
-			private:
-				NodeType* _node; ///< The underlying node.
-				friend class List;
-		};
-
 	public:
-		typedef details::ListNode<T> NodeType;
+		typedef impl::ListNode<T> NodeType;
 		typedef NodeType ToAllocate; ///< The type that should be managed by the allocator.
-		typedef NodeIterator<T, NodeType> Iterator; ///< Non constant iterator.
-		typedef NodeIterator<const T, const NodeType> ConstIterator;///< Constant iterator.
+		typedef impl::NodeIterator<T, NodeType> Iterator; ///< Non constant iterator.
+		typedef impl::NodeIterator<const T, const NodeType> ConstIterator;///< Constant iterator.
 
 		/// Constructor.
 		/// \param allocator The allocator to use.
@@ -433,77 +365,6 @@ typename List<T>::Iterator List<T>::insertImpl(Iterator pos)
 		node->previous->next = node;
 	++_size;
 	return Iterator(node);
-}
-
-// NodeIterator
-
-template <class T>
-template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType>::NodeIterator(NodeType* node):
-	_node{node}
-{
-}
-
-template <class T>
-template <typename U, typename NodeType>
-U&  List<T>::NodeIterator<U, NodeType>::operator*() const
-{
-	return _node->value;
-}
-
-template <class T>
-template <typename U, typename NodeType>
-U*  List<T>::NodeIterator<U, NodeType>::operator->() const
-{
-	return &_node->value;
-}
-
-template <class T>
-template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator++()
-{
-	_node = _node->next;
-	return static_cast<NodeIterator&>(*this);
-}
-
-template <class T>
-template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator++(int)
-{
-	NodeIterator tmp{*this};
-	_node = _node->next;
-	return tmp;
-}
-
-template <class T>
-template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType>& List<T>::NodeIterator<U, NodeType>::operator--()
-{
-	_node = _node->previous;
-	return static_cast<NodeIterator&>(*this);
-}
-
-template <class T>
-template <typename U, typename NodeType>
-List<T>::NodeIterator<U, NodeType> List<T>::NodeIterator<U, NodeType>::operator--(int)
-{
-	NodeIterator tmp{*this};
-	_node = _node->previous;
-	return tmp;
-}
-
-template <class T>
-template <typename U, typename NodeType>
-bool List<T>::NodeIterator<U, NodeType>::operator==(const NodeIterator<U, NodeType>& other) const
-{
-	return _node == other._node;
-}
-
-template <class T>
-template <typename U, typename NodeType>
-bool List<T>::NodeIterator<U, NodeType>::operator!=(const NodeIterator<U, NodeType>& other) const
-{
-	return _node != other._node;
 }
 
 #endif // LIST_HPP

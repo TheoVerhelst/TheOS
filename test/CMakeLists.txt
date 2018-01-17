@@ -3,6 +3,7 @@ set(TEST_SOURCE_FILES
     "cpp/allocators/PoolAllocatorTest.cpp"
     "cpp/containers/ArrayTest.cpp"
     "cpp/containers/ListTest.cpp"
+    "cpp/containers/StaticQueueTest.cpp"
     "cpp/BitSetTest.cpp"
     "cpp/flagsTest.cpp"
     "cpp/mathTest.cpp"

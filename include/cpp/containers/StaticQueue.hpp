@@ -3,72 +3,27 @@
 
 #include <std/cstddef>
 #include <cpp/utility.hpp>
-#include <cpp/math.hpp>
 #include <cpp/assert.hpp>
+#include <cpp/containers/impl/StaticQueueIterator.hpp>
 
+/// Implements a queue of static size using a circular buffer. This is useful
+/// for having a queueing behavior without dynamic allocation. MaxSize is the
+/// maximum number of elements in the queue. If more than MaxSize elements are
+/// pushed, the oldest ones are discarded and written over. Note that for the
+/// sake of a safer and simpler implementation, only MaxSize - 1 slots are
+/// effectively available for storage.
+///
+/// Since the storage is static, the object are constructed once at the
+/// StaticQueue creation, and destroyed at the StaticQueue destruction. The
+/// pushBack function uses assignment operator, and popFront does not make any
+/// copy. It is therefore the user responsability to copy the instance before it
+/// is overwritten when the buffer cycles.
 template <class T, size_t MaxSize>
 class StaticQueue
 {
-	private:
-		template <class T_, size_t MaxSize_>
-		class StaticQueueIterator
-		{
-			public:
-				/// Constructor from list node.
-				/// \param queue The iterated queue.
-				/// \param index The iteration index of this iterator.
-				explicit StaticQueueIterator(StaticQueue<T_, MaxSize_>& queue, size_t index);
-
-				/// Dereferencement operator.
-				/// \return A reference to the pointed object.
-				T_& operator*() const;
-
-				/// Dereferencement operator.
-				/// \return A pointer to the pointed object.
-				T_* operator->() const;
-
-				/// Increment operator. This advances the iterator by one
-				/// element.
-				/// \return A reference to the advanced iterator.
-				StaticQueueIterator& operator++();
-
-				/// Increment operator. This advances the iterator by one
-				/// element.
-				/// \return The old, non advanced iterator.
-				StaticQueueIterator operator++(int);
-
-				/// Decrement operator. This moves the iterator by one
-				/// element back.
-				/// \return A reference to the moved iterator.
-				StaticQueueIterator& operator--();
-
-				/// Decrement operator. This moves the iterator by one
-				/// element back.
-				/// \return The old, non advanced iterator.
-				StaticQueueIterator operator--(int);
-
-				/// Comparison operator.
-				/// \param other The other iterator to compare to.
-				/// \return True if the iterators point to the same node, false
-				/// otherwhise.
-				bool operator==(const StaticQueueIterator& other) const;
-
-				/// Comparison operator.
-				/// \param other The other iterator to compare to.
-				/// \return True if the iterators do not point to the same node,
-				/// false otherwhise.
-				bool operator!=(const StaticQueueIterator& other) const;
-
-			private:
-				StaticQueue<T_, MaxSize_>& _queue; ///< The iterated queue.
-				size_t _index; ///< The iteration index of this iterator.
-
-				friend class StaticQueue;
-		};
-
 	public:
-		typedef StaticQueueIterator<T, MaxSize> Iterator; ///< Non constant iterator.
-		typedef StaticQueueIterator<const T, MaxSize> ConstIterator;///< Constant iterator.
+		typedef impl::StaticQueueIterator<T, MaxSize> Iterator; ///< Non constant iterator.
+		typedef impl::StaticQueueIterator<const T, MaxSize> ConstIterator;///< Constant iterator.
 
 		/// Checks if the queue is empty.
 		/// \return size() == 0.
@@ -225,10 +180,12 @@ T& StaticQueue<T, MaxSize>::popFront()
 	ASSERT(_first != _last);
 	size_t oldFirst{_first};
 	_first = (_first + 1) % MaxSize;
-	_size = math::max(0ul, _size - 1);
-	// If, for some reason, _size was zero and has been decremented
-	if(_size > MaxSize)
-		_size = 0;
+	// If, for some reason, _size is zero (shouldn't with the assert though)
+	if(_size == 0)
+		// Avoid for _first to go past _last, that would be bad
+		_last = _first;
+	else
+		_size -= 1;
 	return _data[oldFirst];
 }
 
@@ -244,8 +201,37 @@ size_t StaticQueue<T, MaxSize>::pushBackImpl()
 {
 	size_t oldLast{_last};
 	_last = (_last + 1) % MaxSize;
-	_size = math::min(MaxSize, _size + 1);
+	// If there is not enough space, eat the cell of the first element
+	if(_size == MaxSize)
+		// Avoid for _last to go past _first, that would be bad
+		_first = (_first + 1) % MaxSize;
+	else
+		_size += 1;
 	return oldLast;
+}
+
+template <class T, size_t MaxSize>
+typename StaticQueue<T, MaxSize>::Iterator StaticQueue<T, MaxSize>::begin()
+{
+	return Iterator(_data, _first);
+}
+
+template <class T, size_t MaxSize>
+typename StaticQueue<T, MaxSize>::ConstIterator StaticQueue<T, MaxSize>::begin() const
+{
+	return ConstIterator(_data, _first);
+}
+
+template <class T, size_t MaxSize>
+typename StaticQueue<T, MaxSize>::Iterator StaticQueue<T, MaxSize>::end()
+{
+	return Iterator(_data, _last);
+}
+
+template <class T, size_t MaxSize>
+typename StaticQueue<T, MaxSize>::ConstIterator StaticQueue<T, MaxSize>::end() const
+{
+	return ConstIterator(_data, _last);
 }
 
 #endif // STATIC_QUEUE_HPP

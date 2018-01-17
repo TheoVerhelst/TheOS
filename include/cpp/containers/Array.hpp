@@ -236,6 +236,4 @@ constexpr typename Array<T, N>::SizeType Array<T, N>::size() const
 	return N;
 }
 
-
-
 #endif // ARRAY_HPP
