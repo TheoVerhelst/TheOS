@@ -133,13 +133,13 @@ size_t StaticQueue<T, MaxSize>::size() const
 template <class T, size_t MaxSize>
 T& StaticQueue<T, MaxSize>::back()
 {
-	return _data[_last - 1];
+	return _data[(_last == 0 ? MaxSize : _last) - 1];
 }
 
 template <class T, size_t MaxSize>
 const T& StaticQueue<T, MaxSize>::back() const
 {
-	return _data[_last - 1];
+	return _data[_last == 0 ? MaxSize - 1 : _last - 1];
 }
 
 template <class T, size_t MaxSize>
@@ -202,7 +202,7 @@ size_t StaticQueue<T, MaxSize>::pushBackImpl()
 	size_t oldLast{_last};
 	_last = (_last + 1) % MaxSize;
 	// If there is not enough space, eat the cell of the first element
-	if(_size == MaxSize)
+	if(_size >= MaxSize - 1)
 		// Avoid for _last to go past _first, that would be bad
 		_first = (_first + 1) % MaxSize;
 	else

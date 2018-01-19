@@ -13,7 +13,8 @@ SCENARIO("Empty queue")
 {
     GIVEN("A default-constructed queue")
     {
-        StaticQueue<double, 16> queue;
+        static constexpr size_t queueSize{16};
+        StaticQueue<double, queueSize> queue;
         THEN("queue is empty")
             requireQueueIsEmpty(queue);
 
@@ -58,7 +59,7 @@ SCENARIO("Empty queue")
 
             WHEN("The queue is copy-constructed")
             {
-                StaticQueue<double, 16> other(queue);
+                StaticQueue<double, queueSize> other(queue);
 
                 THEN("The size is four")
                     REQUIRE(other.size() == 4);
@@ -69,6 +70,29 @@ SCENARIO("Empty queue")
                     for(auto value : {2, 3, 5, 8})
                         REQUIRE(*(it++) == value);
                 }
+            }
+        }
+
+        WHEN("The queue is full")
+        {
+            // Only 15 elements, see StaticQueue doc
+            std::vector<double> values{5., 88., 4., 6., 5., 8., 4., 6., 5., 8., 4., 6., 5., 8., 4.};
+            for(double v : values)
+                queue.pushBack(v);
+
+            THEN("The size no longer increases")
+            {
+                size_t oldSize{queue.size()};
+                queue.pushBack(54);
+                REQUIRE(queue.size() == oldSize);
+                REQUIRE(queue.size() == queueSize - 1);
+            }
+
+            THEN("The first element is erased")
+            {
+                queue.pushBack(43.);
+                REQUIRE(queue.front() == values[1]);
+                REQUIRE(queue.back() == 43.);
             }
         }
     }
