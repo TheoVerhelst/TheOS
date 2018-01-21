@@ -1,7 +1,7 @@
 extern isrDispatcher
 global interruptHandler
 
-%define DATA_SEGMENT 0x08
+%define DATA_SEGMENT 0x10
 
 section .text
 interruptHandler:

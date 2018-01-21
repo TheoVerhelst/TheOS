@@ -187,19 +187,6 @@ enum Flags : uint8_t
 
 } // namespace Flags
 
-/// Namespace for the segment selector values.
-namespace Segment
-{
-
-/// Indicates which kind of segment the interrupt handler belongs to.
-enum Segment : uint16_t
-{
-	Code = 0x10,
-	Data = 0x08
-};
-
-} // namespace Segment
-
 /// An entry in the IDT, i.e. an interrupt descriptor.
 struct [[gnu::packed]] IdtEntry
 {
@@ -213,7 +200,7 @@ struct [[gnu::packed]] IdtEntry
 		uint16_t _base0;
 
 		/// Indicates in which segment the entry belongs to.
-		uint16_t _segment;
+		uint16_t _segmentSelector;
 
 		/// Empty space, not used, must be set to 0.
 		uint8_t _null = 0;

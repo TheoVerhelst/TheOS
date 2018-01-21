@@ -68,14 +68,16 @@ namespace Flags0
 /// The set of bits that can be set in first flag field.
 enum Flags0 : uint8_t
 {
+	// The next three bits are defined as here only if the descriptor is a data
+	// or code descriptor, (DescriptorType = 1).
 	Accessed            = 1 << 0,
 	Enabled             = 1 << 1,
 	DirectionConforming = 1 << 2,
-	DataOrCode          = 1 << 3,
-	DescriptorType      = 1 << 4,
-	Privilege1          = 1 << 5,
-	Privilege2          = 1 << 6,
-	Present             = 1 << 7
+	DataOrCode          = 1 << 3, ///< 0 = data segment; 1 = code segment.
+	DescriptorType      = 1 << 4, ///< Descriptor type (0 = system; 1 = code or data).
+	Privilege1          = 1 << 5, ///< Descriptor privilege level.
+	Privilege2          = 1 << 6, ///< Descriptor privilege level.
+	Present             = 1 << 7  ///<  Segment present.
 };
 
 } // namespace Flags0

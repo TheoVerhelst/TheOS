@@ -20,7 +20,7 @@ void initializeIdt()
 
 IdtEntry::IdtEntry(uint32_t base):
 	_base0{static_cast<uint16_t>(base & 0x0000FFFF)},
-	_segment{Segment::Code},
+	_segmentSelector{0b1000},
 	_flags{Flags::InterruptGate | Flags::Size | Flags::Present},
 	_base1{static_cast<uint16_t>((base & 0xFFFF0000) >> 16)}
 {
