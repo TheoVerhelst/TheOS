@@ -80,17 +80,17 @@ class Table
 		friend void isrDispatcher(Arguments args);
 
 		/// Declare all interrupts service routines with the item trick
-#define ITEM(INDEX) static void isr##INDEX(Arguments args);
-#include <kernel/item64Helper.itm>
-#undef ITEM
+		#define ITEM(INDEX) static void isr##INDEX(Arguments args);
+		#include <kernel/item64Helper.itm>
+		#undef ITEM
 
 		/// The table of effective ISRs.
 		static constexpr void (*_table[idt::idtSize])(Arguments) =
 		{
-/// Assign all 64 ISR table entries with the item trick
-#define ITEM(INDEX) Table::isr##INDEX,
-#include <kernel/item64Helper.itm>
-#undef ITEM
+			/// Assign all 64 ISR table entries with the item trick
+			#define ITEM(INDEX) Table::isr##INDEX,
+			#include <kernel/item64Helper.itm>
+			#undef ITEM
 		};
 };
 

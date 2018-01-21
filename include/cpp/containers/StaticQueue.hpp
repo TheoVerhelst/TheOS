@@ -133,13 +133,13 @@ size_t StaticQueue<T, MaxSize>::size() const
 template <class T, size_t MaxSize>
 T& StaticQueue<T, MaxSize>::back()
 {
-	return _data[(_last == 0 ? MaxSize : _last) - 1];
+	return _data[(_last + MaxSize - 1) % MaxSize];
 }
 
 template <class T, size_t MaxSize>
 const T& StaticQueue<T, MaxSize>::back() const
 {
-	return _data[_last == 0 ? MaxSize - 1 : _last - 1];
+	return _data[(_last + MaxSize - 1) % MaxSize];
 }
 
 template <class T, size_t MaxSize>

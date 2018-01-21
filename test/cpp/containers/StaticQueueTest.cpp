@@ -18,7 +18,7 @@ SCENARIO("Empty queue")
         THEN("queue is empty")
             requireQueueIsEmpty(queue);
 
-        WHEN("an elements is pushed")
+        WHEN("an element is pushed")
         {
             queue.pushBack(3.41);
             THEN("size is equal to one")
@@ -93,6 +93,13 @@ SCENARIO("Empty queue")
                 queue.pushBack(43.);
                 REQUIRE(queue.front() == values[1]);
                 REQUIRE(queue.back() == 43.);
+            }
+
+            WHEN("The queue is cleared")
+            {
+                queue.clear();
+                THEN("The queue is empty")
+                    requireQueueIsEmpty(queue);
             }
         }
     }

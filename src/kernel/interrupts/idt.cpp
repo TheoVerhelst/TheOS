@@ -9,10 +9,10 @@ IdtDescriptor idtDescriptor{sizeof(idt) - 1, reinterpret_cast<uint32_t>(&idt)};
 
 void initializeIdt()
 {
-// Make all 64 IDT entries with the item trick
-#define ITEM(INDEX) idt[INDEX] = IdtEntry(reinterpret_cast<uint32_t>(&isr##INDEX));
-#include <kernel/item64Helper.itm>
-#undef ITEM
+	// Make all 64 IDT entries with the item trick
+	#define ITEM(INDEX) idt[INDEX] = IdtEntry(reinterpret_cast<uint32_t>(&isr##INDEX));
+	#include <kernel/item64Helper.itm>
+	#undef ITEM
 
 	// Give the idtDescriptor address to the instruction lidt
 	asm volatile("lidt %0":: "m"(idtDescriptor));
@@ -21,8 +21,7 @@ void initializeIdt()
 IdtEntry::IdtEntry(uint32_t base):
 	_base0{static_cast<uint16_t>(base & 0x0000FFFF)},
 	_segment{Segment::Code},
-	_gateSelector{GateSelector::InterruptGate | GateSelector::Size},
-	_flags{Flags::Ring0 | Flags::Present},
+	_flags{Flags::InterruptGate | Flags::Size | Flags::Present},
 	_base1{static_cast<uint16_t>((base & 0xFFFF0000) >> 16)}
 {
 }

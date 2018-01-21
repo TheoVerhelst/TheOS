@@ -82,29 +82,32 @@ enum Interrupt : uint32_t
 	/// **Source:** any memory reference.
 	PageFault,
 
-	/// 15: X87 FPU floating point error.
+	/// 15: Intel reserved.
+	IntelReserved0,
+
+	/// 16: X87 FPU floating point error.
 	/// **Source:** x87 FPU floating-point or WAIT/FWAIT instruction.
 	X87FpuFloatingPointError,
 
-	/// 16: Alignement check.
+	/// 17: Alignement check.
 	/// **Source:** any data reference in memory.
 	AlignementCheck,
 
-	/// 17: Machine check.
+	/// 18: Machine check.
 	/// **Source:** error codes (if any) and source are model dependent.
 	MachineCheck,
 
-	/// 18: SIMD floating point exception.
+	/// 19: SIMD floating point exception.
 	/// **Source:** SSE/SSE2/SSE3 floating-point instructions.
 	SimdFloatingPointException,
 
-	/// 19: Virtualization exception.
+	/// 20: Virtualization exception.
 	/// **Source:** EPT violations.
 	VirtualizationException,
 
-	/// 20: Intel reserved.
+	/// 21 to 31: Intel reserved.
 	/// **Source:**
-	IntelReserved,
+	IntelReserved1,
 
 	/// This is the first master Programmable Interrupt, so this is why it has a
 	/// specific value.
@@ -171,30 +174,18 @@ namespace Flags
 /// Flags to put in an interrupt descriptor.
 enum Flags : uint8_t
 {
-	Ring0 = 0,
-	Ring1   = 1,
-	Ring2   = 2,
-	Ring3   = 3,
-	Present = 1 << 2
+	// Choose only one of these for the three first bits:
+	TaskGate        = 0b101, ///< Task gate.
+	InterruptGate   = 0b110, ///< Interrupt gate (the most common).
+	TrapGate        = 0b111, ///< Trap gate.
+	Size            = 1 << 3, ///< Set for 32-bit sized gate, unset for 16-bit.
+	// Bit 4 is always 0
+	PrivilegeLevel0 = 1 << 5,
+	PrivilegeLevel1 = 1 << 6,
+	Present         = 1 << 7
 };
 
 } // namespace Flags
-
-/// Namespace for the gate selector values.
-namespace GateSelector
-{
-
-/// Bit patterns to put in the interrupt descriptor indicating which kind of
-/// interrupt handler it is.
-enum GateSelector : uint16_t
-{
-	TaskGate      = 5 << 8,///< Task gate.
-	InterruptGate = 6 << 8,///< Interrupt gate (the most common).
-	TrapGate      = 7 << 8,///< Trap gate.
-	Size          = 1 << 11///< Set for 32-bit sized gate, unset for 16-bit.
-};
-
-} // namespace GateSelector
 
 /// Namespace for the segment selector values.
 namespace Segment
@@ -224,13 +215,12 @@ struct [[gnu::packed]] IdtEntry
 		/// Indicates in which segment the entry belongs to.
 		uint16_t _segment;
 
-		// TODO do not use bit fields when ordering and packing is critical
-		/// Indicates the kind of interrupt descriptor.
-		uint16_t _gateSelector : 13;
+		/// Empty space, not used, must be set to 0.
+		uint8_t _null = 0;
 
-		/// Some flags indicating if the interrupt handler is present and its
-		/// privilege level.
-		uint8_t _flags : 3;
+		/// Bits Indicating various information about the descriptor, to be
+		/// filled with Flags.
+		uint8_t _flags;
 
 		/// Second part of the address of the interrupt handler.
 		uint16_t _base1;
@@ -249,7 +239,7 @@ static_assert(sizeof(IdtDescriptor) == 6, "The IDT descriptor must be 6-bytes lo
 constexpr size_t idtSize{64};
 
 /// The so-called IDT.
-extern IdtEntry idt[idtSize];
+alignas(sizeof(IdtEntry)) extern IdtEntry idt[idtSize];
 
 /// The descriptor of the IDT to give to the CPU.
 extern IdtDescriptor idtDescriptor;

@@ -23,9 +23,9 @@ Kernel::Kernel(const MemoryMap& memoryMap):
 
 void Kernel::run()
 {
-	while(true)
-		while(not _keyboardDriver.characterQueueEmpty())
-			out << _keyboardDriver.getCharacter();
+	while(true);
+		while(not _keyboardDriver.characterQueueEmpty());
+			//out << _keyboardDriver.getCharacter();
 	abort();
 }
 
