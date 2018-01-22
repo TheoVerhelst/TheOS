@@ -3,9 +3,6 @@
 
 #include <std/cstdint>
 
-namespace boot
-{
-
 namespace gdt
 {
 
@@ -111,9 +108,5 @@ SegmentDescriptor constructSegmentDescriptor(uint32_t base, uint32_t limit, uint
 extern "C" [[gnu::section(".bootText")]] void flushGdt();
 
 } // namespace gdt
-
-} // namespace boot
-
-
 
 #endif // GDT_HPP

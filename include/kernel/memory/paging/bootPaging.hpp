@@ -4,16 +4,13 @@
 #include <std/cstddef>
 #include <kernel/memory/paging/paging.hpp>
 
-namespace boot
-{
-
 /// This is a namespace that includes all functions and structures used in the
 /// early initialization of the kernel (when paging is not yet enabled).
 /// The job of these guys is in fact to enable paging.
 ///
 /// This is why they have special compiler directive: they need to be
 /// linked in special sections that are not in the higher half.
-namespace paging
+namespace bootPaging
 {
 
 /// Arbitrary number (yet another) that is the supposed maximum number of page
@@ -62,8 +59,6 @@ void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf);
 
 #define BOOTSTRAP_ALIGN_DOWN(address) (address & ~(::paging::pageSize - 1UL))
 
-} // namespace paging
-
-} // namespace boot
+} // namespace bootPaging
 
 #endif // BOOT_PAGING_HPP

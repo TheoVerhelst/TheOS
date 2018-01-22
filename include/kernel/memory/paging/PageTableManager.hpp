@@ -14,7 +14,7 @@ class PageTableManager
 		/// Constructor.
 		/// \param memoryMap The memory map containing all available memory
 		/// areas, constructed from the multiboot info.
-		PageTableManager(const MemoryMap& memoryMap);
+		PageTableManager(const multiboot::MemoryMap& memoryMap);
 
 		void* allocatePage();
 

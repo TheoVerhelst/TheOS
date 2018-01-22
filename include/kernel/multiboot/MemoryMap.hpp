@@ -4,7 +4,16 @@
 #include <std/cstddef>
 #include <kernel/multiboot/MultibootInfo.hpp>
 
-struct MemoryRegion
+/// Contains structs related to the Multiboot Specification version 0.6.96,
+/// which is applied by the bootloader used by the kernel.
+namespace multiboot
+{
+
+/// This class holds data representing a memory region. Its name is used to
+/// distinguish it from multiboot::MemoryRegion, which is the data structure as
+/// stated by multiboot specification (and this latter is way more complicated
+/// to handle).
+struct SimpleMemoryRegion
 {
 	void* address;
 	size_t size;
@@ -21,8 +30,8 @@ class MemoryMapIterator
 
 		MemoryMapIterator(const MemoryMapIterator& other) = default;
 
-		const MemoryRegion& operator*() const;
-		const MemoryRegion* operator->() const;
+		const SimpleMemoryRegion& operator*() const;
+		const SimpleMemoryRegion* operator->() const;
 		MemoryMapIterator& operator++();
 		MemoryMapIterator operator++(int);
 		bool operator==(const MemoryMapIterator& other) const;
@@ -36,9 +45,13 @@ class MemoryMapIterator
 
 		const multiboot::MemoryRegion* _multibootRegion;
 		uintptr_t _memoryMapUpperBound;
-		MemoryRegion _region;
+		SimpleMemoryRegion _region;
 };
 
+/// Class that helps iterate on the memory map given by the multiboot loader.
+/// The one given by the bootloader is a pain to iterate on, due to strange
+/// storage scheme. This class abstracts that suffering away, by giving a nice
+/// iterator-based interface.
 class MemoryMap
 {
 	public:
@@ -54,5 +67,7 @@ class MemoryMap
 		const multiboot::MemoryRegion* _multibootMemoryMap;
 		const uintptr_t _multibootMemoryMapUpperBound;
 };
+
+} // namespace multiboot
 
 #endif // MEMORYMAP_HPP

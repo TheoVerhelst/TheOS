@@ -1,9 +1,6 @@
 #include <kernel/memory/segmentation/segmentSelectors.hpp>
 #include <kernel/memory/segmentation/gdt.hpp>
 
-namespace boot
-{
-
 namespace gdt
 {
 
@@ -42,5 +39,3 @@ SegmentDescriptor constructSegmentDescriptor(uint32_t base, uint32_t limit, uint
 }
 
 } // namespace gdt
-
-} // namespace boot

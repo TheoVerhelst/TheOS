@@ -14,7 +14,7 @@ class Kernel final
 		/// Constructor.
 		/// \param memoryMap The memory map containing all available memory
 		/// areas, constructed from the multiboot info.
-		Kernel(const MemoryMap& memoryMap);
+		Kernel(const multiboot::MemoryMap& memoryMap);
 
 		/// Main function.
 		[[noreturn]] void run();

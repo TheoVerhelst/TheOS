@@ -7,8 +7,8 @@
 namespace paging
 {
 
-PageTableManager::PageTableManager(const MemoryMap& memoryMap):
-	_pageDirectory{reinterpret_cast<PageDirectoryEntry*>(::boot::paging::kernelPageDirectory)},
+PageTableManager::PageTableManager(const multiboot::MemoryMap& memoryMap):
+	_pageDirectory{reinterpret_cast<PageDirectoryEntry*>(::bootPaging::kernelPageDirectory)},
 	_physicalMemoryManager{memoryMap}
 {
 	allocateAlreadyPagedFrames();

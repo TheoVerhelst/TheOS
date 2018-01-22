@@ -8,7 +8,7 @@ KernelTerminal kernelTerminal;
 Printer out{kernelTerminal};
 Kernel* Kernel::_instance{nullptr};
 
-Kernel::Kernel(const MemoryMap& memoryMap):
+Kernel::Kernel(const multiboot::MemoryMap& memoryMap):
 	_pageTableManager{memoryMap},
 	_heapAddress{_pageTableManager.allocatePage()},
 	_heapManagerPoolAllocator{_heapManagerPool},

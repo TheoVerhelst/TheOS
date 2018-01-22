@@ -3,10 +3,7 @@
 #include <kernel/memory/segmentation/gdt.hpp>
 #include <kernel/memory/paging/bootPaging.hpp>
 
-namespace boot
-{
-
-namespace paging
+namespace bootPaging
 {
 
 alignas(::paging::pageSize) [[gnu::section(".bootBss")]]
@@ -69,6 +66,4 @@ void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf)
 	}
 }
 
-} // namespace paging
-
-} // namespace boot
+} // namespace bootPaging

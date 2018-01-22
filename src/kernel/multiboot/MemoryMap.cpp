@@ -1,5 +1,8 @@
 #include <kernel/multiboot/MemoryMap.hpp>
 
+namespace multiboot
+{
+
 MemoryMapIterator::MemoryMapIterator():
 	_multibootRegion{nullptr},
 	_memoryMapUpperBound{0UL}
@@ -14,12 +17,12 @@ MemoryMapIterator::MemoryMapIterator(const multiboot::MemoryRegion* multibootReg
 	advanceUntilValid();
 }
 
-const MemoryRegion& MemoryMapIterator::operator*() const
+const SimpleMemoryRegion& MemoryMapIterator::operator*() const
 {
 	return _region;
 }
 
-const MemoryRegion* MemoryMapIterator::operator->() const
+const SimpleMemoryRegion* MemoryMapIterator::operator->() const
 {
 	return &_region;
 }
@@ -94,3 +97,5 @@ MemoryMap::ConstIterator MemoryMap::end() const
 {
 	return ConstIterator();
 }
+
+} // namespace multiboot

@@ -8,7 +8,7 @@ extern "C" void kernelMain(const multiboot::MultibootInfo& multibootInfoAddress)
 {
     idt::initializeIdt();
     pic::initializePic();
-    const MemoryMap memoryMap{multibootInfoAddress};
+    const multiboot::MemoryMap memoryMap{multibootInfoAddress};
     Kernel kernel{memoryMap};
     kernel.run();
 }

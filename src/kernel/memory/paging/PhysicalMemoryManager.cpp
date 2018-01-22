@@ -5,7 +5,7 @@
 namespace paging
 {
 
-PhysicalMemoryManager::PhysicalMemoryManager(const MemoryMap& memoryMap)
+PhysicalMemoryManager::PhysicalMemoryManager(const multiboot::MemoryMap& memoryMap)
 {
 	for(const auto& region : memoryMap)
 		freeMemoryRegion(region);
@@ -52,7 +52,7 @@ void PhysicalMemoryManager::setFrame(void* address, bool free)
 		_freeFrames.set(index, free);
 }
 
-void PhysicalMemoryManager::freeMemoryRegion(const MemoryRegion& region)
+void PhysicalMemoryManager::freeMemoryRegion(const multiboot::SimpleMemoryRegion& region)
 {
 	// region.base_addr is 64-bits, get only the first 32 bits
 	uintptr_t address{reinterpret_cast<uintptr_t>(region.address)};

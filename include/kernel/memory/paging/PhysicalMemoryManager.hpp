@@ -21,7 +21,7 @@ class PhysicalMemoryManager
 		/// Default constructor.
 		/// \param memoryMap The memory map containing all available memory
 		/// areas, constructed from the multiboot info.
-		PhysicalMemoryManager(const MemoryMap& memoryMap);
+		PhysicalMemoryManager(const multiboot::MemoryMap& memoryMap);
 
 		/// Allocates a frame and return its address.
 		/// \return the address of the allocated frame.
@@ -49,7 +49,7 @@ class PhysicalMemoryManager
 
 		/// Frees the set of frames contained in the given region.
 		/// \param region The region to free.
-		void freeMemoryRegion(const MemoryRegion& region);
+		void freeMemoryRegion(const multiboot::SimpleMemoryRegion& region);
 
 		/// Gets the first 4k-aligned number that is greater or equal to \a address.
 		/// \param address The address to convert.
