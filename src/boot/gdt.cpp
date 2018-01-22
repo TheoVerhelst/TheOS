@@ -1,3 +1,4 @@
+#include <boot/segmentSelectors.hpp>
 #include <boot/gdt.hpp>
 
 namespace boot
@@ -15,13 +16,13 @@ gdt::GdtDescriptor gdtDescriptor;
 [[gnu::section(".bootText")]]
 void initializeGdt()
 {
-	gdtDescriptor.address = reinterpret_cast<uint32_t>(&globalDescriptorTable);
+	gdtDescriptor.address = reinterpret_cast<uint32_t>(globalDescriptorTable);
 	gdtDescriptor.size = sizeof(globalDescriptorTable);
 	globalDescriptorTable[0] = constructSegmentDescriptor(0, 0, 0, 0);
-	globalDescriptorTable[1] = constructSegmentDescriptor(0, 0xFFFFFFFF,
+	globalDescriptorTable[CODE_SEGMENT >> 3] = constructSegmentDescriptor(0, 0xFFFFFFFF,
 			Flags0::Enabled | Flags0::DataOrCode | Flags0::DescriptorType | Flags0::Present,
 			Flags1::Size | Flags1::Granularity);
-	globalDescriptorTable[2] = constructSegmentDescriptor(0, 0xFFFFFFFF,
+	globalDescriptorTable[DATA_SEGMENT >> 3] = constructSegmentDescriptor(0, 0xFFFFFFFF,
 			Flags0::Enabled | Flags0::DescriptorType | Flags0::Present,
 			Flags1::Size | Flags1::Granularity);
 	flushGdt();

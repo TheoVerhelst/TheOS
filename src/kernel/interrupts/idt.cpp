@@ -1,3 +1,4 @@
+#include <boot/segmentSelectors.hpp>
 #include <kernel/interrupts/idt.hpp>
 
 namespace idt
@@ -20,7 +21,7 @@ void initializeIdt()
 
 IdtEntry::IdtEntry(uint32_t base):
 	_base0{static_cast<uint16_t>(base & 0x0000FFFF)},
-	_segmentSelector{0b1000},
+	_segmentSelector{CODE_SEGMENT},
 	_flags{Flags::InterruptGate | Flags::Size | Flags::Present},
 	_base1{static_cast<uint16_t>((base & 0xFFFF0000) >> 16)}
 {
