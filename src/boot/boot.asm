@@ -35,9 +35,9 @@ section .multiboot
 
 section .bootInit
 	; this is the multiboot info structure address
-	multibootInfoAddress resd 1
+	multibootInfoAddress db 0
 	align 4
-	resb 0x1000  ; make a 4Kb stack
+	times 0x1000 db 0x0 ; make a 4Ko stack
 	initStackTop:
 
 	_start:
