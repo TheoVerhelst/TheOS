@@ -25,6 +25,8 @@ extern kernelMain
 
 ; _init is entry point of routine used for initializing global objects
 extern _init
+; _fini is the exit function that calls global object destructors
+extern _fini
 
 ; make a new section so data are ordered in a true header
 section .multiboot
@@ -73,9 +75,11 @@ section .bootInit
 		call kernelMain
 		add esp, byte 4
 
+		; call objects destructor routines. It doesn't hurt, and it may be useful
+		call _fini
+
 		; reset the interrupt flag (IF) to not handle maskable interrupts
 		cli
-
 	.hang:
 		; infinite loop if kernelMain returns
 		hlt
