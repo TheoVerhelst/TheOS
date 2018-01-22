@@ -1,7 +1,7 @@
 #include <cpp/flags.hpp>
 #include <cpp/log.hpp>
 #include <cpp/abort.hpp>
-#include <boot/paging.hpp>
+#include <kernel/memory/paging/bootPaging.hpp>
 #include <kernel/memory/paging/PageTableManager.hpp>
 
 namespace paging

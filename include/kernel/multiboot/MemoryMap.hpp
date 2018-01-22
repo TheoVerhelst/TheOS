@@ -2,7 +2,7 @@
 #define MEMORYMAP_HPP
 
 #include <std/cstddef>
-#include <boot/MultibootInfo.hpp>
+#include <kernel/multiboot/MultibootInfo.hpp>
 
 struct MemoryRegion
 {

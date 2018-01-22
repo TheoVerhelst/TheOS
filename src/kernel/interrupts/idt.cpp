@@ -1,4 +1,4 @@
-#include <boot/segmentSelectors.hpp>
+#include <kernel/memory/segmentation/segmentSelectors.hpp>
 #include <kernel/interrupts/idt.hpp>
 
 namespace idt

@@ -1,5 +1,5 @@
 ; TODO I didn't manage to use the -I flag of nasm, this should be solved
-%include "../../../include/boot/segmentSelectors.asm"
+%include "../../../include/kernel/memory/segmentation/segmentSelectors.asm"
 
 ; Put the whole code in the appropriate boot section
 SECTION .bootText

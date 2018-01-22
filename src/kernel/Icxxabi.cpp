@@ -1,5 +1,5 @@
 #include <cpp/abort.hpp>
-#include <boot/Icxxabi.hpp>
+#include <kernel/Icxxabi.hpp>
 
 extern "C"
 {

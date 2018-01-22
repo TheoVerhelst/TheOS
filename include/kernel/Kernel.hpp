@@ -1,7 +1,7 @@
 #ifndef KERNEL_HPP
 #define KERNEL_HPP
 
-#include <boot/MemoryMap.hpp>
+#include <kernel/multiboot/MemoryMap.hpp>
 #include <kernel/interrupts/isr.hpp>
 #include <cpp/allocators/PoolAllocator.hpp>
 #include <cpp/allocators/MemoryManager.hpp>

@@ -1,4 +1,4 @@
-#include <boot/MemoryMap.hpp>
+#include <kernel/multiboot/MemoryMap.hpp>
 
 MemoryMapIterator::MemoryMapIterator():
 	_multibootRegion{nullptr},

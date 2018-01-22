@@ -5,7 +5,7 @@
 #include <cpp/BitSet.hpp>
 #include <cpp/math.hpp>
 #include <kernel/memory/Byte.hpp>
-#include <boot/MemoryMap.hpp>
+#include <kernel/multiboot/MemoryMap.hpp>
 #include <kernel/memory/paging/paging.hpp>
 
 namespace paging

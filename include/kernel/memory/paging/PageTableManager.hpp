@@ -1,7 +1,7 @@
 #ifndef PAGETABLEMANAGER_HPP
 #define PAGETABLEMANAGER_HPP
 
-#include <boot/MemoryMap.hpp>
+#include <kernel/multiboot/MemoryMap.hpp>
 #include <kernel/memory/paging/paging.hpp>
 #include <kernel/memory/paging/PhysicalMemoryManager.hpp>
 

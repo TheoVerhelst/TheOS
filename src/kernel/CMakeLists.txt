@@ -1,11 +1,17 @@
 set(SOURCES
+	"boot/boot.asm"
+	"boot/kernelMain.cpp"
 	"interrupts/idt.cpp"
 	"interrupts/interruptHandler.asm"
 	"interrupts/isr.cpp"
 	"interrupts/pic.cpp"
+	"memory/paging/bootPaging.cpp"
 	"memory/paging/PageTableManager.cpp"
 	"memory/paging/paging.cpp"
 	"memory/paging/PhysicalMemoryManager.cpp"
+	"memory/segmentation/gdt.asm"
+	"memory/segmentation/gdt.cpp"
+	"multiboot/MemoryMap.cpp"
 	"ps2/Driver.cpp"
 	"ps2/KeyboardDriver.cpp"
 	"ps2/KeyEventMapper.cpp"
@@ -13,6 +19,7 @@ set(SOURCES
 	"ps2/ScancodeMapper.cpp"
 	"terminal/KernelTerminal.cpp"
 	"video/vgaManagement.cpp"
+	"Icxxabi.cpp"
 	"io.cpp"
 	"Kernel.cpp"
 )
@@ -25,3 +32,5 @@ foreach(INDEX RANGE 63)
 endforeach(INDEX)
 
 add_library(kernel OBJECT ${SOURCES})
+add_library(crti OBJECT "boot/crti.asm")
+add_library(crtn OBJECT "boot/crtn.asm")

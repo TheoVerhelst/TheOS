@@ -1,7 +1,7 @@
 #include <kernel/memory/paging/paging.hpp>
 #include <kernel/memory/kernelLocation.hpp>
-#include <boot/gdt.hpp>
-#include <boot/paging.hpp>
+#include <kernel/memory/segmentation/gdt.hpp>
+#include <kernel/memory/paging/bootPaging.hpp>
 
 namespace boot
 {

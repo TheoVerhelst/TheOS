@@ -1,5 +1,5 @@
-#include <boot/segmentSelectors.hpp>
-#include <boot/gdt.hpp>
+#include <kernel/memory/segmentation/segmentSelectors.hpp>
+#include <kernel/memory/segmentation/gdt.hpp>
 
 namespace boot
 {

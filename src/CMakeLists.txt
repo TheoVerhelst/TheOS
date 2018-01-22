@@ -17,7 +17,6 @@ set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 set(BUILD_TEST FALSE)
 
 # List the main executable source files
-add_subdirectory(boot)
 add_subdirectory(kernel)
 add_subdirectory(cpp)
 
@@ -26,7 +25,6 @@ set(EXECUTABLE_NAME "${PROJECT_NAME}.bin")
 add_executable(${EXECUTABLE_NAME}
     "$<TARGET_OBJECTS:crti>"
     "${CRTBEGIN_O}"
-    "$<TARGET_OBJECTS:boot>"
     "$<TARGET_OBJECTS:kernel>"
     "$<TARGET_OBJECTS:cpp>"
     "${CRTEND_O}"

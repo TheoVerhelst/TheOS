@@ -1,7 +1,7 @@
 #include <kernel/interrupts/idt.hpp>
 #include <kernel/interrupts/pic.hpp>
-#include <boot/MultibootInfo.hpp>
-#include <boot/MemoryMap.hpp>
+#include <kernel/multiboot/MultibootInfo.hpp>
+#include <kernel/multiboot/MemoryMap.hpp>
 #include <kernel/Kernel.hpp>
 
 extern "C" void kernelMain(const multiboot::MultibootInfo& multibootInfoAddress)
