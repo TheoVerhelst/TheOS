@@ -7,7 +7,7 @@ namespace ps2
 void KeyboardDriver::pollKeyboard()
 {
 	uint8_t byte;
-	if(read(byte) and _currentScancode.length + 1 <= Scancode::maxLength)
+	if(read(byte) and _currentScancode.length < Scancode::maxLength)
 	{
 		_currentScancode.bytes[_currentScancode.length++] = byte;
 		KeyEvent event{_scancodeMapper.get(_currentScancode)};

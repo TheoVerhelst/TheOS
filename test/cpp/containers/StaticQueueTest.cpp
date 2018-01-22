@@ -20,7 +20,8 @@ SCENARIO("Empty queue")
 
         WHEN("an element is pushed")
         {
-            queue.pushBack(3.41);
+            double value{3.41};
+            queue.pushBack(value);
             THEN("size is equal to one")
             {
                 REQUIRE(queue.size() == 1);
@@ -29,13 +30,13 @@ SCENARIO("Empty queue")
             }
 
             THEN("front() is the added element")
-                REQUIRE(queue.front() == 3.41);
+                REQUIRE(queue.front() == value);
 
             WHEN("the element is removed")
             {
                 double poppedValue{queue.popFront()};
                 THEN("The popped element is the added one")
-					REQUIRE(poppedValue == 3.41);
+					REQUIRE(poppedValue == value);
                 THEN("queue is empty")
                     requireQueueIsEmpty(queue);
             }
@@ -43,17 +44,17 @@ SCENARIO("Empty queue")
 
         WHEN("Four elements are appended")
         {
-            queue.pushBack(2);
-            queue.pushBack(3);
-            queue.pushBack(5);
-            queue.pushBack(8);
+            std::vector<double> values{2, 3, 5, 8};
+            for(auto& value : values)
+                queue.pushBack(value);
+
             THEN("The size is four")
-                REQUIRE(queue.size() == 4);
+                REQUIRE(queue.size() == values.size());
 
             THEN("All elements are in the queue")
             {
                 auto it(queue.begin());
-                for(auto value : {2, 3, 5, 8})
+                for(auto& value : values)
                     REQUIRE(*(it++) == value);
             }
 
@@ -62,12 +63,12 @@ SCENARIO("Empty queue")
                 StaticQueue<double, queueSize> other(queue);
 
                 THEN("The size is four")
-                    REQUIRE(other.size() == 4);
+                    REQUIRE(other.size() == values.size());
 
                 THEN("All elements are in the queue")
                 {
                     auto it(other.begin());
-                    for(auto value : {2, 3, 5, 8})
+                    for(auto& value : values)
                         REQUIRE(*(it++) == value);
                 }
             }
@@ -90,9 +91,10 @@ SCENARIO("Empty queue")
 
             THEN("The first element is erased")
             {
-                queue.pushBack(43.);
+                double value{43.};
+                queue.pushBack(value);
                 REQUIRE(queue.front() == values[1]);
-                REQUIRE(queue.back() == 43.);
+                REQUIRE(queue.back() == value);
             }
 
             WHEN("The queue is cleared")

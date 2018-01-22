@@ -14,8 +14,8 @@ template <class T>
 struct ListNode
 {
 	T value;                    ///< The value of the node.
-	ListNode* next {nullptr};    ///< The next node.
-	ListNode* previous {nullptr};///< The previous node.
+	ListNode* next{nullptr};    ///< The next node.
+	ListNode* previous{nullptr};///< The previous node.
 };
 
 template <typename T, typename NodeType>

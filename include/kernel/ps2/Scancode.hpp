@@ -9,8 +9,8 @@ namespace ps2
 
 struct Scancode
 {
-	static constexpr size_t maxLength {8};
-	size_t length;
+	static constexpr size_t maxLength{8};
+	size_t length{0};
 	uint8_t bytes[maxLength];
 	constexpr bool operator==(const Scancode& other) const;
 };
