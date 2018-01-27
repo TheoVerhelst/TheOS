@@ -2,9 +2,9 @@
 #include <kernel/io.hpp>
 #include <kernel/vga/VgaTerminal.hpp>
 
-const vga::ColourProfile KernelTerminal::_defaultColourProfile{vga::Colour::LightGrey, vga::Colour::Black};
+const vga::ColourProfile VgaTerminal::_defaultColourProfile{vga::Colour::LightGrey, vga::Colour::Black};
 
-KernelTerminal::KernelTerminal():
+VgaTerminal::VgaTerminal():
 	_row{0},
 	_column{0},
 	_profile{vga::Colour::LightGrey, vga::Colour::Black},
@@ -14,18 +14,18 @@ KernelTerminal::KernelTerminal():
 	clearScreen();
 }
 
-void KernelTerminal::setColourProfile(vga::ColourProfile profile)
+void VgaTerminal::setColourProfile(vga::ColourProfile profile)
 {
 	_profile = profile;
 	_emptyCell = vga::Entry(' ', _profile);
 }
 
-void KernelTerminal::putEntryAt(char c, vga::ColourProfile profile, size_t x, size_t y)
+void VgaTerminal::putEntryAt(char c, vga::ColourProfile profile, size_t x, size_t y)
 {
 	vga::buffer[vga::coordToIndex(x, y)] = vga::Entry(c, profile);
 }
 
-void KernelTerminal::newLine(void)
+void VgaTerminal::newLine(void)
 {
 	_column = 0;
 	++_row;
@@ -33,7 +33,7 @@ void KernelTerminal::newLine(void)
 		scrollUp();
 }
 
-void KernelTerminal::putChar(char c)
+void VgaTerminal::putChar(char c)
 {
 	if(c == '\n')
 		newLine();
@@ -51,13 +51,13 @@ void KernelTerminal::putChar(char c)
 		moveCursor(_column, _row);
 }
 
-void KernelTerminal::putString(const char* str)
+void VgaTerminal::putString(const char* str)
 {
 	while(*str != '\0')
 		putChar(*(str++));
 }
 
-void KernelTerminal::scrollUp()
+void VgaTerminal::scrollUp()
 {
 	--_row;
 	mem::copy(vga::buffer, &vga::buffer[vga::coordToIndex(0, 1)],
@@ -65,12 +65,12 @@ void KernelTerminal::scrollUp()
 	mem::set(&vga::buffer[vga::coordToIndex(0, vga::height - 1)], static_cast<uint16_t>(_emptyCell), vga::width);
 }
 
-void KernelTerminal::clearScreen()
+void VgaTerminal::clearScreen()
 {
 	mem::set(vga::buffer, static_cast<uint16_t>(_emptyCell), vga::height*vga::width);
 }
 
-void KernelTerminal::moveCursor(int x, int y)
+void VgaTerminal::moveCursor(int x, int y)
 {
 	uint16_t location = (y * vga::width) + x;
 

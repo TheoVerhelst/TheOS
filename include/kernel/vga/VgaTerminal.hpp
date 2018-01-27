@@ -6,11 +6,11 @@
 #include <kernel/vga/vgaManagement.hpp>
 
 /// Class managing the kernel terminal.
-class KernelTerminal : public AbstractTerminal
+class VgaTerminal : public AbstractTerminal
 {
 	public:
 		/// Constructor.
-		KernelTerminal();
+		VgaTerminal();
 
 		/// Changes the colours of the terminal.
 		void setColourProfile(vga::ColourProfile profile);
