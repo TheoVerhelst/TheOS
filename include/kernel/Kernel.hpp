@@ -14,7 +14,7 @@ class Kernel final
 		/// Constructor.
 		/// \param memoryMap The memory map containing all available memory
 		/// areas, constructed from the multiboot info.
-		Kernel(const multiboot::MemoryMap& memoryMap);
+		Kernel(const multiboot::MemoryMap& memoryMap, AbstractKeyboardDriver& keyboardDriver);
 
 		/// Main function.
 		[[noreturn]] void run();
@@ -63,10 +63,7 @@ class Kernel final
 		/// The kernel memory allocator (the kernel heap manager).
 		MemoryManager _heapManager;
 
-		/// The keyboard driver. It needs to be notified when a keyboard
-		/// interrupt occur (with the ISR 33), and it gives a queue of
-		/// characters that the user typed.
-		ps2::KeyboardDriver _keyboardDriver;
+		AbstractKeyboardDriver& _keyboardDriver;
 };
 
 #endif // KERNEL_HPP

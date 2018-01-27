@@ -8,14 +8,15 @@ VgaTerminal kernelTerminal;
 Printer out{kernelTerminal};
 Kernel* Kernel::_instance{nullptr};
 
-Kernel::Kernel(const multiboot::MemoryMap& memoryMap):
+Kernel::Kernel(const multiboot::MemoryMap& memoryMap, AbstractKeyboardDriver& keyboardDriver):
 	_pageTableManager{memoryMap},
 	_heapAddress{_pageTableManager.allocatePage()},
 	_heapManagerPoolAllocator{_heapManagerPool},
 	// Give a needed kernel size of zero if info about memory is not available
 	// (that's better than nothing)
 	_heapManager{_heapAddress, _heapAddress == nullptr ? 0UL : _heapSize,
-	             _heapManagerPoolAllocator}
+	             _heapManagerPoolAllocator},
+	_keyboardDriver{keyboardDriver}
 {
 	_instance = this;
 	printPrettyAsciiArt();

@@ -15,7 +15,6 @@ set(KERNEL_SOURCES
 	"ps2/Driver.cpp"
 	"ps2/KeyboardDriver.cpp"
 	"ps2/KeyEventMapper.cpp"
-	"ps2/Scancode.cpp"
 	"ps2/ScancodeMapper.cpp"
 	"vga/VgaTerminal.cpp"
 	"vga/vgaManagement.cpp"

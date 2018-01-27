@@ -20,7 +20,7 @@ void KeyboardDriver::pollKeyboard()
 	}
 }
 
-bool KeyboardDriver::characterQueueEmpty()
+bool KeyboardDriver::characterQueueEmpty() const
 {
 	return _keyEventMapper.characterQueueEmpty();
 }

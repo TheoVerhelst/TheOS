@@ -4,7 +4,7 @@
 #include <std/cstdint>
 #include <std/cstddef>
 
-/// VGA hardware interface
+/// VGA hardware interface, assuming that we use text-mode VGA.
 namespace vga
 {
 
@@ -56,7 +56,7 @@ static_assert(sizeof(Entry) == 2, "Entry must be 16-bits");
 const size_t width{80};
 const size_t height{25};
 
-/// defined location on the VGA buffer
+/// defined location of the VGA memory buffer
 Entry* const buffer{reinterpret_cast<Entry*>(0xB8000)};
 
 constexpr inline size_t coordToIndex(size_t x, size_t y)
@@ -65,6 +65,6 @@ constexpr inline size_t coordToIndex(size_t x, size_t y)
 }
 
 
-} // namespace VGA
+} // namespace vga
 
 #endif // VGA_MANAGEMENT_H

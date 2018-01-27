@@ -4,6 +4,7 @@
 #include <std/cstdint>
 #include <std/cstddef>
 #include <cpp/Printer.hpp>
+#include <kernel/AbstractKeyboardDriver.hpp>
 #include <kernel/ps2/Driver.hpp>
 #include <kernel/ps2/ScancodeMapper.hpp>
 #include <kernel/ps2/KeyEventMapper.hpp>
@@ -11,12 +12,12 @@
 namespace ps2
 {
 
-class KeyboardDriver : public Driver
+class KeyboardDriver : public Driver, public AbstractKeyboardDriver
 {
 	public:
-		void pollKeyboard();
-		bool characterQueueEmpty();
-		char getCharacter();
+		virtual void pollKeyboard() override;
+		virtual bool characterQueueEmpty() const override;
+		virtual char getCharacter() override;
 
 	private:
 
