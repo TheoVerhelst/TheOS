@@ -1,36 +1,36 @@
-set(SOURCES
-	"boot/boot.asm"
-	"boot/kernelMain.cpp"
-	"interrupts/idt.cpp"
-	"interrupts/interruptHandler.asm"
-	"interrupts/isr.cpp"
-	"interrupts/pic.cpp"
-	"memory/paging/bootPaging.cpp"
-	"memory/paging/PageTableManager.cpp"
-	"memory/paging/paging.cpp"
-	"memory/paging/PhysicalMemoryManager.cpp"
-	"memory/segmentation/gdt.asm"
-	"memory/segmentation/gdt.cpp"
+set(KERNEL_SOURCES
+	"arch/i386/boot/boot.asm"
+	"arch/i386/boot/kernelMain.cpp"
+	"arch/i386/interrupts/idt.cpp"
+	"arch/i386/interrupts/interruptHandler.asm"
+	"arch/i386/interrupts/isr.cpp"
+	"arch/i386/interrupts/pic.cpp"
+	"arch/i386/memory/paging/bootPaging.cpp"
+	"arch/i386/memory/paging/PageTableManager.cpp"
+	"arch/i386/memory/paging/paging.cpp"
+	"arch/i386/memory/paging/PhysicalMemoryManager.cpp"
+	"arch/i386/memory/segmentation/gdt.asm"
+	"arch/i386/memory/segmentation/gdt.cpp"
 	"multiboot/MemoryMap.cpp"
 	"ps2/Driver.cpp"
 	"ps2/KeyboardDriver.cpp"
 	"ps2/KeyEventMapper.cpp"
 	"ps2/Scancode.cpp"
 	"ps2/ScancodeMapper.cpp"
-	"terminal/KernelTerminal.cpp"
-	"video/vgaManagement.cpp"
+	"vga/VgaTerminal.cpp"
+	"vga/vgaManagement.cpp"
 	"Icxxabi.cpp"
 	"io.cpp"
 	"Kernel.cpp"
 )
 
 foreach(INDEX RANGE 63)
-	set(SOURCES "${SOURCES}"
-		"interrupts/isr/asm/isr${INDEX}.asm"
-		"interrupts/isr/cpp/isr${INDEX}.cpp"
+	set(KERNEL_SOURCES "${KERNEL_SOURCES}"
+		"arch/i386/interrupts/isr/asm/isr${INDEX}.asm"
+		"arch/i386/interrupts/isr/cpp/isr${INDEX}.cpp"
 	)
 endforeach(INDEX)
 
-add_library(kernel OBJECT ${SOURCES})
-add_library(crti OBJECT "boot/crti.asm")
-add_library(crtn OBJECT "boot/crtn.asm")
+add_library(kernel OBJECT ${KERNEL_SOURCES})
+add_library(crti OBJECT "arch/i386/boot/crti.asm")
+add_library(crtn OBJECT "arch/i386/boot/crtn.asm")

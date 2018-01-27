@@ -2,10 +2,10 @@
 #define KERNEL_HPP
 
 #include <kernel/multiboot/MemoryMap.hpp>
-#include <kernel/interrupts/isr.hpp>
+#include <kernel/arch/i386/interrupts/isr.hpp>
 #include <cpp/allocators/PoolAllocator.hpp>
 #include <cpp/allocators/MemoryManager.hpp>
-#include <kernel/memory/paging/PageTableManager.hpp>
+#include <kernel/arch/i386/memory/paging/PageTableManager.hpp>
 #include <kernel/ps2/KeyboardDriver.hpp>
 
 class Kernel final

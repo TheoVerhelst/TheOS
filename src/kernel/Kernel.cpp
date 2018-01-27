@@ -1,6 +1,6 @@
 #include <cpp/Printer.hpp>
 #include <cpp/new.hpp>
-#include <kernel/terminal/KernelTerminal.hpp>
+#include <kernel/vga/VgaTerminal.hpp>
 #include <cpp/abort.hpp>
 #include <kernel/Kernel.hpp>
 
