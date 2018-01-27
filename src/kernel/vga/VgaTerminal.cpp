@@ -70,13 +70,13 @@ void VgaTerminal::clearScreen()
 	mem::set(vga::buffer, static_cast<uint16_t>(_emptyCell), vga::height*vga::width);
 }
 
-void VgaTerminal::moveCursor(int x, int y)
+void VgaTerminal::moveCursor(size_t x, size_t y)
 {
-	uint16_t location = (y * vga::width) + x;
+	const uint16_t location{static_cast<uint16_t>(vga::coordToIndex(x, y))};
 
-	// 0x3D4-0x3D5 are in VGA address space
-	outb(0x3D4, 0x0F);
-	outb(0x3D5, (uint8_t)(location & 0xFF));
-	outb(0x3D4, 0x0E);
-	outb(0x3D5, (uint8_t)((location >> 8) & 0xFF));
+	// set VGA registers using IO ports
+	outb(vga::addressPort, vga::cursorLocationLow);
+	outb(vga::dataPort, static_cast<uint8_t>(location & 0xFF));
+	outb(vga::addressPort, vga::cursorLocationHigh);
+	outb(vga::dataPort, static_cast<uint8_t>((location >> 8) & 0xFF));
 }

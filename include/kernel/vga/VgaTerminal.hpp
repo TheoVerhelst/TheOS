@@ -30,7 +30,7 @@ class VgaTerminal : public AbstractTerminal
 		void scrollUp();
 		void clearScreen();
 		void putEntryAt(char c, vga::ColourProfile profile, size_t x, size_t y);
-		void moveCursor(int x, int y);
+		void moveCursor(size_t x, size_t y);
 
 		size_t _row;                /// Y coordinate
 		size_t _column;             /// X coordinate
