@@ -16,6 +16,9 @@ namespace flags
 	template <typename BitField, typename Flags>
 	constexpr bool allSet(BitField bitField, Flags flags);
 
+	template <typename InputType, typename OutputType>
+	constexpr OutputType getBits(InputType input, InputType from, InputType to);
+
 } // namespace flags
 
 namespace flags
@@ -24,6 +27,14 @@ namespace flags
 	constexpr bool allSet(BitField bitField, Flags flags)
 	{
 		return (bitField & static_cast<BitField>(flags)) == static_cast<BitField>(flags);
+	}
+
+	template <typename InputType, typename OutputType>
+	constexpr OutputType getBits(InputType input, InputType from, InputType to)
+	{
+	 	constexpr InputType fromMask{(1 << from) - 1};
+		constexpr InputType toMask{(1 << to) - 1};
+		return static_cast<OutputType>((input & (fromMask ^ toMask)) >> from);
 	}
 
 } // namespace flags
