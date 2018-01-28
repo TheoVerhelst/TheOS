@@ -1,7 +1,10 @@
 #include <cpp/mem.hpp>
+#include <cpp/Printer.hpp>
 #include <kernel/io.hpp>
 #include <kernel/vga/VgaTerminal.hpp>
 
+VgaTerminal vgaTerminal;
+Printer out{vgaTerminal};
 const vga::ColourProfile VgaTerminal::_defaultColourProfile{vga::Colour::LightGrey, vga::Colour::Black};
 
 VgaTerminal::VgaTerminal():
