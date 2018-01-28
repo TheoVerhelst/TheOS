@@ -43,9 +43,6 @@ section .bootInit
 	initStackTop:
 
 	_start:
-		; Block interrupts
-		cli
-
 		; set up a little stack for paging init functions
 		mov esp, initStackTop
 
@@ -78,8 +75,6 @@ section .bootInit
 		; call objects destructor routines. It doesn't hurt, and it may be useful
 		call _fini
 
-		; reset the interrupt flag (IF) to not handle maskable interrupts
-		cli
 	.hang:
 		; infinite loop if kernelMain returns
 		hlt

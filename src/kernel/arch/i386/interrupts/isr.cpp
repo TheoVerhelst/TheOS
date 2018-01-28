@@ -6,9 +6,9 @@
 namespace isr
 {
 
-constexpr void (*Table::_table[idt::idtSize])(Arguments);
+constexpr void (*Table::_table[idt::idtSize])(Arguments&);
 
-extern "C" void isrDispatcher(Arguments args)
+extern "C" void isrDispatcher(Arguments& args)
 {
 	// Call the proper ISR
 	Table::_table[args.interruptNumber](args);
@@ -18,11 +18,22 @@ extern "C" void isrDispatcher(Arguments args)
 		pic::sendEndOfInterrupt(args.interruptNumber);
 }
 
-Printer& operator<<(Printer& out, const ErrorCode& errorCode)
+Printer& operator<<(Printer& out, const Arguments& args)
 {
-	out << (errorCode.indexAndFlags & Flags::ExternalEvent ? "external" : "internal") << " at ";
-	out << (errorCode.indexAndFlags & Flags::DescriptorLocation ? "idt" : (errorCode.indexAndFlags & Flags::GdtLdt ? "ldt" : "gdt"));
-	out << "[" << ((errorCode.indexAndFlags & 0xFFF8) >> 3) << "]";
+	out << Printer::Flags::Hex
+		<< "\nEDI: " << args.edi
+		<< "\nESI: " << args.esi
+		<< "\nEBP: " << args.ebp
+		<< "\nESP: " << args.esp
+		<< "\nEBX: " << args.ebx
+		<< "\nEDX: " << args.edx
+		<< "\nECX: " << args.ecx
+		<< "\nEAX: " << args.eax
+		<< "\nEIP: " << args.eip
+		<< "\nCS : " << args.cs
+		<< "\nEFLAGS: " << args.eflags
+		<< "\ninterrupt number: " << args.interruptNumber
+		<< "\nerror code: " << args.errorCode.indexAndFlags;
 	return out;
 }
 

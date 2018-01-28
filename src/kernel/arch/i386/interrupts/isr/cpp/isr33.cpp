@@ -4,9 +4,11 @@
 namespace isr
 {
 
-void Table::isr33(Arguments /* args */)
+void Table::isr33(Arguments& /* args */)
 {
-	Kernel::getInstance()._keyboardDriver.pollKeyboard();
+	Kernel* kernel{&Kernel::getInstance()};
+	if(kernel != nullptr)
+		kernel->_keyboardDriver.pollKeyboard();
 }
 
 } // namespace isr

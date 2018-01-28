@@ -1,26 +1,16 @@
 extern isrDispatcher
 global interruptHandler
 
-%define DATA_SEGMENT 0x10
+; TODO I didn't manage to use the -I flag of nasm, this should be solved
+%include "../../../include/kernel/arch/i386/memory/segmentation/segmentSelectors.asm"
 
 section .text
 interruptHandler:
-	push ds
-	push es
-	push fs
-	push gs
-	; Set up segment registers for the interrupt handler
-	mov ax, DATA_SEGMENT
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov eax, isrDispatcher
-	call eax  ; A special call, preserves the 'eip' register
-	pop gs
-	pop fs
-	pop es
-	pop ds
-	add esp, 8  ; Cleans up the pushed error code and pushed ISR number
-	sti
+	pushad ; Push EAX, ECX, EDX, EBX, original ESP, EBP, ESI, and EDI
+	; Push the address of the stack, to give it as a pointer to the arg struct
+	mov eax, esp
+	push eax
+	call isrDispatcher
+	popad
+	add esp, 8 ; Cleans up the pushed error code and pushed ISR number
 	iret

@@ -24,7 +24,6 @@ void Kernel::run()
 	while(true)
 		while(not _keyboardDriver.characterQueueEmpty())
 			out << _keyboardDriver.getCharacter();
-	abort();
 }
 
 Kernel& Kernel::getInstance()
