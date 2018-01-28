@@ -1,5 +1,6 @@
 #include <kernel/arch/i386/interrupts/idt.hpp>
 #include <kernel/arch/i386/interrupts/pic.hpp>
+#include <kernel/arch/i386/interrupts/isr.hpp>
 #include <kernel/multiboot/MultibootInfo.hpp>
 #include <kernel/multiboot/MemoryMap.hpp>
 #include <kernel/Kernel.hpp>
@@ -17,5 +18,7 @@ extern "C" void kernelMain(const multiboot::MultibootInfo& multibootInfoAddress)
     // the memory map will always be a multiboot memory map.
     const multiboot::MemoryMap memoryMap{multibootInfoAddress};
     Kernel kernel{memoryMap, keyboardDriver};
+    // Now that the kernel is initialized, interrupts can be safely enabled
+    isr::enableInterrupts();
     kernel.run();
 }

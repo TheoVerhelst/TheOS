@@ -7,8 +7,6 @@ namespace pic
 void initializePic()
 {
 	remap();
-	// Enable interrupts
-	asm volatile("sti");
 }
 
 void sendEndOfInterrupt(uint32_t interruptNumber)

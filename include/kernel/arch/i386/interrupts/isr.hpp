@@ -124,6 +124,8 @@ struct [[gnu::packed]] Arguments
 /// \param args The arguments to give to the ISR.
 extern "C" void isrDispatcher(Arguments& args);
 
+void enableInterrupts();
+
 /// All ISRs are put in this class in order to grant them private access the
 /// Kernel class, by making them friends.
 class Table

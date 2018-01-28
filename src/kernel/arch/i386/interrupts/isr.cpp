@@ -18,6 +18,11 @@ extern "C" void isrDispatcher(Arguments& args)
 		pic::sendEndOfInterrupt(args.interruptNumber);
 }
 
+void enableInterrupts()
+{
+	asm volatile("sti");
+}
+
 Printer& operator<<(Printer& out, const Arguments& args)
 {
 	out << Printer::Flags::Hex
