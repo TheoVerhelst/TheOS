@@ -11,6 +11,7 @@ interruptHandler:
 	mov eax, esp
 	push eax
 	call isrDispatcher
+	add esp, 4
 	popad
 	add esp, 8 ; Cleans up the pushed error code and pushed ISR number
 	iret
