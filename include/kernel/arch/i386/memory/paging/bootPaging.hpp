@@ -47,17 +47,13 @@ void initKernelPaging();
 void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf);
 
 /// Help to fill an entry with the proper address and flags.
-/// \param entry The lvalue representing the page {table|directory} entry to
-/// fill.
 /// \param address The address to put in the entry.
 /// \param flags The flags to put in the entry, they must already be OR'ed.
-/// \example FILL_ENTRY(pageDirectory[0], anAddress, Flags::Present | Flags::ReadWrite);
-#define BOOTSTRAP_FILL_ENTRY(entry, address, flags)                            \
-	entry = (reinterpret_cast<uint32_t>(address) & 0xFFFFF000) | (flags & 0xFFF)
+#define BOOTSTRAP_MAKE_ENTRY(address, flags) (reinterpret_cast<uint32_t>((address)) & 0xFFFFF000) | ((flags) & 0xFFF)
 
-#define BOOTSTRAP_ALIGN_UP(address) ((address + ::paging::pageSize - 1UL) & ~(::paging::pageSize - 1UL))
+#define BOOTSTRAP_ALIGN_DOWN(address) ((address) & ~(::paging::pageSize - 1UL))
 
-#define BOOTSTRAP_ALIGN_DOWN(address) (address & ~(::paging::pageSize - 1UL))
+#define BOOTSTRAP_ALIGN_UP(address) (BOOTSTRAP_ALIGN_DOWN((address) + ::paging::pageSize - 1UL))
 
 } // namespace bootPaging
 

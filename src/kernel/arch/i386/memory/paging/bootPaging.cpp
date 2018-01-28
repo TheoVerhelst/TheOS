@@ -37,7 +37,7 @@ void initKernelPaging()
 	mapMemory(reinterpret_cast<uintptr_t>(&lowKernelStart), reinterpret_cast<uintptr_t>(&lowKernelEnd), false);
 
 	// map higher half kernel
-	mapMemory(reinterpret_cast<uintptr_t>(&kernelPhysicalStart), reinterpret_cast<uintptr_t>(&kernelPhysicalEnd), true);
+	mapMemory(reinterpret_cast<uintptr_t>(&lowKernelStart), reinterpret_cast<uintptr_t>(&kernelPhysicalEnd), true);
 }
 
 [[gnu::section(".bootText")]]
@@ -55,14 +55,13 @@ void mapMemory(uintptr_t start, uintptr_t end, bool higherHalf)
 		if(not (kernelPageDirectory[directoryEntry] & ::paging::Flags::Present))
 		{
 			// Use a new page table from the array
-			BOOTSTRAP_FILL_ENTRY(kernelPageDirectory[directoryEntry],
-				&kernelPageTables[usedPageTables], kernelPagingFlags);
+			kernelPageDirectory[directoryEntry] = BOOTSTRAP_MAKE_ENTRY(&kernelPageTables[usedPageTables], kernelPagingFlags);
 			++usedPageTables;
 		}
 
 		uint32_t* pageTable{reinterpret_cast<uint32_t*>(kernelPageDirectory[directoryEntry] & 0xFFFFF000)};
 		const size_t tableEntry{page % ::paging::entriesNumber};
-		BOOTSTRAP_FILL_ENTRY(pageTable[tableEntry], page * ::paging::pageSize, kernelPagingFlags);
+		pageTable[tableEntry] = BOOTSTRAP_MAKE_ENTRY(page * ::paging::pageSize, kernelPagingFlags);
 	}
 }
 

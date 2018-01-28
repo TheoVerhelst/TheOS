@@ -67,7 +67,7 @@ section .bootInit
 		; set up a stack by putting TOS in ESP
 		mov esp, kernelStackTop
 
-		; call objects constructors routines
+		; call global objects constructors routines
 		call _init
 
 		; let's go for some fun

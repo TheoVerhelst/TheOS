@@ -36,7 +36,7 @@ struct [[gnu::packed]] ErrorCode
 	/// segment or gate selector being referenced by the error code.
 	uint16_t indexAndFlags;
 
-	/// Bit reserverd for the CPU.
+	/// Bits reserverd for the CPU.
 	uint16_t reserved;
 };
 static_assert(sizeof(ErrorCode) == 4, "Error code structure must be 32-bit");
@@ -67,16 +67,14 @@ struct [[gnu::packed]] Arguments
 	uint32_t ss;             ///< The SS register.
 };
 
-/// Calls the apropriate C-written ISR, and logs the interrupt if needed.
+/// Calls the apropriate C++-written ISR, and logs the interrupt if needed. This
+/// function also sends a "end of interrupt" message to the PIC if needed.
+/// \param args The arguments to give to the ISR.
 extern "C" void isrDispatcher(Arguments args);
 
 class Table
 {
 	private:
-		/// Calls the apropriate C-written ISR, and logs the interrupt if
-		/// needed. This function also sends a "end of interrupt" message to the
-		/// PIC if needed.
-		/// \param args The arguments to give to the ISR.
 		friend void isrDispatcher(Arguments args);
 
 		/// Declare all interrupts service routines with the item trick
