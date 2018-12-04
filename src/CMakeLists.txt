@@ -41,6 +41,7 @@ add_custom_target(${ISO_NAME} ALL
     COMMAND cp -r "${CONFIG_DIRECTORY}/iso/" "${CMAKE_BINARY_DIR}"
     # Put the .bin executable in the directory
     COMMAND cp "${CMAKE_BINARY_DIR}/${EXECUTABLE_NAME}" "${CMAKE_BINARY_DIR}/iso/"
+    COMMAND cp "${CMAKE_BINARY_DIR}/firstTest.bin" "${CMAKE_BINARY_DIR}/iso/"
     # Create a new iso with grub
     COMMAND grub-mkrescue -o "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${ISO_NAME}" "${CMAKE_BINARY_DIR}/iso/"
     # Finally copy the run script
