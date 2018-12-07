@@ -57,6 +57,23 @@ struct MemoryRegion
 	static constexpr uint32_t validType{UINT32_C(1)};
 };
 
+/// Holds information about a module that has been loaded by the bootloader
+/// alongside the kernel.
+struct Module
+{
+	/// The start address of the module.
+	void* mod_start;
+
+	/// The end address of the module.
+	void* mod_end;
+
+	/// A string associated to the module, such as a file name of a command line.
+	char* string;
+
+	/// Reserved, do not use.
+	uint32_t reserved;
+};
+
 /// This is the Multiboot information data structure,
 /// through which the boot loader communicates vital information to the
 /// operating system. The operating system can use or ignore any parts of the
@@ -87,7 +104,8 @@ struct MultibootInfo
 	size_t mods_count;
 
 	/// Physical address of the first module structure.
-	void* mods_addr;
+	Module* mods_addr;
+
 	union
 	{
 		/// Data about the a.out symbol table of the kernel.
