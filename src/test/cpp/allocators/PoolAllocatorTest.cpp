@@ -1,6 +1,6 @@
 #include <vector>
 #include <unordered_set>
-#include <catch/catch.hpp>
+#include <test/catch/catch.hpp>
 #include <cpp/allocators/PoolAllocator.hpp>
 
 SCENARIO("Pool allocator returns nullptr when full")

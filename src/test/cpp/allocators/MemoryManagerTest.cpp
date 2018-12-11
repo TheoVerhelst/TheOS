@@ -1,6 +1,6 @@
 #include <cmath>
 #include <cstdint>
-#include <catch/catch.hpp>
+#include <test/catch/catch.hpp>
 #include <cpp/log.hpp>
 #include <cpp/allocators/MemoryManager.hpp>
 

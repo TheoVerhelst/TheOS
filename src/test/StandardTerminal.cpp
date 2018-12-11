@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cpp/Printer.hpp>
-#include "StandardTerminal.hpp"
+#include <test/StandardTerminal.hpp>
 
 StandardTerminal terminal;
 Printer out{terminal};

@@ -1,4 +1,4 @@
-#include <catch/catch.hpp>
+#include <test/catch/catch.hpp>
 #include <cpp/containers/Array.hpp>
 
 class ConstructionTracer

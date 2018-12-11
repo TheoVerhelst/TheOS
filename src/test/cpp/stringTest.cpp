@@ -1,4 +1,4 @@
-#include <catch/catch.hpp>
+#include <test/catch/catch.hpp>
 #include <cpp/string.hpp>
 
 SCENARIO("Testing string length function")

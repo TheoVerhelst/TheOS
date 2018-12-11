@@ -1,3 +1,5 @@
+set(MODULE_NAME "cpp")
+
 set(SOURCES
 	"allocators/MemoryManager.cpp"
 	"abort.cpp"
@@ -9,8 +11,7 @@ set(SOURCES
 	"string.cpp"
 )
 
-if(BUILD_TEST)
-	add_library(cppTest OBJECT ${SOURCES})
-else(BUILD_TEST)
-	add_library(cpp OBJECT ${SOURCES})
-endif(BUILD_TEST)
+add_library(${MODULE_NAME} STATIC ${SOURCES})
+
+# Make the CPP sources available to parent scope, to use by cppFreestanding
+set(CPP_SOURCES ${SOURCES} PARENT_SCOPE)

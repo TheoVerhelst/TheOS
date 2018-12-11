@@ -45,7 +45,7 @@ class Kernel final
 		/// (so the ISRs can modify the kernel).
 		friend class isr::Table;
 
-		void printPrettyAsciiArt();
+		void printPrettyAsciiArt() const;
 
 		static Kernel* _instance;
 

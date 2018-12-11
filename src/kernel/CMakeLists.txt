@@ -1,4 +1,6 @@
-set(KERNEL_SOURCES
+set(MODULE_NAME "kernel")
+
+set(SOURCES
 	"arch/i386/boot/boot.asm"
 	"arch/i386/boot/kernelMain.cpp"
 	"arch/i386/interrupts/idt.cpp"
@@ -24,12 +26,11 @@ set(KERNEL_SOURCES
 )
 
 foreach(INDEX RANGE 63)
-	set(KERNEL_SOURCES "${KERNEL_SOURCES}"
+	set(SOURCES "${SOURCES}"
 		"arch/i386/interrupts/isr/asm/isr${INDEX}.asm"
 		"arch/i386/interrupts/isr/cpp/isr${INDEX}.cpp"
 	)
 endforeach(INDEX)
 
-add_library(kernel OBJECT ${KERNEL_SOURCES})
-add_library(crti OBJECT "arch/i386/boot/crti.asm")
-add_library(crtn OBJECT "arch/i386/boot/crtn.asm")
+makeFreestanding("${MODULE_NAME}" "${SOURCES}")
+target_link_libraries("${MODULE_NAME}.bin" cppFreestanding gcc)

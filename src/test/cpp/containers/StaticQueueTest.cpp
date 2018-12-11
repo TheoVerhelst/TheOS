@@ -1,4 +1,4 @@
-#include <catch/catch.hpp>
+#include <test/catch/catch.hpp>
 #include <cpp/containers/StaticQueue.hpp>
 
 template <typename T, size_t MaxSize>

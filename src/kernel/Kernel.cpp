@@ -1,3 +1,4 @@
+#include <kernel/multiboot/MultibootInfo.hpp>
 #include <cpp/Printer.hpp>
 #include <cpp/new.hpp>
 #include <cpp/abort.hpp>
@@ -36,7 +37,7 @@ MemoryManager& Kernel::getHeapManager()
 	return _heapManager;
 }
 
-void Kernel::printPrettyAsciiArt()
+void Kernel::printPrettyAsciiArt() const
 {
 	out << "\
 \n\
