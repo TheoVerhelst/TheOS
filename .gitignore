@@ -1,16 +1,9 @@
-# Ignore project files
-*.geany
-
-# Ignore vim temporary files
-*.swp
-
 # Ignore precompiled headers
 *.gch
 
-build/
+buildDebug/
+buildRelease/
 doxygen/
 
 # Folder with scripts/alternative resources
 alt/
-
-test/catch/
